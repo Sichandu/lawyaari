@@ -201,11 +201,16 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .add-field-btn:hover{border-color:var(--accent);color:var(--accent);}
 
 /* TOAST */
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 18px;border-radius:8px;font-size:12px;z-index:999;animation:toastIn .3s ease;pointer-events:none;white-space:nowrap;}
-.toast.success{border-color:var(--accent3);color:var(--accent3);}
-.toast.error{border-color:var(--accent2);color:var(--accent2);}
-.toast.warn{border-color:var(--accent);color:var(--accent);}
-@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.toast{
+  position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  background:var(--bg2);border:1px solid var(--border2);color:var(--text);
+  padding:10px 22px;border-radius:10px;font-size:13px;font-weight:500;
+  z-index:9999;animation:toastIn .25s ease;pointer-events:none;
+  white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5);}
+.toast.success{border-color:var(--accent3);color:var(--accent3);background:rgba(16,185,129,.1);}
+.toast.error{border-color:var(--accent2);color:var(--accent2);background:rgba(239,68,68,.1);}
+.toast.warn{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.1);}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
 /* MOBILE (#1 fix) */
 .sidebar-overlay{display:none;position:fixed;inset:0;top:52px;background:rgba(0,0,0,.55);z-index:140;}
@@ -272,7 +277,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       <div class="service-item" onclick="openService('complaint_draft')"><span class="sname">📣 Complaint Draft</span><span class="sprice">₹69</span></div>
       <div class="service-item" onclick="openService('legal_reply')"><span class="sname">💬 Legal Reply</span><span class="sprice">₹19</span></div>
       <div class="service-item" onclick="openService('priority_answer')"><span class="sname">⚡ Priority Answer</span><span class="sprice">₹5–10</span></div>
-
+      <div class="sidebar-section">💬 Support</div>
+      <div class="service-item" onclick="openFeedback()"><span class="sname">📝 Give Feedback</span><span class="sprice" style="background:rgba(16,185,129,.1);color:var(--accent3)">Free</span></div>
     </div>
   </aside>
 
@@ -308,6 +314,20 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
     </div>
   </main>
 </div>
+
+<!-- FOOTER -->
+<footer style="background:var(--bg2);border-top:1px solid var(--border);padding:12px 20px;text-align:center;font-size:11px;color:var(--text3);flex-shrink:0;">
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:4px;">
+    <a href="about.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">About Us</a>
+    <a href="contact.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Contact</a>
+    <a href="faq.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">FAQ</a>
+    <a href="terms.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Terms</a>
+    <a href="privacy.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Privacy</a>
+    <a href="disclaimer.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Disclaimer</a>
+    <a href="#" onclick="openFeedback();return false;" style="color:var(--accent3);text-decoration:none;">Feedback</a>
+  </div>
+  <div>© 2026 LegalDost · lawyaari.com · Not a legal firm</div>
+</footer>
 
 <!-- AUTH MODAL -->
 <div class="modal-overlay" id="authModal">
@@ -381,7 +401,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
   <div class="modal">
     <button class="modal-close" onclick="closeModal('paywallModal')">✕</button>
     <h2>🚀 Upgrade Plan</h2>
-    <p class="modal-sub">Free limit reached. Upgrade to continue.</p>
+    <p class="modal-sub">Daily limit reached. Upgrade now, or wait 24 hours for free reset.</p>
     <div class="plan-cards" id="paywallPlans"></div>
   </div>
 </div>
@@ -428,13 +448,13 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
     <div class="result-actions">
       <button class="ra ra-copy" onclick="copyResult()">📋 Copy</button>
       <button class="ra ra-pdf" onclick="downloadPDF()">⬇ PDF</button>
-      <button class="ra ra-share" onclick="buildShareCard()">↗ Share Card</button>
     </div>
-    <!-- Canvas share card -->
+    <!-- Canvas share card — single block only -->
     <div id="shareCardWrap">
-      <canvas id="shareCanvas"></canvas><br/>
-      <button class="share-dl-btn" onclick="shareCard()">↗ Share Card</button>
+      <canvas id="shareCanvas" style="border-radius:10px;max-width:100%;box-shadow:0 4px 20px rgba(0,0,0,.5);margin-top:12px;"></canvas><br/>
+      <button class="share-dl-btn" onclick="shareCard()" style="margin-top:8px;">↗ Share Card</button>
     </div>
+    <button class="ra ra-share" onclick="buildShareCard()" style="width:100%;margin-top:10px;">🎴 Generate Share Card</button>
   </div>
 </div>
 
@@ -468,16 +488,56 @@ const T = {
 };
 
 const QUICK_Q = {
-  msme:{hi:['MSME payment 45 दिन से देर क्या करूं?','Udyam registration कैसे करें?','MSME Samadhaan portal क्या है?','TReDS scheme क्या है?'],te:['MSME చెల్లింపు ఆలస్యమైతే?','Udyam నమోదు ఎలా?','MSME రుణం ఎక్కడ?'],hinglish:['MSME payment late kya karun?','Udyam registration kaise?','MSME Samadhaan kya hai?']},
-  banking:{hi:['Cheque bounce pe kya karun?','Recovery agent pareshan kar raha hai?','Bank loan reject kya options?','Credit card fraud kya karun?'],te:['చెక్ బౌన్స్ అయితే?','రికవరీ ఏజెంట్ వేధిస్తే?','లోన్ రిజెక్ట్?'],hinglish:['Cheque bounce kya karun?','Recovery agent kya karun?','Bank loan reject?']},
-  cyber:{hi:['Online fraud paise wapas milenge?','WhatsApp scam aaya kya karun?','Cybercrime complaint kahan karein?','KYC fraud se bachein?'],te:['ఆన్‌లైన్ మోసం పైసలు?','సైబర్ క్రైమ్ ఫిర్యాదు?'],hinglish:['Online fraud paisa wapas?','Cybercrime complaint kahan?']},
-  police:{hi:['FIR likhne se police mana kar rahi?','Arrest ke baad kya rights hain?','Anticipatory bail kya hoti hai?','Chargesheet kya hoti hai?'],te:['FIR నిరాకరిస్తే?','అరెస్టు తర్వాత హక్కులు?'],hinglish:['FIR likhne se mana kare?','Arrest ke baad rights?']},
-  medical:{hi:['Doctor ne galat treatment diya?','Hospital bill bahut zyada hai?','Medical negligence case kaise karein?'],te:['తప్పు చికిత్స?','హాస్పిటల్ బిల్ ఎక్కువు?'],hinglish:['Doctor galat treatment?','Hospital bill zyada?']},
-  consumer:{hi:['Online product nahi aaya?','Consumer forum mein case kaise?','Defective product wapas nahi lete?'],te:['ఆర్డర్ రాలేదు?','కన్స్యూమర్ ఫోరం కేసు?'],hinglish:['Online product nahi aaya?','Consumer forum case?']},
-  labour:{hi:['Salary nahi di kya karun?','Wrongful termination kya karun?','PF aur gratuity kaise milegi?'],te:['జీతం ఇవ్వలేదు?','తప్పుగా తొలగించారు?'],hinglish:['Salary nahi mili?','Wrongful termination?']},
-  property:{hi:['Property dispute kaise resolve karein?','Landlord deposit wapas nahi de raha?','Rent agreement kaise banayen?','Tenant rights kya hain?','Eviction notice mila kya karun?'],te:['ఆస్తి వివాదం?','డిపాజిట్ ఇవ్వడం లేదు?','అద్దెదారు హక్కులు?'],hinglish:['Property dispute?','Deposit wapas nahi?','Tenant rights kya?']},
-  women:{hi:['Domestic violence complaint kaise?','Workplace harassment kya karun?','Dowry harassment case kaise?','POCSO act kya hai?','Maintenance kaise milti hai?'],te:['గృహ హింస ఫిర్యాదు?','వర్క్‌ప్లేస్ వేధింపు?','మహిళా హక్కులు?'],hinglish:['Domestic violence complaint?','Workplace harassment kya?','Dowry case kaise?']},
-  tax:{hi:['GST notice aaya kya karun?','ITR file karne ki last date?','Tax demand notice ka reply?'],te:['GST నోటీస్?','ITR ఫైల్?'],hinglish:['GST notice kya karun?','ITR kab file karein?']},
+  msme:{
+    hi:['MSME payment 45 दिन से ज़्यादा देर है, क्या करूं?','Udyam registration कैसे करें?','MSME Samadhaan portal पर complaint कैसे करें?','Cheque bounce हुआ MSME buyer का, कार्रवाई?','MSME को bank loan reject हुआ, क्या options हैं?'],
+    te:['MSME చెల్లింపు 45 రోజులు ఆలస్యమైతే ఏం చేయాలి?','Udyam నమోదు ఎలా చేయాలి?','MSME Samadhaan portal లో ఫిర్యాదు ఎలా చేయాలి?','MSME కి బ్యాంక్ లోన్ తిరస్కరిస్తే ఏం చేయాలి?','MSME buyer చెక్కు బౌన్స్ అయితే ఏం చేయాలి?'],
+    hinglish:['MSME payment late hai kya karun?','Udyam registration kaise kare?','MSME Samadhaan portal pe complaint kaise?','MSME buyer ka cheque bounce hua kya karun?','MSME loan reject hua options kya hain?']
+  },
+  banking:{
+    hi:['Cheque bounce होने पर 15 दिन में क्या करें?','Recovery agent घर आकर परेशान कर रहा है?','Bank ने बिना notice loan account freeze किया?','Credit card fraud हुआ, पैसे वापस मिलेंगे?','CIBIL score गलत है, कैसे ठीक करें?'],
+    te:['చెక్ బౌన్స్ అయిన తర్వాత 15 రోజులలో ఏం చేయాలి?','రికవరీ ఏజెంట్ ఇంటికి వచ్చి వేధిస్తే ఏం చేయాలి?','బ్యాంక్ నోటీసు లేకుండా ఖాతా ఫ్రీజ్ చేస్తే?','క్రెడిట్ కార్డ్ మోసం జరిగింది పైసలు వస్తాయా?','CIBIL స్కోర్ తప్పుగా ఉంటే ఎలా సరిచేయాలి?'],
+    hinglish:['Cheque bounce ke baad 15 din mein kya karun?','Recovery agent ghar aa ke pareshan kar raha hai?','Bank ne bina notice account freeze kiya?','Credit card fraud hua paisa wapas milega?','CIBIL score galat hai kaise theek kare?']
+  },
+  cyber:{
+    hi:['Online UPI fraud हुआ, पैसे वापस कैसे मिलेंगे?','WhatsApp पर fake job offer scam आया?','Cybercrime portal पर complaint कैसे दर्ज करें?','Social media पर fake profile बनाई, क्या करूं?','OTP share करके fraud हुआ, अब क्या करें?'],
+    te:['ఆన్‌లైన్ UPI మోసం జరిగింది పైసలు తిరిగి వస్తాయా?','WhatsApp లో నకిలీ job offer వచ్చింది ఏం చేయాలి?','Cybercrime portal లో ఫిర్యాదు ఎలా నమోదు చేయాలి?','సోషల్ మీడియాలో నకిలీ ప్రొఫైల్ తయారు చేస్తే ఏం చేయాలి?','OTP చెప్పి మోసం జరిగింది ఏం చేయాలి?'],
+    hinglish:['Online UPI fraud hua paisa wapas kaise milega?','WhatsApp pe fake job offer scam aaya kya karun?','Cybercrime portal pe complaint kaise kare?','Social media pe fake profile bani kya karun?','OTP share karke fraud hua ab kya kare?']
+  },
+  police:{
+    hi:['FIR लिखने से police मना कर रही है, क्या करूं?','Arrest के बाद मेरे क्या अधिकार हैं?','Anticipatory bail कैसे मिलती है?','Police ने बिना warrant घर में घुसे, legal कार्रवाई?','Section 41A notice मिला, क्या करूं?'],
+    te:['FIR రాయడానికి పోలీసులు నిరాకరిస్తే ఏం చేయాలి?','అరెస్టు తర్వాత నా హక్కులు ఏమిటి?','Anticipatory bail ఎలా పొందాలి?','వారెంట్ లేకుండా పోలీసులు ఇంటికి వస్తే ఏం చేయాలి?','Section 41A నోటీస్ వచ్చింది ఏం చేయాలి?'],
+    hinglish:['FIR likhne se police mana kar rahi hai kya karun?','Arrest ke baad mere kya rights hain?','Anticipatory bail kaise milti hai?','Police bina warrant ghar mein ghusi legal kya kare?','Section 41A notice mila kya karun?']
+  },
+  medical:{
+    hi:['Doctor ने गलत treatment दिया, कहाँ complaint करूं?','Hospital ने बिना consent operation किया?','Medical negligence case कैसे file करें?','Hospital bill बहुत ज़्यादा है, क्या कर सकता हूँ?','Pharmacy ने expired medicine दी, क्या करूं?'],
+    te:['డాక్టర్ తప్పు చికిత్స చేస్తే ఎక్కడ ఫిర్యాదు చేయాలి?','హాస్పిటల్ అనుమతి లేకుండా ఆపరేషన్ చేస్తే?','Medical negligence కేసు ఎలా వేయాలి?','హాస్పిటల్ బిల్ చాలా ఎక్కువగా ఉంటే ఏం చేయాలి?','Pharmacy expired medicine ఇస్తే ఏం చేయాలి?'],
+    hinglish:['Doctor ne galat treatment diya kahan complaint karun?','Hospital ne bina consent operation kiya?','Medical negligence case kaise file kare?','Hospital bill bahut zyada hai kya kar sakta hun?','Pharmacy ne expired medicine di kya karun?']
+  },
+  consumer:{
+    hi:['Online order नहीं आया, refund कैसे मिलेगा?','Consumer Forum में case कैसे file करें?','Defective product exchange करने से मना कर रहे हैं?','E-commerce company false advertising कर रही है?','Service provider ने payment लेकर काम नहीं किया?'],
+    te:['ఆన్‌లైన్ ఆర్డర్ రాలేదు refund ఎలా పొందాలి?','Consumer Forum లో కేసు ఎలా వేయాలి?','లోపభూయిష్ట product exchange చేయడానికి నిరాకరిస్తే?','E-commerce company తప్పుడు ప్రకటన చేస్తే?','సేవ చేయకుండా పైసలు తీసుకుంటే ఏం చేయాలి?'],
+    hinglish:['Online order nahi aaya refund kaise milega?','Consumer Forum mein case kaise kare?','Defective product exchange nahi kar rahe kya karun?','E-commerce false advertising kar rahi hai kya karun?','Service provider ne payment lekar kaam nahi kiya?']
+  },
+  labour:{
+    hi:['Salary नहीं दी, कहाँ complaint करूं?','Wrongful termination हुई, क्या legal options हैं?','PF और gratuity कैसे मिलेगी?','Employer ने overtime pay नहीं दिया?','Maternity leave के लिए employer ने मना किया?'],
+    te:['జీతం ఇవ్వలేదు ఎక్కడ ఫిర్యాదు చేయాలి?','తప్పుగా తొలగించారు legal options ఏమిటి?','PF మరియు gratuity ఎలా పొందాలి?','Employer overtime pay ఇవ్వలేదు ఏం చేయాలి?','Maternity leave కి employer నిరాకరిస్తే?'],
+    hinglish:['Salary nahi di kahan complaint karun?','Wrongful termination hua kya legal options hain?','PF aur gratuity kaise milegi?','Employer ne overtime pay nahi diya?','Maternity leave ke liye employer ne mana kiya?']
+  },
+  property:{
+    hi:['Landlord security deposit वापस नहीं दे रहा?','Rent agreement बनाने का सही तरीका क्या है?','Property dispute court में कैसे file करें?','Eviction notice मिला, क्या मेरे rights हैं?','Landlord बिना notice किराया बढ़ा रहा है?'],
+    te:['Landlord security deposit తిరిగి ఇవ్వడం లేదు ఏం చేయాలి?','Rent agreement ఎలా తయారు చేయాలి?','Property dispute court లో ఎలా file చేయాలి?','Eviction notice వచ్చింది నా హక్కులు ఏమిటి?','Landlord నోటీస్ లేకుండా అద్దె పెంచుతే ఏం చేయాలి?'],
+    hinglish:['Landlord deposit wapas nahi de raha kya karun?','Rent agreement banane ka sahi tarika kya hai?','Property dispute court mein kaise file kare?','Eviction notice mila kya mere rights hain?','Landlord bina notice kiraya badha raha hai?']
+  },
+  women:{
+    hi:['Domestic violence complaint कहाँ और कैसे करें?','Workplace sexual harassment के लिए क्या करूं?','Dowry harassment case कैसे file करें?','Maintenance कैसे और कहाँ से मिलती है?','POCSO act क्या है और कब लागू होता है?'],
+    te:['గృహ హింస ఫిర్యాదు ఎక్కడ ఎలా చేయాలి?','కార్యాలయంలో లైంగిక వేధింపులకు ఏం చేయాలి?','కట్నం వేధింపు కేసు ఎలా వేయాలి?','Maintenance ఎలా ఎక్కడ నుండి పొందాలి?','POCSO act ఏమిటి ఎప్పుడు వర్తిస్తుంది?'],
+    hinglish:['Domestic violence complaint kahan aur kaise karun?','Workplace sexual harassment ke liye kya karun?','Dowry harassment case kaise file kare?','Maintenance kaise aur kahan se milti hai?','POCSO act kya hai kab lagoo hota hai?']
+  },
+  tax:{
+    hi:['GST notice आया, कैसे reply करूं?','ITR file करने की last date और process क्या है?','Income tax demand notice का क्या करूं?','GST registration कैसे करें small business के लिए?','TDS refund कैसे claim करें?'],
+    te:['GST నోటీస్ వచ్చింది ఎలా reply చేయాలి?','ITR file చేయడానికి last date మరియు process ఏమిటి?','Income tax demand notice కి ఏం చేయాలి?','Small business కి GST registration ఎలా చేయాలి?','TDS refund ఎలా claim చేయాలి?'],
+    hinglish:['GST notice aaya kaise reply karun?','ITR file karne ki last date aur process kya hai?','Income tax demand notice ka kya karun?','Small business ke liye GST registration kaise kare?','TDS refund kaise claim kare?']
+  },
 };
 
 const NEXT_STEPS = {
@@ -655,7 +715,7 @@ function appendAiMsg(text,intent){
     <div class="msg-actions">
       <button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button>
       <button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>
-      <button class="msg-action-btn primary" onclick="openService('priority_answer')" style="font-size:11px">⚡ ₹5 Expert</button>
+      <button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" style="font-size:11px">⚡ ₹5 Expert</button>
     </div></div>`;
   c.appendChild(d);scrollBottom();
 }
@@ -671,7 +731,7 @@ function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
 function showPaywallInChat(data){
   const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='paywall-msg';
   const plans=(data.plans||[]).map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="initiatePayment('${p.plan_id}',${p.price})"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats}</div></div>`).join('');
-  d.innerHTML=`<h3>Daily limit reached 🚫</h3><p>Upgrade to continue</p><div class="plan-cards">${plans}</div>`;
+  d.innerHTML=`<h3>Daily limit reached 🚫</h3><p>Upgrade to continue today, or wait 24 hours for free reset.</p><div class="plan-cards">${plans}</div>`;
   c.appendChild(d);scrollBottom();
 }
 function scrollBottom(){const c=document.getElementById('chatMessages');c.scrollTop=c.scrollHeight;}
@@ -804,7 +864,7 @@ function addPurchase(service,amount){
 const SVC = {
   cheque_notice:{title:'📝 Cheque Bounce Notice',desc:'Section 138 legal notice — ₹149',price:149,ep:'/api/cheque-notice',fields:[{id:'client_name',label:'Your Name',type:'input',ph:'Full name'},{id:'client_address',label:'Your Address',type:'textarea',ph:'Full address'},{id:'drawer_name',label:'Drawer Name',type:'input',ph:'Who gave the cheque'},{id:'drawer_address',label:'Drawer Address',type:'textarea',ph:'Address'},{id:'cheque_number',label:'Cheque No',type:'input',ph:'001234'},{id:'cheque_date',label:'Cheque Date',type:'input',ph:'DD/MM/YYYY'},{id:'cheque_amount',label:'Amount ₹',type:'input',ph:'50000'},{id:'bank_name',label:'Bank',type:'input',ph:'SBI'},{id:'dishonour_reason',label:'Dishonour Reason',type:'input',ph:'Insufficient funds'}]},
   msme_notice:{title:'📦 MSME Recovery',desc:'Demand notice under MSMED Act — ₹249',price:249,ep:'/api/msme-notice',fields:[{id:'business_name',label:'Your Business',type:'input',ph:'MSME name'},{id:'buyer_name',label:'Buyer Name',type:'input',ph:'Client name'},{id:'buyer_address',label:'Buyer Address',type:'textarea',ph:'Full address'},{id:'invoice_number',label:'Invoice No',type:'input',ph:'INV-001'},{id:'invoice_date',label:'Invoice Date',type:'input',ph:'DD/MM/YYYY'},{id:'outstanding_amount',label:'Outstanding ₹',type:'input',ph:'200000'},{id:'due_date',label:'Due Date',type:'input',ph:'DD/MM/YYYY'},{id:'udyam_number',label:'Udyam No (optional)',type:'input',ph:'UDYAM-XX-0-0000000'}]},
-  legal_reply:{title:'💬 Legal Reply Generator',desc:'Reply to any notice — ₹19',price:19,ep:'/api/legal-reply',fields:[{id:'received_message',label:'Notice/Message Received',type:'textarea',ph:'Paste the notice here...'},{id:'context',label:'Context',type:'select',opts:['bank','landlord','employer','police','recovery_agent','other']},{id:'tone',label:'Tone',type:'select',opts:['polite','firm','strict_legal']},{id:'user_name',label:'Your Name',type:'input',ph:'Full name'}]},
+  legal_reply:{title:'💬 Legal Reply Generator',desc:'Reply to any notice — ₹19',price:19,ep:'/api/legal-reply',fields:[{id:'received_message',label:'Notice/Message Received',type:'textarea',ph:'Paste the EXACT legal notice text (from bank, court, landlord, recovery agent, police). This service is for LEGAL notices only.'},{id:'context',label:'Who sent the notice?',type:'select',opts:['bank','landlord','employer','police','recovery_agent','other']},{id:'your_facts',label:'Your Key Facts to Assert (Important!)',type:'textarea',ph:'State YOUR side clearly. E.g: I paid Rs.18400 via NEFT on 05 Jan 2026 (UTR:NEFTXXXX). Or: I vacated on 15 Feb 2026. Or: Cheque was security deposit not for debt. The AI builds your reply around these facts.'},{id:'tone',label:'Tone',type:'select',opts:['polite','firm','strict_legal']},{id:'user_name',label:'Your Name',type:'input',ph:'Full name'}]},
   complaint_draft:{title:'📣 Complaint Draft',desc:'Formal complaint — ₹69',price:69,ep:'/api/complaint-draft',fields:[{id:'issue_type',label:'Issue Type',type:'select',opts:['police','cybercrime','consumer','labour','medical','other']},{id:'issue_description',label:'Problem Description',type:'textarea',ph:'What happened...'},{id:'location',label:'Location',type:'input',ph:'City, State'},{id:'opponent_name',label:'Opponent (optional)',type:'input',ph:'Person/company'},{id:'date',label:'Incident Date',type:'input',ph:'DD/MM/YYYY'},{id:'user_name',label:'Your Name',type:'input',ph:'Full name'}]},
   priority_answer:{title:'⚡ Priority Answer',desc:'Structured legal answer — ₹5 / ₹10',price:5,ep:'/api/priority-answer',fields:[{id:'question',label:'Your Legal Question',type:'textarea',ph:'Describe in detail...'},{id:'priority_type',label:'Answer Type',type:'select',opts:['instant_5','detailed_10'],onchange:'updatePriorityPrice()'}]},
 };
@@ -834,7 +894,7 @@ function updatePriorityPrice(){
 }
 
 async function handleSvcSubmit(key,price){
-  const cfg=SVC[key];const data={};const optional=['udyam_number','opponent_name'];
+  const cfg=SVC[key];const data={};const optional=['udyam_number','opponent_name','your_facts'];
   for(const f of cfg.fields){const el=document.getElementById('sf_'+f.id);data[f.id]=el?el.value.trim():'';if(!data[f.id]&&!optional.includes(f.id)){toast(`Fill: ${f.label}`,'error');return;}}
   state.pendingServiceData=data;state.pendingPaymentService=key;
   await initiatePayment(key,price);
@@ -892,68 +952,78 @@ async function downloadPDF(){
 }
 
 // SHARE CARD — draws branded canvas card (like reference image)
-function drawShareCanvas(title, bodyText){
-  const wrap=document.getElementById('shareCardWrap');
-  const canvas=document.getElementById('shareCanvas');
-  const ctx=canvas.getContext('2d');
-  const W=600,H=440;
-  canvas.width=W;canvas.height=H;
-  canvas.style.width='100%';canvas.style.maxWidth='100%';
-
-  // Dark BG
-  ctx.fillStyle='#0f0f17';
-  ctx.fillRect(0,0,W,H);
-
-  // Top gradient accent bar
-  const gTop=ctx.createLinearGradient(0,0,W,0);
-  gTop.addColorStop(0,'#f59e0b');gTop.addColorStop(1,'#f97316');
-  ctx.fillStyle=gTop;ctx.fillRect(0,0,W,6);
-
-  // Logo area background strip
-  ctx.fillStyle='#17171f';ctx.fillRect(0,6,W,72);
-
-  // Scale emoji text — use fillText with fallback
-  ctx.font='24px sans-serif';ctx.fillStyle='#f59e0b';
-  ctx.fillText('\u2696\uFE0F LegalDost',22,48);
-  ctx.font='600 13px sans-serif';ctx.fillStyle='#a0a0b5';
-  ctx.fillText('\u0906\u092A\u0915\u093E \u0915\u093E\u0928\u0942\u0928\u0940 \u0926\u094B\u0938\u094D\u0924  \u2022  LegalDost.in',22,66);
-
-  // Divider
-  ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(0,78);ctx.lineTo(W,78);ctx.stroke();
-
-  // Title pill
-  ctx.fillStyle='rgba(245,158,11,0.12)';
-  roundRect(ctx,22,92,W-44,32,6);ctx.fill();
-  ctx.font='bold 14px sans-serif';ctx.fillStyle='#f59e0b';
-  ctx.fillText(title.slice(0,70),32,113);
-
-  // Body text with word wrap
-  ctx.font='14px sans-serif';ctx.fillStyle='#d0d0e0';
-  const clean=bodyText.replace(/[#*_`]/g,'').replace(/\n+/g,' ').trim();
-  const words=clean.split(' ');
-  let line='',y=146,lh=22,maxW=W-44,maxY=H-70;
+function wrapText(ctx, text, x, y, maxW, lineH, maxY){
+  const words=text.replace(/[#*_`]/g,'').split(' ');
+  let line='';
   for(const w of words){
     const test=line+(line?' ':'')+w;
     if(ctx.measureText(test).width>maxW&&line){
-      ctx.fillText(line,22,y);line=w;y+=lh;
-      if(y>maxY){ctx.fillStyle='#6a6a80';ctx.fillText('...  (see full response in app)',22,y);break;}
+      ctx.fillText(line,x,y);line=w;y+=lineH;
+      if(y>maxY){ctx.fillStyle='#6a6a80';ctx.fillText('... (open app for full answer)',x,y);return y;}
     } else line=test;
   }
-  if(y<=maxY&&line) ctx.fillText(line,22,y);
+  if(line&&y<=maxY) ctx.fillText(line,x,y);
+  return y;
+}
+
+function drawShareCanvas(question, bodyText){
+  const wrap=document.getElementById('shareCardWrap');
+  const canvas=document.getElementById('shareCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=640,H=500;
+  canvas.width=W;canvas.height=H;
+  canvas.style.width='100%';canvas.style.maxWidth='100%';
+
+  // BG
+  ctx.fillStyle='#0d0d14';ctx.fillRect(0,0,W,H);
+
+  // Top gradient bar
+  const g=ctx.createLinearGradient(0,0,W,0);
+  g.addColorStop(0,'#f59e0b');g.addColorStop(1,'#f97316');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,5);
+
+  // Logo strip
+  ctx.fillStyle='#14141e';ctx.fillRect(0,5,W,60);
+  ctx.font='bold 18px sans-serif';ctx.fillStyle='#f59e0b';
+  ctx.fillText('⚖️  LegalDost',20,38);
+  ctx.font='12px sans-serif';ctx.fillStyle='#888';
+  ctx.fillText('lawyaari.com  •  Free legal help for every Indian',20,56);
+
+  // Divider
+  ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,65);ctx.lineTo(W,65);ctx.stroke();
+
+  // QUESTION block
+  const qClean=(question||'Legal Question').replace(/[#*_`]/g,'').trim();
+  ctx.fillStyle='rgba(245,158,11,0.08)';
+  ctx.beginPath();ctx.roundRect(16,75,W-32,44,8);ctx.fill();
+  ctx.fillStyle='#f59e0b';ctx.font='bold 12px sans-serif';
+  ctx.fillText('Q  →',24,96);
+  ctx.fillStyle='#f0f0f5';ctx.font='13px sans-serif';
+  // Single line question with ellipsis
+  let qText=qClean;
+  while(ctx.measureText(qText).width>W-100&&qText.length>10) qText=qText.slice(0,-1);
+  if(qText!==qClean) qText+='...';
+  ctx.fillText(qText,60,96);
+  ctx.fillStyle='#2a2a38';ctx.fillRect(16,119,W-32,1);
+
+  // ANSWER block
+  ctx.fillStyle='#f59e0b';ctx.font='bold 12px sans-serif';
+  ctx.fillText('A  →',24,140);
+  ctx.fillStyle='#d0d0e0';ctx.font='13px sans-serif';
+  const ansClean=bodyText.replace(/[#*_`]/g,'').replace(/\n+/g,' ').trim();
+  wrapText(ctx, ansClean, 60, 140, W-80, 20, H-60);
 
   // Bottom bar
-  ctx.fillStyle='#17171f';ctx.fillRect(0,H-50,W,50);
+  ctx.fillStyle='#14141e';ctx.fillRect(0,H-44,W,44);
   ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(0,H-50);ctx.lineTo(W,H-50);ctx.stroke();
-  ctx.font='11px sans-serif';ctx.fillStyle='#6a6a80';
-  ctx.fillText('LegalDost.in  \u2022  Your legal rights, explained.',22,H-20);
+  ctx.beginPath();ctx.moveTo(0,H-44);ctx.lineTo(W,H-44);ctx.stroke();
+  ctx.font='11px sans-serif';ctx.fillStyle='#555';
+  ctx.fillText('LegalDost.in  •  Not legal advice. Consult a lawyer.',20,H-16);
   ctx.fillStyle='#f59e0b';ctx.textAlign='right';
-  ctx.fillText('Free legal help for every Indian',W-22,H-20);
+  ctx.fillText('lawyaari.com',W-20,H-16);
   ctx.textAlign='left';
-
-  // Bottom gradient accent
-  ctx.fillStyle=gTop;ctx.fillRect(0,H-3,W,3);
+  ctx.fillStyle=g;ctx.fillRect(0,H-3,W,3);
 
   wrap.style.display='block';
 }
@@ -966,12 +1036,14 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
 }
 
-// Called from Result modal "Share Card" button
+// Called from Result modal Generate button
 function buildShareCard(){
   const result=state.currentResult;
   if(!result){toast('No content to share','error');return;}
-  drawShareCanvas(result.title, result.content);
-  toast('Share card ready! Download below \u2193','success');
+  // title is the question for chat responses, service name for premium docs
+  drawShareCanvas(result.title||'LegalDost Response', result.content||'');
+  document.getElementById('shareCardWrap').style.display='block';
+  toast('Share card ready! ↓','success');
 }
 
 function downloadShareCard(){
@@ -1002,21 +1074,29 @@ async function shareCard(){
   }
 }
 
-// Called from chat bubble "Share" button — generates card in a popup
+// Called from chat bubble "Share" button
 function shareBubble(btn){
-  const b=btn.closest('.msg').querySelector('.msg-bubble');
-  // Extract just the AI response text, strip follow-up nudge
-  let rawText=b.innerText||'';
-  // Remove "Aur kya" / "Next enti" lines at bottom
-  rawText=rawText.replace(/Aur kya jaanna hai\?.*$/i,'').replace(/Next enti\?.*$/i,'').trim();
-  // Set as current result and open result modal with share card
-  state.currentResult={title:'LegalDost – Legal Advice',content:rawText,serviceType:'chat'};
+  const msgEl=btn.closest('.msg');
+  // Get the user question from the previous user message
+  const allMsgs=[...document.querySelectorAll('.msg')];
+  const idx=allMsgs.indexOf(msgEl);
+  let question='Legal Question';
+  for(let i=idx-1;i>=0;i--){
+    if(allMsgs[i].classList.contains('user')){
+      question=allMsgs[i].querySelector('.msg-bubble')?.innerText||'Legal Question';
+      break;
+    }
+  }
+  // Get AI answer — strip nudge text
+  const b=msgEl.querySelector('.msg-bubble');
+  let rawText=(b?.innerText||'').replace(/Aur kya jaanna hai\?.*$/i,'').replace(/Next enti\?.*$/i,'').trim();
+  state.currentResult={title:question,content:rawText,serviceType:'chat'};
   document.getElementById('resultModalTitle').textContent='Share This Response';
   document.getElementById('resultContent').textContent=rawText;
   document.getElementById('shareCardWrap').style.display='none';
   openModal('resultModal');
-  // Auto-draw share card after modal opens
-  setTimeout(()=>buildShareCard(),100);
+  // Auto-draw with Q+A
+  setTimeout(()=>{drawShareCanvas(question,rawText);},120);
 }
 
 function copyBubble(btn){
@@ -1038,10 +1118,57 @@ document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('cl
 // TOAST
 function toast(msg,type=''){
   const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
-  document.body.appendChild(el);setTimeout(()=>el.remove(),2800);
+  document.body.appendChild(el);setTimeout(()=>el.remove(),3000);
 }
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ₹5 Expert — get priority answer for current bubble's question
+async function expertAnswerForThis(btn){
+  const msgEl=btn.closest('.msg');
+  const allMsgs=[...document.querySelectorAll('.msg')];
+  const idx=allMsgs.indexOf(msgEl);
+  let question='';
+  // Find the user question that triggered this AI response
+  for(let i=idx-1;i>=0;i--){
+    if(allMsgs[i].classList.contains('user')){
+      question=allMsgs[i].querySelector('.msg-bubble')?.innerText?.trim()||'';
+      break;
+    }
+  }
+  if(!question){toast('Could not find the question. Please use the Priority Answer service.','error');return;}
+  // Pre-fill and open priority answer with this question
+  state.pendingExpertQuestion=question;
+  // Open service modal but pre-filled
+  openService('priority_answer');
+  // After modal opens, auto-fill the question field
+  setTimeout(()=>{
+    const qField=document.getElementById('sf_question');
+    if(qField){
+      qField.value=question;
+      qField.setAttribute('readonly','true');
+      qField.style.opacity='0.7';
+    }
+  },100);
+}
+
+// FEEDBACK
+function openFeedback(){openModal('feedbackModal');}
+
+function submitFeedback(){
+  const name=document.getElementById('fb_name').value.trim()||'Anonymous';
+  const type=document.getElementById('fb_type').value;
+  const msg=document.getElementById('fb_message').value.trim();
+  const phone=document.getElementById('fb_phone').value.trim();
+  if(!msg){toast('Please write your feedback first','error');return;}
+
+  const typeLabel={suggestion:'💡 Suggestion',bug:'🐛 Bug Report',complaint:'😤 Complaint',praise:'🙌 Praise',feature:'🚀 Feature Request'}[type]||type;
+  const lang=state.lang||'hi';
+  const text=`*LegalDost Feedback*%0A%0A*Type:* ${typeLabel}%0A*Name:* ${name}%0A*Language:* ${lang}%0A*Phone:* ${phone||'Not given'}%0A%0A*Message:*%0A${encodeURIComponent(msg)}%0A%0A_Sent from lawyaari.com_`;
+  window.open(`https://wa.me/918185843878?text=${text}`,'_blank');
+  closeModal('feedbackModal');
+  toast('Opening WhatsApp... Thank you! 🙏','success');
+}
 
 // INIT
 function init(){
@@ -1069,6 +1196,39 @@ function init(){
 }
 init();
 </script>
+<!-- FEEDBACK MODAL -->
+<div class="modal-overlay" id="feedbackModal">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="closeModal('feedbackModal')">✕</button>
+    <h2>📝 Share Your Feedback</h2>
+    <p class="modal-sub">Help us improve LegalDost. Your feedback goes directly to the founder.</p>
+    <div class="form-group">
+      <label>Your Name (optional)</label>
+      <input type="text" id="fb_name" placeholder="What should we call you?"/>
+    </div>
+    <div class="form-group">
+      <label>Feedback Type</label>
+      <select id="fb_type">
+        <option value="suggestion">💡 Suggestion / Improvement</option>
+        <option value="bug">🐛 Bug / Issue Report</option>
+        <option value="complaint">😤 Complaint</option>
+        <option value="praise">🙌 Praise / Testimonial</option>
+        <option value="feature">🚀 Feature Request</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Your Message *</label>
+      <textarea id="fb_message" placeholder="Tell us what you think, what's broken, or what you'd love to see..." style="min-height:100px;"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Your Phone (optional — for follow-up)</label>
+      <input type="tel" id="fb_phone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"/>
+    </div>
+    <button class="modal-btn" onclick="submitFeedback()">Send Feedback via WhatsApp →</button>
+    <p style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Opens WhatsApp. Your feedback is sent directly to the founder.</p>
+  </div>
+</div>
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
