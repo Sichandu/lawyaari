@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin – LegalDost</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#2a2a38;--border2:#3a3a50;
+    --accent:#f59e0b;--accent2:#ef4444;--accent3:#10b981;
+    --text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;}
+  nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;}
+  .logo{font-size:18px;font-weight:700;}
+  .main{max-width:960px;margin:0 auto;padding:28px 20px;}
+  h1{font-size:22px;margin-bottom:4px;}
+  .sub{font-size:13px;color:var(--text3);margin-bottom:24px;}
+  .login-card{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:28px;max-width:380px;margin:60px auto;}
+  .form-group{margin-bottom:14px;}
+  label{font-size:12px;color:var(--text3);font-weight:600;display:block;margin-bottom:5px;}
+  input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;}
+  input:focus{border-color:var(--accent);}
+  .btn{width:100%;padding:12px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px;}
+  .stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+  .stat-value{font-size:28px;font-weight:700;color:var(--accent);margin-top:6px;}
+  .section-title{font-size:13px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:20px 0 10px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{text-align:left;padding:8px;color:var(--text3);border-bottom:1px solid var(--border);font-weight:600;font-size:11px;text-transform:uppercase;}
+  td{padding:9px 8px;border-bottom:1px solid var(--border);color:var(--text2);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;}
+  .b-te{background:rgba(245,158,11,.15);color:var(--accent);}
+  .b-hi{background:rgba(16,185,129,.15);color:var(--accent3);}
+  .b-hinglish{background:rgba(99,102,241,.15);color:#818cf8;}
+  .intent-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .intent-pill{background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 14px;font-size:12px;color:var(--text2);}
+  .intent-pill strong{color:var(--accent);}
+  .refresh{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;}
+  .refresh:hover{color:var(--text);}
+  @media(max-width:600px){.grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">⚖️ LegalDost Admin</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="index.html" onclick="sessionStorage.setItem('from_admin','1')" style="background:#1a1a24;border:1px solid #3a3a50;color:#a0a0b5;padding:6px 14px;border-radius:8px;font-size:12px;text-decoration:none;font-weight:600;">← Back to App</a>
+    <button class="refresh" onclick="loadStats()">↻ Refresh</button>
+  </div>
+</nav>
+
+<div class="main">
+  <div id="loginSection" class="login-card">
+    <h2 style="margin-bottom:6px">🔒 Admin Access</h2>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:20px">Enter your admin key to access dashboard</p>
+    <div class="form-group">
+      <label>Admin Key</label>
+      <input type="password" id="adminKey" placeholder="Enter admin key" onkeydown="if(event.key==='Enter')loadStats()" />
+    </div>
+    <button class="btn" onclick="loadStats()">Access Dashboard</button>
+  </div>
+
+  <div id="dashboard" style="display:none">
+    <h1>Dashboard</h1>
+    <p class="sub" id="lastUpdated">Loading...</p>
+
+    <div class="grid" id="statsGrid"></div>
+
+    <div class="section-title">Intent Breakdown</div>
+    <div class="intent-bar" id="intentBar"></div>
+
+    <div class="section-title">Language Breakdown</div>
+    <div class="intent-bar" id="langBar"></div>
+
+    <div class="section-title">Recent Chats</div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Mobile</th><th>Message</th><th>Language</th><th>Intent</th><th>Time</th></tr></thead>
+        <tbody id="chatsTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = window.BACKEND_URL || 'http://localhost:8000';
+let adminKey = '';
+
+async function loadStats() {
+  adminKey = document.getElementById('adminKey')?.value?.trim() || adminKey;
+  if (!adminKey) return alert('Enter admin key');
+
+  try {
+    const res = await fetch(`${API}/api/admin/stats`, {
+      headers: { 'x-admin-key': adminKey }
+    });
+    if (!res.ok) { alert('Invalid admin key'); return; }
+    const d = await res.json();
+
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleTimeString('en-IN');
+
+    document.getElementById('statsGrid').innerHTML = `
+      <div class="stat"><div class="stat-label">Total Users</div><div class="stat-value">${d.total_users}</div></div>
+      <div class="stat"><div class="stat-label">Total Chats</div><div class="stat-value">${d.total_chats}</div></div>
+      <div class="stat"><div class="stat-label">Paid Services</div><div class="stat-value">${d.paid_services}</div></div>
+      <div class="stat"><div class="stat-label">Revenue</div><div class="stat-value">₹${d.total_revenue}</div></div>
+      <div class="stat"><div class="stat-label">Conversion Rate</div><div class="stat-value" style="font-size:22px;color:var(--accent3)">${d.conversion_rate}</div></div>`;
+
+    document.getElementById('intentBar').innerHTML = d.intent_breakdown.length
+      ? d.intent_breakdown.map(i => `<div class="intent-pill">${i._id} <strong>${i.count}</strong></div>`).join('')
+      : '<div style="font-size:13px;color:var(--text3)">No intent data yet</div>';
+
+    document.getElementById('langBar').innerHTML = d.language_breakdown.length
+      ? d.language_breakdown.map(l => `<div class="intent-pill badge b-${l._id}">${l._id} <strong>${l.count}</strong></div>`).join('')
+      : '<div style="font-size:13px;color:var(--text3)">No language data yet</div>';
+
+    document.getElementById('chatsTable').innerHTML = d.recent_chats.map(c => `
+      <tr>
+        <td>${c.mobile ? c.mobile.slice(0,6)+'****' : 'Guest'}</td>
+        <td title="${c.message}">${(c.message||'').slice(0,50)}${(c.message||'').length > 50 ? '...' : ''}</td>
+        <td><span class="badge b-${c.language}">${c.language}</span></td>
+        <td>${c.intent ? `<span style="color:var(--accent);font-size:11px">${c.intent}</span>` : '<span style="color:var(--text3)">—</span>'}</td>
+        <td style="font-size:11px;color:var(--text3)">${c.timestamp ? new Date(c.timestamp).toLocaleString('en-IN') : '—'}</td>
+      </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:20px">No chats yet</td></tr>';
+
+  } catch(e) { alert('Error: ' + e.message); }
+}
+</script>
+</body>
+</html>

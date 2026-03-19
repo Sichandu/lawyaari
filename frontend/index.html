@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>LegalDost – आपका क़ानूनी दोस्त</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;
+  --border:#2a2a38;--border2:#3a3a50;
+  --accent:#f59e0b;--accent2:#ef4444;--accent3:#10b981;
+  --text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;
+  --card:#15151e;--radius:12px;--shadow:0 4px 24px rgba(0,0,0,.5);
+  --font:'Noto Sans','Noto Sans Devanagari',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 12px;display:flex;align-items:center;justify-content:space-between;height:52px;gap:6px;}
+.logo{display:flex;align-items:center;gap:7px;font-size:17px;font-weight:700;color:var(--text);text-decoration:none;white-space:nowrap;}
+.logo-badge{background:var(--accent);color:#000;font-size:9px;font-weight:700;padding:2px 5px;border-radius:20px;}
+.nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.menu-toggle{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;padding:2px;flex-shrink:0;line-height:1;}
+
+/* Language DROPDOWN (#3 fix) */
+.lang-dropdown{position:relative;}
+.lang-dd-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:5px 9px;border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font);font-weight:600;display:flex;align-items:center;gap:4px;transition:border-color .15s;white-space:nowrap;}
+.lang-dd-btn:hover{border-color:var(--accent);}
+.lang-dd-menu{display:none;position:absolute;top:calc(100% + 5px);right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;overflow:hidden;min-width:130px;z-index:300;box-shadow:var(--shadow);}
+.lang-dd-menu.open{display:block;}
+.lang-option{padding:10px 14px;font-size:13px;cursor:pointer;color:var(--text2);transition:all .12s;border-bottom:1px solid var(--border);}
+.lang-option:last-child{border-bottom:none;}
+.lang-option:hover{background:var(--bg3);color:var(--text);}
+.lang-option.active{color:var(--accent);font-weight:700;}
+.auth-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 11px;border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:all .15s;}
+.auth-btn:hover{background:var(--border2);}
+.auth-btn.logged-in{color:var(--accent3);border-color:var(--accent3);}
+
+/* LAYOUT */
+.app-container{display:flex;height:calc(100vh - 52px);overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:235px;min-width:235px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:transform .25s;}
+.sidebar-header{padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;}
+.sidebar-scroll{flex:1;overflow-y:auto;padding:6px;}
+.category-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .15s;margin-bottom:2px;font-size:12px;border:1px solid transparent;}
+.category-item:hover{background:var(--bg3);}
+.category-item.active{background:var(--bg3);border-color:var(--border2);}
+.category-item .icon{font-size:16px;width:22px;text-align:center;flex-shrink:0;}
+.category-item .label{color:var(--text2);font-weight:500;line-height:1.3;}
+.category-item.active .label{color:var(--text);}
+.sidebar-section{padding:12px 10px 5px;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;}
+.service-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all .15s;margin-bottom:2px;border:1px solid transparent;}
+.service-item:hover{background:var(--bg3);border-color:var(--border);}
+.service-item .sname{font-size:11px;color:var(--text2);font-weight:500;}
+.service-item .sprice{font-size:10px;color:var(--accent);background:rgba(245,158,11,.1);padding:2px 6px;border-radius:8px;font-weight:700;}
+.add-service-btn{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all .15s;margin:4px 0;border:1px dashed var(--border2);font-size:11px;color:var(--text3);}
+.add-service-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* CHAT MAIN */
+.chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.quick-cards-area{padding:10px 14px 0;flex-shrink:0;}
+.quick-cards-title{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.5px;margin-bottom:7px;text-transform:uppercase;}
+.quick-cards{display:flex;gap:6px;flex-wrap:wrap;}
+.quick-card{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:6px 11px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis;}
+.quick-card:hover{background:var(--bg3);border-color:var(--border2);color:var(--text);}
+
+/* MESSAGES */
+.chat-messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:14px;}
+.msg{display:flex;gap:10px;align-items:flex-start;animation:msgIn .2s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{flex-direction:row-reverse;}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border);}
+.msg.user .msg-avatar{background:var(--accent);color:#000;font-size:11px;font-weight:700;}
+.msg-bubble{max-width:75%;padding:11px 14px;border-radius:12px;font-size:13px;line-height:1.65;border:1px solid var(--border);}
+.msg.user .msg-bubble{background:var(--bg3);border-color:var(--border2);border-top-right-radius:3px;}
+.msg.ai .msg-bubble{background:var(--card);border-top-left-radius:3px;}
+.msg-actions{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;}
+.msg-action-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:4px 9px;border-radius:6px;font-size:11px;cursor:pointer;transition:all .15s;font-family:var(--font);}
+.msg-action-btn:hover{color:var(--text);border-color:var(--border2);}
+.msg-action-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+
+/* NEXT STEP HOOKS (#5 fix) */
+.next-steps{margin-top:10px;border-top:1px solid var(--border);padding-top:8px;}
+.next-steps-label{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase;}
+.next-step-q{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:7px;cursor:pointer;transition:all .15s;font-size:12px;color:var(--text2);border:1px solid transparent;margin-bottom:3px;}
+.next-step-q:hover{background:var(--bg3);border-color:var(--border);color:var(--text);}
+.next-step-q::before{content:'→';color:var(--accent);font-size:11px;flex-shrink:0;}
+
+/* INTENT CTA */
+.intent-cta{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(245,158,11,.04));border:1px solid rgba(245,158,11,.3);border-radius:9px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.intent-cta-text{font-size:12px;color:var(--text2);}
+.intent-cta-text strong{color:var(--accent);}
+.intent-cta-btn{background:var(--accent);color:#000;border:none;padding:7px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;}
+
+/* USAGE BAR — above input, centered (#6 fix) */
+.usage-bar{padding:8px 14px 4px;text-align:center;flex-shrink:0;}
+.usage-inner{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;}
+.usage-count{color:var(--accent);font-weight:700;}
+.usage-count.warn{color:var(--accent2);}
+.upgrade-pro-btn{background:var(--accent);color:#000;border:none;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;}
+
+/* INPUT */
+.input-area{padding:8px 14px 14px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0;}
+.input-wrap{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);display:flex;align-items:flex-end;gap:8px;padding:9px 12px;transition:border-color .15s;}
+.input-wrap:focus-within{border-color:var(--accent);}
+#chatInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:14px;font-family:var(--font);resize:none;max-height:100px;line-height:1.5;min-height:22px;}
+#chatInput::placeholder{color:var(--text3);}
+.send-btn{width:34px;height:34px;border-radius:8px;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:opacity .15s;}
+.send-btn:hover{opacity:.85;}
+.send-btn:disabled{opacity:.35;cursor:not-allowed;}
+.typing-dots{display:flex;gap:3px;align-items:center;padding:2px 0;}
+.typing-dots span{width:5px;height:5px;background:var(--text3);border-radius:50%;animation:dot .9s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.15s;}
+.typing-dots span:nth-child(3){animation-delay:.3s;}
+@keyframes dot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;}
+.empty-state .icon{font-size:42px;margin-bottom:12px;}
+.empty-state h2{font-size:18px;margin-bottom:6px;}
+.empty-state p{font-size:13px;color:var(--text2);max-width:320px;line-height:1.6;}
+
+.paywall-msg{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);padding:18px;text-align:center;animation:msgIn .2s ease;}
+.paywall-msg h3{font-size:15px;margin-bottom:6px;}
+.paywall-msg p{font-size:12px;color:var(--text2);margin-bottom:14px;}
+.plan-cards{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.plan-card{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:14px;min-width:120px;cursor:pointer;transition:all .2s;text-align:center;}
+.plan-card:hover,.plan-card.featured{border-color:var(--accent);}
+.plan-name{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:3px;}
+.plan-price{font-size:20px;font-weight:700;color:var(--accent);}
+.plan-price span{font-size:11px;color:var(--text3);}
+.plan-chats{font-size:11px;color:var(--text3);margin-top:3px;}
+
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(4px);z-index:400;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px;position:relative;animation:modalIn .2s ease;}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;line-height:1;}
+.modal-close:hover{color:var(--text);}
+.modal h2{font-size:17px;margin-bottom:4px;}
+.modal-sub{font-size:12px;color:var(--text2);margin-bottom:16px;}
+.form-group{margin-bottom:12px;}
+.form-group label{font-size:11px;color:var(--text3);font-weight:700;display:block;margin-bottom:4px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 11px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--accent);}
+.form-group textarea{min-height:70px;resize:vertical;}
+.form-group select option{background:var(--bg3);}
+.modal-btn{width:100%;padding:11px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity .15s;margin-top:4px;}
+.modal-btn:hover{opacity:.9;}
+.modal-btn:disabled{opacity:.45;cursor:not-allowed;}
+.modal-btn.secondary{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);margin-top:6px;}
+.otp-display{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;font-size:26px;font-weight:700;color:var(--accent);letter-spacing:8px;font-family:var(--mono);margin:10px 0;}
+
+/* USER PROFILE MODAL (#2 fix) */
+.user-hero{text-align:center;padding:14px 0 18px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.user-sigma{font-size:54px;margin-bottom:6px;line-height:1;}
+.user-name-big{font-size:20px;font-weight:700;margin-bottom:4px;}
+.user-plan-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(16,185,129,.15);color:var(--accent3);border:1px solid rgba(16,185,129,.3);}
+.user-plan-badge.paid{background:rgba(245,158,11,.15);color:var(--accent);border-color:rgba(245,158,11,.3);}
+.share-earn-btn{background:linear-gradient(135deg,var(--accent),#f97316);color:#000;border:none;padding:9px 22px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:12px;transition:opacity .15s;}
+.share-earn-btn:hover{opacity:.88;}
+.sigma-picker{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0;}
+.sigma-opt{font-size:26px;cursor:pointer;padding:5px;border-radius:8px;border:2px solid transparent;transition:all .15s;line-height:1;}
+.sigma-opt:hover,.sigma-opt.selected{border-color:var(--accent);background:rgba(245,158,11,.1);}
+.purchase-row{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.purchase-name{font-size:12px;font-weight:600;color:var(--text);}
+.purchase-dates{font-size:10px;color:var(--text3);margin-top:2px;}
+.renew-btn{background:var(--accent);color:#000;border:none;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;}
+
+/* RESULT MODAL */
+.result-content{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:12px;line-height:1.8;color:var(--text2);max-height:280px;overflow-y:auto;white-space:pre-wrap;margin-bottom:12px;}
+.result-actions{display:flex;gap:7px;flex-wrap:wrap;}
+.ra{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);border:none;min-width:80px;text-align:center;transition:opacity .15s;}
+.ra:hover{opacity:.85;}
+.ra-copy{background:var(--bg3);color:var(--text2);border:1px solid var(--border2)!important;}
+.ra-pdf{background:var(--accent);color:#000;}
+.ra-share{background:var(--accent3);color:#000;}
+#shareCardWrap{display:none;margin-top:14px;text-align:center;}
+#shareCanvas{border-radius:10px;max-width:100%;box-shadow:var(--shadow);}
+.share-dl-btn{display:inline-block;margin-top:8px;background:var(--accent3);color:#000;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);}
+
+/* PRIORITY PRICE DISPLAY (#7 fix) */
+.priority-price-display{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:10px;text-align:center;font-size:14px;font-weight:700;color:var(--accent);margin-bottom:10px;transition:all .2s;}
+
+/* CUSTOM SERVICE MODAL (#8 fix) */
+.custom-field-row{display:flex;gap:6px;align-items:center;margin-bottom:6px;}
+.custom-field-row input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;padding:7px 10px;color:var(--text);font-size:12px;font-family:var(--font);outline:none;}
+.custom-field-row input:focus{border-color:var(--accent);}
+.rm-field-btn{background:none;border:none;color:var(--accent2);cursor:pointer;font-size:16px;flex-shrink:0;line-height:1;}
+.add-field-btn{background:var(--bg3);border:1px dashed var(--border2);color:var(--text3);padding:7px;border-radius:7px;font-size:12px;cursor:pointer;font-family:var(--font);transition:all .15s;width:100%;}
+.add-field-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 18px;border-radius:8px;font-size:12px;z-index:999;animation:toastIn .3s ease;pointer-events:none;white-space:nowrap;}
+.toast.success{border-color:var(--accent3);color:var(--accent3);}
+.toast.error{border-color:var(--accent2);color:var(--accent2);}
+.toast.warn{border-color:var(--accent);color:var(--accent);}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* MOBILE (#1 fix) */
+.sidebar-overlay{display:none;position:fixed;inset:0;top:52px;background:rgba(0,0,0,.55);z-index:140;}
+.sidebar-overlay.open{display:block;}
+@media(max-width:680px){
+  .sidebar{position:fixed;left:0;top:52px;bottom:0;z-index:150;transform:translateX(-100%);width:78vw;max-width:270px;box-shadow:var(--shadow);}
+  .sidebar.open{transform:translateX(0);}
+  .menu-toggle{display:block;}
+  .chat-messages{padding:10px;}
+  .input-area{padding:7px 10px 12px;}
+  .quick-cards-area{padding:8px 10px 0;}
+  .msg-bubble{max-width:88%;font-size:13px;}
+  nav{padding:0 10px;}
+  .modal{padding:18px;}
+  .logo-badge{display:none;}
+  .usage-bar{padding:6px 10px 2px;}
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- NAV -->
+<nav>
+  <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <a href="#" class="logo">⚖️ LegalDost <span class="logo-badge">BETA</span></a>
+  </div>
+  <div class="nav-right">
+    <!-- Language dropdown (#3 fix — vertical dropdown not horizontal) -->
+    <div class="lang-dropdown">
+      <button class="lang-dd-btn" onclick="toggleLangMenu()" id="langDdBtn">🌐 हिंदी ▾</button>
+      <div class="lang-dd-menu" id="langDdMenu">
+        <div class="lang-option active" onclick="setLang('hi')" data-lang="hi">🇮🇳 हिंदी</div>
+        <div class="lang-option" onclick="setLang('te')" data-lang="te">🇮🇳 తెలుగు</div>
+        <div class="lang-option" onclick="setLang('hinglish')" data-lang="hinglish">💬 Hinglish</div>
+      </div>
+    </div>
+    <button class="auth-btn" id="authBtn" onclick="handleAuthClick()">Login</button>
+  </div>
+</nav>
+
+<div class="app-container">
+  <!-- SIDEBAR (#4 fix — no admin icon here) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">📂 Topics</div>
+    <div class="sidebar-scroll">
+      <div class="category-item active" onclick="selectCategory('msme',this)"><span class="icon">🏭</span><span class="label" data-key="cat_msme">MSME Rights</span></div>
+      <div class="category-item" onclick="selectCategory('banking',this)"><span class="icon">🏦</span><span class="label" data-key="cat_banking">Banking Rights</span></div>
+      <div class="category-item" onclick="selectCategory('cyber',this)"><span class="icon">💻</span><span class="label" data-key="cat_cyber">Cyber Crime</span></div>
+      <div class="category-item" onclick="selectCategory('police',this)"><span class="icon">🚔</span><span class="label" data-key="cat_police">Police Rights</span></div>
+      <div class="category-item" onclick="selectCategory('medical',this)"><span class="icon">🏥</span><span class="label" data-key="cat_medical">Medical Rights</span></div>
+      <div class="category-item" onclick="selectCategory('consumer',this)"><span class="icon">🛒</span><span class="label" data-key="cat_consumer">Consumer Rights</span></div>
+      <div class="category-item" onclick="selectCategory('labour',this)"><span class="icon">👷</span><span class="label" data-key="cat_labour">Labour Law</span></div>
+      <div class="category-item" onclick="selectCategory('property',this)"><span class="icon">🏠</span><span class="label" data-key="cat_property">Property & Tenant</span></div>
+      <!-- Women Rights replaces Family Law -->
+      <div class="category-item" onclick="selectCategory('women',this)"><span class="icon">👩‍⚖️</span><span class="label" data-key="cat_women">Women Rights</span></div>
+      <div class="category-item" onclick="selectCategory('tax',this)"><span class="icon">📋</span><span class="label" data-key="cat_tax">Tax & GST</span></div>
+
+      <div class="sidebar-section">⭐ Premium Services</div>
+      <div class="service-item" onclick="openService('cheque_notice')"><span class="sname">📝 Cheque Bounce</span><span class="sprice">₹149</span></div>
+      <div class="service-item" onclick="openService('msme_notice')"><span class="sname">📦 MSME Recovery</span><span class="sprice">₹249</span></div>
+      <div class="service-item" onclick="openService('complaint_draft')"><span class="sname">📣 Complaint Draft</span><span class="sprice">₹69</span></div>
+      <div class="service-item" onclick="openService('legal_reply')"><span class="sname">💬 Legal Reply</span><span class="sprice">₹19</span></div>
+      <div class="service-item" onclick="openService('priority_answer')"><span class="sname">⚡ Priority Answer</span><span class="sprice">₹5–10</span></div>
+
+    </div>
+  </aside>
+
+  <!-- CHAT MAIN -->
+  <main class="chat-main">
+    <div class="quick-cards-area">
+      <div class="quick-cards-title" id="quickTitle">Quick Questions</div>
+      <div class="quick-cards" id="quickCards"></div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="empty-state" id="emptyState">
+        <div class="icon">⚖️</div>
+        <h2 id="emptyTitle">आपका क़ानूनी दोस्त</h2>
+        <p id="emptyDesc">कोई भी क़ानूनी सवाल पूछें — MSME, बैंकिंग, साइबर क्राइम, पुलिस राइट्स और बहुत कुछ।</p>
+      </div>
+    </div>
+
+    <!-- Usage bar above input, centered (#6 fix) -->
+    <div class="usage-bar" id="usageBarWrap">
+      <div class="usage-inner" id="usageInner">
+        <span class="usage-count" id="usageCount">5/5</span>
+        <span id="usageCta" style="color:var(--text2)">Confusion is expensive. ₹49 isn't 🍵🕵️</span>
+        <button class="upgrade-pro-btn" onclick="openPaywall()">PRO →</button>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-wrap">
+        <textarea id="chatInput" rows="1" placeholder="अपना क़ानूनी सवाल यहाँ लिखें..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <h2>🔐 Login / Register</h2>
+    <p class="modal-sub">Free legal help. No BS.</p>
+    <div id="authStep1">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="nameInput" placeholder="What should we call you?" maxlength="40"/>
+      </div>
+      <div class="form-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="mobileInput" placeholder="10-digit mobile" maxlength="10" inputmode="numeric"/>
+      </div>
+      <div class="form-group">
+        <label>Gender</label>
+        <select id="genderInput" style="width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 11px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other / Prefer not to say</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Pick Your Sigma Vibe 😤</label>
+        <div class="sigma-picker" id="sigmaPicker">
+          <span class="sigma-opt selected" data-emoji="😤" onclick="pickSigma(this)">😤</span>
+          <span class="sigma-opt" data-emoji="🗿" onclick="pickSigma(this)">🗿</span>
+          <span class="sigma-opt" data-emoji="💀" onclick="pickSigma(this)">💀</span>
+          <span class="sigma-opt" data-emoji="🤌" onclick="pickSigma(this)">🤌</span>
+          <span class="sigma-opt" data-emoji="😎" onclick="pickSigma(this)">😎</span>
+          <span class="sigma-opt" data-emoji="🥷" onclick="pickSigma(this)">🥷</span>
+          <span class="sigma-opt" data-emoji="👑" onclick="pickSigma(this)">👑</span>
+          <span class="sigma-opt" data-emoji="🔥" onclick="pickSigma(this)">🔥</span>
+        </div>
+      </div>
+      <button class="modal-btn" onclick="sendOTP()">Send OTP →</button>
+    </div>
+    <div id="authStep2" style="display:none">
+      <p style="font-size:12px;color:var(--text2);margin-bottom:6px">OTP (shown for demo):</p>
+      <div class="otp-display" id="otpDisplay">------</div>
+      <div class="form-group" style="margin-top:12px">
+        <label>Enter OTP</label>
+        <input type="text" id="otpInput" placeholder="6-digit OTP" maxlength="6" inputmode="numeric"/>
+      </div>
+      <button class="modal-btn" onclick="verifyOTP()">Verify & Login ✓</button>
+      <button class="modal-btn secondary" onclick="showStep1()">← Change Number</button>
+    </div>
+  </div>
+</div>
+
+<!-- USER PROFILE MODAL (#2 fix) -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
+    <div class="user-hero">
+      <div class="user-sigma" id="profileEmoji">😤</div>
+      <div class="user-name-big" id="profileName">User</div>
+      <div id="profileBadge" class="user-plan-badge">FREE</div><br/>
+      <button class="share-earn-btn" onclick="shareAndEarn()">🔗 Share & Earn</button>
+    </div>
+    <div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Purchase History</div>
+    <div id="purchaseList"><p style="font-size:12px;color:var(--text3)">No premium purchases yet.</p></div>
+    <button class="modal-btn secondary" style="margin-top:14px" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<!-- PAYWALL MODAL -->
+<div class="modal-overlay" id="paywallModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('paywallModal')">✕</button>
+    <h2>🚀 Upgrade Plan</h2>
+    <p class="modal-sub">Free limit reached. Upgrade to continue.</p>
+    <div class="plan-cards" id="paywallPlans"></div>
+  </div>
+</div>
+
+<!-- SERVICE MODAL -->
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal" style="max-width:540px">
+    <button class="modal-close" onclick="closeModal('serviceModal')">✕</button>
+    <h2 id="serviceModalTitle">Service</h2>
+    <p class="modal-sub" id="serviceModalDesc"></p>
+    <div id="serviceModalBody"></div>
+  </div>
+</div>
+
+<!-- CUSTOM SERVICE MODAL (removed from sidebar, kept functional) -->
+<div class="modal-overlay" id="customServiceModal">
+  <div class="modal" style="max-width:500px">
+    <button class="modal-close" onclick="closeModal('customServiceModal')">✕</button>
+    <h2>➕ Custom Service</h2>
+    <p class="modal-sub">Add your own requirement — AI will generate the document.</p>
+    <div class="form-group">
+      <label>Service Name</label>
+      <input type="text" id="customServiceName" placeholder="e.g. Rent Dispute Notice"/>
+    </div>
+    <div class="form-group">
+      <label>Describe What You Need</label>
+      <textarea id="customServiceDesc" placeholder="Explain the legal situation in detail..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Extra Fields (optional)</label>
+      <div id="customFieldsList"></div>
+      <button class="add-field-btn" onclick="addCustomField()">+ Add Field</button>
+    </div>
+    <button class="modal-btn" onclick="submitCustomService()">Generate (Free)</button>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal" style="max-width:600px">
+    <button class="modal-close" onclick="closeModal('resultModal')">✕</button>
+    <h2 id="resultModalTitle">Result</h2>
+    <div class="result-content" id="resultContent" contenteditable="true"></div>
+    <div class="result-actions">
+      <button class="ra ra-copy" onclick="copyResult()">📋 Copy</button>
+      <button class="ra ra-pdf" onclick="downloadPDF()">⬇ PDF</button>
+      <button class="ra ra-share" onclick="buildShareCard()">↗ Share Card</button>
+    </div>
+    <!-- Canvas share card -->
+    <div id="shareCardWrap">
+      <canvas id="shareCanvas"></canvas><br/>
+      <button class="share-dl-btn" onclick="shareCard()">↗ Share Card</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// CONFIG
+const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
+// Admin free access: controlled by admin mobile number in backend
+// Set to false so real users see limits; admin mobile bypasses via backend
+const ADMIN_FREE = false;
+// Admin mobile stored after login — if this mobile logs in, skip frontend limits too
+const ADMIN_MOBILE = localStorage.getItem('ld_admin_mobile') || '';
+
+// STATE
+let state = {
+  lang:'hi', token:localStorage.getItem('ld_token')||null,
+  mobile:localStorage.getItem('ld_mobile')||null,
+  userName:localStorage.getItem('ld_name')||null,
+  userEmoji:localStorage.getItem('ld_emoji')||'😤',
+  category:'msme', chatHistory:[],
+  usedChats:parseInt(localStorage.getItem('ld_chats_'+new Date().toDateString())||'0'),
+  currentResult:null, pendingPaymentService:null, pendingServiceData:null,
+  purchases:JSON.parse(localStorage.getItem('ld_purchases')||'[]'),
+  selectedSigma:'😤', warnedLastChat:false,
+};
+
+// TRANSLATIONS
+const T = {
+  hi:{placeholder:'अपना क़ानूनी सवाल यहाँ लिखें...',emptyTitle:'आपका क़ानूनी दोस्त',emptyDesc:'कोई भी क़ानूनी सवाल पूछें — MSME, बैंकिंग, साइबर क्राइम, पुलिस राइट्स और बहुत कुछ।',quickTitle:'जल्दी सवाल',nextLabel:'आगे क्या पूछें?',cat_msme:'MSME अधिकार',cat_banking:'बैंकिंग अधिकार',cat_cyber:'साइबर क्राइम',cat_police:'पुलिस अधिकार',cat_medical:'मेडिकल अधिकार',cat_consumer:'उपभोक्ता अधिकार',cat_labour:'श्रम क़ानून',cat_property:'संपत्ति & किरायेदार',cat_women:'महिला अधिकार',cat_tax:'टैक्स & GST'},
+  te:{placeholder:'మీ న్యాయ సందేహం ఇక్కడ టైప్ చేయండి...',emptyTitle:'మీ న్యాయ స్నేహితుడు',emptyDesc:'MSME, బ్యాంకింగ్, సైబర్ క్రైమ్, పోలీస్ హక్కులు గురించి అడగండి.',quickTitle:'త్వరిత ప్రశ్నలు',nextLabel:'తర్వాత ఏమి అడగాలి?',cat_msme:'MSME హక్కులు',cat_banking:'బ్యాంకింగ్ హక్కులు',cat_cyber:'సైబర్ క్రైమ్',cat_police:'పోలీస్ హక్కులు',cat_medical:'వైద్య హక్కులు',cat_consumer:'వినియోగదారు హక్కులు',cat_labour:'కార్మిక చట్టం',cat_property:'ఆస్తి & అద్దె',cat_women:'మహిళా హక్కులు',cat_tax:'పన్ను & GST'},
+  hinglish:{placeholder:'Apna legal sawaal yahan likho...',emptyTitle:'Aapka Legal Dost',emptyDesc:'Koi bhi legal sawaal pucho — MSME, Banking, Cyber Crime, Police Rights aur bahut kuch.',quickTitle:'Quick Questions',nextLabel:'Aage kya poochho?',cat_msme:'MSME Rights',cat_banking:'Banking Rights',cat_cyber:'Cyber Crime',cat_police:'Police Rights',cat_medical:'Medical Rights',cat_consumer:'Consumer Rights',cat_labour:'Labour Law',cat_property:'Property & Tenant',cat_women:'Women Rights',cat_tax:'Tax & GST'},
+};
+
+const QUICK_Q = {
+  msme:{hi:['MSME payment 45 दिन से देर क्या करूं?','Udyam registration कैसे करें?','MSME Samadhaan portal क्या है?','TReDS scheme क्या है?'],te:['MSME చెల్లింపు ఆలస్యమైతే?','Udyam నమోదు ఎలా?','MSME రుణం ఎక్కడ?'],hinglish:['MSME payment late kya karun?','Udyam registration kaise?','MSME Samadhaan kya hai?']},
+  banking:{hi:['Cheque bounce pe kya karun?','Recovery agent pareshan kar raha hai?','Bank loan reject kya options?','Credit card fraud kya karun?'],te:['చెక్ బౌన్స్ అయితే?','రికవరీ ఏజెంట్ వేధిస్తే?','లోన్ రిజెక్ట్?'],hinglish:['Cheque bounce kya karun?','Recovery agent kya karun?','Bank loan reject?']},
+  cyber:{hi:['Online fraud paise wapas milenge?','WhatsApp scam aaya kya karun?','Cybercrime complaint kahan karein?','KYC fraud se bachein?'],te:['ఆన్‌లైన్ మోసం పైసలు?','సైబర్ క్రైమ్ ఫిర్యాదు?'],hinglish:['Online fraud paisa wapas?','Cybercrime complaint kahan?']},
+  police:{hi:['FIR likhne se police mana kar rahi?','Arrest ke baad kya rights hain?','Anticipatory bail kya hoti hai?','Chargesheet kya hoti hai?'],te:['FIR నిరాకరిస్తే?','అరెస్టు తర్వాత హక్కులు?'],hinglish:['FIR likhne se mana kare?','Arrest ke baad rights?']},
+  medical:{hi:['Doctor ne galat treatment diya?','Hospital bill bahut zyada hai?','Medical negligence case kaise karein?'],te:['తప్పు చికిత్స?','హాస్పిటల్ బిల్ ఎక్కువు?'],hinglish:['Doctor galat treatment?','Hospital bill zyada?']},
+  consumer:{hi:['Online product nahi aaya?','Consumer forum mein case kaise?','Defective product wapas nahi lete?'],te:['ఆర్డర్ రాలేదు?','కన్స్యూమర్ ఫోరం కేసు?'],hinglish:['Online product nahi aaya?','Consumer forum case?']},
+  labour:{hi:['Salary nahi di kya karun?','Wrongful termination kya karun?','PF aur gratuity kaise milegi?'],te:['జీతం ఇవ్వలేదు?','తప్పుగా తొలగించారు?'],hinglish:['Salary nahi mili?','Wrongful termination?']},
+  property:{hi:['Property dispute kaise resolve karein?','Landlord deposit wapas nahi de raha?','Rent agreement kaise banayen?','Tenant rights kya hain?','Eviction notice mila kya karun?'],te:['ఆస్తి వివాదం?','డిపాజిట్ ఇవ్వడం లేదు?','అద్దెదారు హక్కులు?'],hinglish:['Property dispute?','Deposit wapas nahi?','Tenant rights kya?']},
+  women:{hi:['Domestic violence complaint kaise?','Workplace harassment kya karun?','Dowry harassment case kaise?','POCSO act kya hai?','Maintenance kaise milti hai?'],te:['గృహ హింస ఫిర్యాదు?','వర్క్‌ప్లేస్ వేధింపు?','మహిళా హక్కులు?'],hinglish:['Domestic violence complaint?','Workplace harassment kya?','Dowry case kaise?']},
+  tax:{hi:['GST notice aaya kya karun?','ITR file karne ki last date?','Tax demand notice ka reply?'],te:['GST నోటీస్?','ITR ఫైల్?'],hinglish:['GST notice kya karun?','ITR kab file karein?']},
+};
+
+const NEXT_STEPS = {
+  msme:{hi:['MSME court case kaise karein?','Samadhaan portal complaint?','Udyam certificate ke fayde?'],te:['MSME కోర్టు కేసు?','Samadhaan complaint?'],hinglish:['MSME court case kaise?','Samadhaan complaint?']},
+  banking:{hi:['Bank ombudsman complaint kaise?','Cheque bounce case file kaise?','CIBIL score fix kaise karein?'],te:['ఒంబుడ్స్మాన్ complaint?','CIBIL score fix?'],hinglish:['Bank ombudsman complaint?','CIBIL score fix?']},
+  cyber:{hi:['Cybercrime portal pe complaint kaise?','Bank refund kaise milega?','Evidence collect kaise karein?'],te:['Cybercrime portal?','Bank refund?'],hinglish:['Cybercrime portal complaint?','Bank refund kaise?']},
+  police:{hi:['Bail application kaise likhein?','Magistrate complaint kaise?','Lawyer hire kaise karein?'],te:['బెయిల్ application?','Magistrate complaint?'],hinglish:['Bail application kaise?','Magistrate complaint?']},
+  women:{hi:['NCW complaint kaise karein?','One Stop Centre kya hai?','POCSO case mein kya process?'],te:['NCW complaint?','One Stop Centre?'],hinglish:['NCW complaint kaise?','One Stop Centre kya?']},
+  property:{hi:['Rent control court mein case?','Tenant eviction process?','Rent increase pe kya rights?'],te:['అద్దె కోర్టు కేసు?','Eviction process?'],hinglish:['Rent control case?','Tenant eviction process?']},
+  default:{hi:['Legal notice kaise bhejein?','Lawyer hire kaise karein?','Court fees kitni hoti hai?'],te:['లీగల్ నోటీస్?','లాయర్ hire?'],hinglish:['Legal notice kaise bhejein?','Lawyer hire kaise?']},
+};
+
+const INTENT_MAP = {
+  cheque_bounce:{kw:['cheque bounce','cheque bounced','dishonour','138','cheque wapas','చెక్ బౌన్స్'],service:'cheque_notice',cta:{hi:'क़ानूनी नोटिस बनाएं (₹149)',te:'లీగల్ నోటీస్ ₹149',hinglish:'Legal Notice banao (₹149)'},price:149},
+  msme_payment:{kw:['payment nahi','payment not received','invoice due','outstanding','చెల్లించలేదు'],service:'msme_notice',cta:{hi:'MSME नोटिस (₹249)',te:'MSME నోటీస్ ₹249',hinglish:'MSME Notice (₹249)'},price:249},
+  complaint:{kw:['complaint','shikayat','police complaint','fraud','धोखा','ఫిర్యాదు'],service:'complaint_draft',cta:{hi:'शिकायत ड्राफ्ट (₹69)',te:'ఫిర్యాదు ₹69',hinglish:'Complaint draft (₹69)'},price:69},
+  legal_reply:{kw:['notice mila','notice received','reply karna','jawab dena','threat message','నోటీస్ వచ్చింది'],service:'legal_reply',cta:{hi:'क़ानूनी जवाब (₹19)',te:'రిప్లై ₹19',hinglish:'Legal Reply (₹19)'},price:19},
+};
+
+function detectIntent(text){
+  const t=text.toLowerCase();
+  for(const[k,d] of Object.entries(INTENT_MAP)){if(d.kw.some(w=>t.includes(w))) return{intent:k,...d};}
+  return null;
+}
+
+// LANG
+function setLang(lang){
+  state.lang=lang;
+  document.querySelectorAll('.lang-option').forEach(o=>o.classList.toggle('active',o.dataset.lang===lang));
+  const labels={hi:'🌐 हिंदी ▾',te:'🌐 తెలుగు ▾',hinglish:'🌐 Hinglish ▾'};
+  document.getElementById('langDdBtn').textContent=labels[lang]||'🌐 ▾';
+  document.getElementById('langDdMenu').classList.remove('open');
+  updateUI();renderQuickCards();
+}
+function toggleLangMenu(){document.getElementById('langDdMenu').classList.toggle('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('.lang-dropdown')) document.getElementById('langDdMenu').classList.remove('open');});
+function t(k){return(T[state.lang]&&T[state.lang][k])||T.hi[k]||k;}
+
+function updateUI(){
+  document.getElementById('chatInput').placeholder=t('placeholder');
+  document.getElementById('emptyTitle').textContent=t('emptyTitle');
+  document.getElementById('emptyDesc').textContent=t('emptyDesc');
+  document.getElementById('quickTitle').textContent=t('quickTitle');
+  document.querySelectorAll('[data-key]').forEach(el=>{const v=t(el.dataset.key);if(v)el.textContent=v;});
+  updateUsageBar();
+}
+
+// SIDEBAR
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('open');}
+function selectCategory(cat,el){
+  state.category=cat;
+  document.querySelectorAll('.category-item').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');renderQuickCards();
+  if(window.innerWidth<=680) closeSidebar();
+}
+function renderQuickCards(){
+  const qs=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
+  document.getElementById('quickCards').innerHTML=qs.map(q=>`<div class="quick-card" onclick="fillAndSend(this.textContent)">${q}</div>`).join('');
+}
+function fillAndSend(t){document.getElementById('chatInput').value=t;sendMessage();}
+
+// USAGE BAR (#6 fix — above input, centered, funny CTA)
+function getLimit(){
+  // Admin mobile gets unlimited
+  const adminMob = localStorage.getItem('ld_admin_mobile');
+  if(state.mobile && adminMob && state.mobile === adminMob) return 9999;
+  const plan=localStorage.getItem('ld_plan')||'free';
+  if(plan==='unlimited') return 9999;
+  if(plan==='pro') return 10;
+  return state.lang==='te'?3:5;
+}
+function updateUsageBar(){
+  const adminMob = localStorage.getItem('ld_admin_mobile');
+  const isAdmin = state.mobile && adminMob && state.mobile === adminMob;
+  if(isAdmin){document.getElementById('usageBarWrap').style.display='none';return;}
+  document.getElementById('usageBarWrap').style.display='block';
+  const limit=getLimit(),used=state.usedChats,rem=Math.max(0,limit-used);
+  const countEl=document.getElementById('usageCount');
+  countEl.textContent=`${rem}/${limit}`;
+  countEl.className='usage-count'+(rem<=1?' warn':'');
+  const ctas={hi:`Confusion is expensive. ₹49 isn't 🍵🕵️`,te:`Confusion costly. ₹49 కాదు 🍵🕵️`,hinglish:`Confusion expensive. ₹49 nahi 🍵🕵️`};
+  document.getElementById('usageCta').textContent=ctas[state.lang]||ctas.hi;
+}
+function incrementUsage(){
+  const adminMob = localStorage.getItem('ld_admin_mobile');
+  const isAdmin = state.mobile && adminMob && state.mobile === adminMob;
+  if(isAdmin) return;
+  state.usedChats++;
+  localStorage.setItem('ld_chats_'+new Date().toDateString(),state.usedChats);
+  const limit=getLimit(),rem=Math.max(0,limit-state.usedChats);
+  // #6A — warn when 1 left
+  if(rem===1&&!state.warnedLastChat){
+    state.warnedLastChat=true;
+    setTimeout(()=>toast('⚠️ 1 free chat left! Upgrade for ₹49/month','warn'),600);
+  }
+  updateUsageBar();
+}
+
+// CHAT
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
+
+async function sendMessage(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text) return;
+
+  // ── Enforce frontend limit BEFORE calling backend ──
+  const adminMob=localStorage.getItem('ld_admin_mobile');
+  const isAdminUser=state.mobile&&adminMob&&state.mobile===adminMob;
+  if(!isAdminUser){
+    const limit=getLimit();
+    if(state.usedChats>=limit){
+      // Show paywall inline
+      const paywallData={paywall:true,plans:[
+        {name:'Pro',price:49,chats:'10/day',plan_id:'pro'},
+        {name:'Unlimited',price:99,chats:'Unlimited',plan_id:'unlimited'}
+      ]};
+      hideEmpty();showPaywallInChat(paywallData);
+      return;
+    }
+  }
+
+  // Soft login nudge after 2 messages
+  if(!state.token&&state.chatHistory.length>=2&&state.chatHistory.length%4===2){
+    appendRaw('💡 Login for chat history & better experience <button onclick="openAuth()" style="background:var(--accent);color:#000;border:none;padding:3px 9px;border-radius:5px;cursor:pointer;font-size:11px;font-weight:700;margin-left:6px">Login</button>');
+  }
+
+  hideEmpty();appendMsg('user',text);
+  input.value='';input.style.height='auto';
+  document.getElementById('sendBtn').disabled=true;
+  const tid=appendTyping();
+  try{
+    const res=await fetch(`${API}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,language:state.lang,session_token:state.token,conversation_history:state.chatHistory.slice(-8)})});
+    const data=await res.json();removeTyping(tid);
+    if(data.paywall){showPaywallInChat(data);}
+    else{
+      state.chatHistory.push({role:'user',content:text});
+      state.chatHistory.push({role:'assistant',content:data.response||''});
+      appendAiMsg(data.response||'',data.intent);
+      incrementUsage();
+    }
+  }catch(err){removeTyping(tid);appendMsg('ai','⚠️ Backend not reachable. Check if server is running on port 8000.');}
+  document.getElementById('sendBtn').disabled=false;scrollBottom();
+}
+
+function hideEmpty(){const e=document.getElementById('emptyState');if(e)e.style.display='none';}
+
+function appendMsg(role,text){
+  const c=document.getElementById('chatMessages');
+  const d=document.createElement('div');d.className=`msg ${role}`;
+  const av=role==='user'?(state.userName?state.userName[0].toUpperCase():'U'):'⚖️';
+  d.innerHTML=`<div class="msg-avatar">${av}</div><div><div class="msg-bubble">${esc(text).replace(/\n/g,'<br>')}</div></div>`;
+  c.appendChild(d);scrollBottom();
+}
+
+function appendRaw(html){
+  const c=document.getElementById('chatMessages');
+  const d=document.createElement('div');d.className='msg ai';
+  d.innerHTML=`<div class="msg-avatar">⚖️</div><div><div class="msg-bubble">${html}</div></div>`;
+  c.appendChild(d);scrollBottom();
+}
+
+function appendAiMsg(text,intent){
+  const c=document.getElementById('chatMessages');
+  const d=document.createElement('div');d.className='msg ai';
+  let intentHtml='';
+  if(intent){const cta=intent.cta||'';intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="openService('${intent.service}')">Generate →</button></div>`;}
+  // Simple follow-up nudge — language responsive, not static questions
+  const followUp={hi:'<em style="color:var(--text3);font-size:12px">Aur kya jaanna hai? 🤔</em>',te:'<em style="color:var(--text3);font-size:12px">Next enti? 🤔</em>',hinglish:'<em style="color:var(--text3);font-size:12px">Aur kya jaanna hai? 🤔</em>'}[state.lang]||'<em style="color:var(--text3);font-size:12px">Aur kya jaanna hai? 🤔</em>';
+  const nextHtml=`<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:7px">${followUp}</div>`;
+  d.innerHTML=`<div class="msg-avatar">⚖️</div><div>
+    <div class="msg-bubble">${esc(text).replace(/\n/g,'<br>')}${intentHtml}${nextHtml}</div>
+    <div class="msg-actions">
+      <button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button>
+      <button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>
+      <button class="msg-action-btn primary" onclick="openService('priority_answer')" style="font-size:11px">⚡ ₹5 Expert</button>
+    </div></div>`;
+  c.appendChild(d);scrollBottom();
+}
+
+function appendTyping(){
+  const c=document.getElementById('chatMessages');const d=document.createElement('div');
+  d.className='msg ai';d.id='typ-'+Date.now();
+  d.innerHTML=`<div class="msg-avatar">⚖️</div><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  c.appendChild(d);scrollBottom();return d.id;
+}
+function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
+
+function showPaywallInChat(data){
+  const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='paywall-msg';
+  const plans=(data.plans||[]).map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="initiatePayment('${p.plan_id}',${p.price})"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats}</div></div>`).join('');
+  d.innerHTML=`<h3>Daily limit reached 🚫</h3><p>Upgrade to continue</p><div class="plan-cards">${plans}</div>`;
+  c.appendChild(d);scrollBottom();
+}
+function scrollBottom(){const c=document.getElementById('chatMessages');c.scrollTop=c.scrollHeight;}
+
+// AUTH
+function handleAuthClick(){if(state.token)openProfileModal();else openAuth();}
+function openAuth(){openModal('authModal');}
+function pickSigma(el){document.querySelectorAll('.sigma-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');state.selectedSigma=el.dataset.emoji;}
+
+async function sendOTP(){
+  const name=document.getElementById('nameInput').value.trim();
+  const mobile=document.getElementById('mobileInput').value.trim();
+  if(!name) return toast('Enter your name','error');
+  if(!/^\d{10}$/.test(mobile)) return toast('Enter valid 10-digit mobile','error');
+  state.pendingName=name;
+  try{
+    const res=await fetch(`${API}/api/auth/send-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile})});
+    const data=await res.json();
+    if(!res.ok) return toast(data.detail||'Error','error');
+    document.getElementById('otpDisplay').textContent=data.otp;
+    document.getElementById('authStep1').style.display='none';
+    document.getElementById('authStep2').style.display='block';
+  }catch(e){toast('Network error','error');}
+}
+
+async function verifyOTP(){
+  const mobile=document.getElementById('mobileInput').value.trim();
+  const otp=document.getElementById('otpInput').value.trim();
+  const gender=document.getElementById('genderInput')?document.getElementById('genderInput').value:'other';
+  try{
+    const res=await fetch(`${API}/api/auth/verify-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,otp})});
+    const data=await res.json();
+    if(!res.ok) return toast(data.detail||'Invalid OTP','error');
+    state.token=data.token;state.mobile=data.mobile;
+    state.userName=state.pendingName||'User';state.userEmoji=state.selectedSigma;
+    localStorage.setItem('ld_token',data.token);
+    localStorage.setItem('ld_mobile',data.mobile);
+    localStorage.setItem('ld_name',state.userName);
+    localStorage.setItem('ld_emoji',state.userEmoji);
+    localStorage.setItem('ld_gender',gender);
+    fetch(`${API}/api/auth/me`,{headers:{Authorization:'Bearer '+data.token}})
+      .then(r=>r.json()).then(u=>{if(u.is_admin)localStorage.setItem('ld_admin_mobile',data.mobile);}).catch(()=>{});
+    closeModal('authModal');updateAuthBtn();updateUsageBar();
+    toast('Welcome '+state.userName+'! 🎉','success');
+  }catch(e){toast('Network error','error');}
+}
+
+function showStep1(){document.getElementById('authStep1').style.display='block';document.getElementById('authStep2').style.display='none';}
+
+function updateAuthBtn(){
+  const btn=document.getElementById('authBtn');
+  if(state.token&&state.userName){btn.textContent=`${state.userEmoji} ${state.userName.split(' ')[0]}`;btn.classList.add('logged-in');}
+  else{btn.textContent='Login';btn.classList.remove('logged-in');}
+}
+
+function logout(){
+  state.token=null;state.mobile=null;state.userName=null;
+  localStorage.removeItem('ld_token');localStorage.removeItem('ld_mobile');localStorage.removeItem('ld_name');
+  updateAuthBtn();closeModal('profileModal');toast('Logged out');
+}
+
+function openProfileModal(){
+  document.getElementById('profileEmoji').textContent=state.userEmoji||'😤';
+  document.getElementById('profileName').textContent=state.userName||'User';
+  const plan=localStorage.getItem('ld_plan')||'free';
+  const badge=document.getElementById('profileBadge');
+  badge.textContent=plan.toUpperCase();badge.className='user-plan-badge'+(plan!=='free'?' paid':'');
+  const list=document.getElementById('purchaseList');
+  if(!state.purchases.length){list.innerHTML='<p style="font-size:12px;color:var(--text3)">No premium purchases yet.</p>';}
+  else{
+    list.innerHTML=state.purchases.map(p=>{
+      const exp=new Date(p.expiry);const expired=exp<new Date();
+      return `<div class="purchase-row"><div><div class="purchase-name">${p.name}</div><div class="purchase-dates">Bought: ${p.date} · Expires: ${exp.toLocaleDateString('en-IN')}</div></div>${expired?`<button class="renew-btn" onclick="openService('${p.service}')">Renew</button>`:'<span style="font-size:10px;color:var(--accent3)">Active ✓</span>'}</div>`;
+    }).join('');
+  }
+  openModal('profileModal');
+}
+
+function shareAndEarn(){
+  const ref=`LD${(state.mobile||'0000').slice(-4)}`;
+  const text=`⚖️ LegalDost – आपका क़ानूनी दोस्त\nFree legal help in Hindi, Telugu & Hinglish!\n\nMy ref code: ${ref}\nlawyaari.com`;
+  if(navigator.share) navigator.share({title:'LegalDost',text});
+  else{navigator.clipboard.writeText(text);toast('Referral link copied! 🔗','success');}
+}
+
+// PAYWALL
+function openPaywall(){
+  const plans=[{name:'Pro',price:49,chats:'10/day',plan_id:'pro'},{name:'Unlimited',price:99,chats:'Unlimited',plan_id:'unlimited'}];
+  document.getElementById('paywallPlans').innerHTML=plans.map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="initiatePayment('${p.plan_id}',${p.price})"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats}</div></div>`).join('');
+  openModal('paywallModal');
+}
+
+// PAYMENT
+async function initiatePayment(service,amount){
+  // Admin mobile bypass
+  const adminMob = localStorage.getItem('ld_admin_mobile');
+  const isAdminUser = state.mobile && adminMob && state.mobile === adminMob;
+  if(isAdminUser){
+    const pid='ADMIN_'+Date.now();
+    toast('Admin access ✓ — generating free','success');
+    closeModal('paywallModal');closeModal('serviceModal');
+    if(state.pendingPaymentService){await submitService(state.pendingPaymentService,pid);state.pendingPaymentService=null;}
+    return pid;
+  }
+  if(!state.token){toast('Login first','error');openAuth();return;}
+  try{
+    const res=await fetch(`${API}/api/create-order`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount,service,mobile:state.mobile})});
+    const order=await res.json();
+    if(order.demo){
+      const vr=await fetch(`${API}/api/verify-payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({razorpay_order_id:order.order_id,razorpay_payment_id:'demo_'+Date.now(),razorpay_signature:'demo',service,mobile:state.mobile})});
+      const vd=await vr.json();
+      if(vd.success){addPurchase(service,amount);toast('Payment demo ✓','success');closeModal('paywallModal');if(state.pendingPaymentService){await submitService(state.pendingPaymentService,vd.payment_id);state.pendingPaymentService=null;}return vd.payment_id;}
+    }
+    new Razorpay({key:order.key,amount:order.amount*100,currency:'INR',name:'LegalDost',description:service,order_id:order.order_id,
+      handler:async r=>{const vr=await fetch(`${API}/api/verify-payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({razorpay_order_id:r.razorpay_order_id,razorpay_payment_id:r.razorpay_payment_id,razorpay_signature:r.razorpay_signature,service,mobile:state.mobile})});const vd=await vr.json();if(vd.success){addPurchase(service,amount);toast('Payment success ✓','success');if(state.pendingPaymentService){await submitService(state.pendingPaymentService,vd.payment_id);state.pendingPaymentService=null;}}},
+      prefill:{contact:state.mobile},theme:{color:'#f59e0b'}
+    }).open();
+  }catch(e){toast('Payment error','error');}
+}
+
+function addPurchase(service,amount){
+  const names={cheque_notice:'Cheque Bounce Notice',msme_notice:'MSME Recovery',legal_reply:'Legal Reply',complaint_draft:'Complaint Draft',priority_answer:'Priority Answer',pro:'Pro Plan',unlimited:'Unlimited Plan'};
+  const exp=new Date();exp.setMonth(exp.getMonth()+1);
+  state.purchases.unshift({name:names[service]||service,service,amount,date:new Date().toLocaleDateString('en-IN'),expiry:exp.toISOString()});
+  localStorage.setItem('ld_purchases',JSON.stringify(state.purchases));
+  if(['pro','unlimited'].includes(service)) localStorage.setItem('ld_plan',service);
+}
+
+// SERVICES
+const SVC = {
+  cheque_notice:{title:'📝 Cheque Bounce Notice',desc:'Section 138 legal notice — ₹149',price:149,ep:'/api/cheque-notice',fields:[{id:'client_name',label:'Your Name',type:'input',ph:'Full name'},{id:'client_address',label:'Your Address',type:'textarea',ph:'Full address'},{id:'drawer_name',label:'Drawer Name',type:'input',ph:'Who gave the cheque'},{id:'drawer_address',label:'Drawer Address',type:'textarea',ph:'Address'},{id:'cheque_number',label:'Cheque No',type:'input',ph:'001234'},{id:'cheque_date',label:'Cheque Date',type:'input',ph:'DD/MM/YYYY'},{id:'cheque_amount',label:'Amount ₹',type:'input',ph:'50000'},{id:'bank_name',label:'Bank',type:'input',ph:'SBI'},{id:'dishonour_reason',label:'Dishonour Reason',type:'input',ph:'Insufficient funds'}]},
+  msme_notice:{title:'📦 MSME Recovery',desc:'Demand notice under MSMED Act — ₹249',price:249,ep:'/api/msme-notice',fields:[{id:'business_name',label:'Your Business',type:'input',ph:'MSME name'},{id:'buyer_name',label:'Buyer Name',type:'input',ph:'Client name'},{id:'buyer_address',label:'Buyer Address',type:'textarea',ph:'Full address'},{id:'invoice_number',label:'Invoice No',type:'input',ph:'INV-001'},{id:'invoice_date',label:'Invoice Date',type:'input',ph:'DD/MM/YYYY'},{id:'outstanding_amount',label:'Outstanding ₹',type:'input',ph:'200000'},{id:'due_date',label:'Due Date',type:'input',ph:'DD/MM/YYYY'},{id:'udyam_number',label:'Udyam No (optional)',type:'input',ph:'UDYAM-XX-0-0000000'}]},
+  legal_reply:{title:'💬 Legal Reply Generator',desc:'Reply to any notice — ₹19',price:19,ep:'/api/legal-reply',fields:[{id:'received_message',label:'Notice/Message Received',type:'textarea',ph:'Paste the notice here...'},{id:'context',label:'Context',type:'select',opts:['bank','landlord','employer','police','recovery_agent','other']},{id:'tone',label:'Tone',type:'select',opts:['polite','firm','strict_legal']},{id:'user_name',label:'Your Name',type:'input',ph:'Full name'}]},
+  complaint_draft:{title:'📣 Complaint Draft',desc:'Formal complaint — ₹69',price:69,ep:'/api/complaint-draft',fields:[{id:'issue_type',label:'Issue Type',type:'select',opts:['police','cybercrime','consumer','labour','medical','other']},{id:'issue_description',label:'Problem Description',type:'textarea',ph:'What happened...'},{id:'location',label:'Location',type:'input',ph:'City, State'},{id:'opponent_name',label:'Opponent (optional)',type:'input',ph:'Person/company'},{id:'date',label:'Incident Date',type:'input',ph:'DD/MM/YYYY'},{id:'user_name',label:'Your Name',type:'input',ph:'Full name'}]},
+  priority_answer:{title:'⚡ Priority Answer',desc:'Structured legal answer — ₹5 / ₹10',price:5,ep:'/api/priority-answer',fields:[{id:'question',label:'Your Legal Question',type:'textarea',ph:'Describe in detail...'},{id:'priority_type',label:'Answer Type',type:'select',opts:['instant_5','detailed_10'],onchange:'updatePriorityPrice()'}]},
+};
+
+function openService(key){
+  const cfg=SVC[key];if(!cfg) return;
+  state.currentService=key;
+  document.getElementById('serviceModalTitle').textContent=cfg.title;
+  document.getElementById('serviceModalDesc').textContent=cfg.desc;
+  const html=cfg.fields.map(f=>{
+    if(f.type==='select') return `<div class="form-group"><label>${f.label}</label><select id="sf_${f.id}" ${f.onchange?`onchange="${f.onchange}"`:''}>${(f.opts||[]).map(o=>`<option value="${o}">${o.replace(/_/g,' ')}</option>`).join('')}</select></div>`;
+    if(f.type==='textarea') return `<div class="form-group"><label>${f.label}</label><textarea id="sf_${f.id}" placeholder="${f.ph||''}"></textarea></div>`;
+    return `<div class="form-group"><label>${f.label}</label><input type="text" id="sf_${f.id}" placeholder="${f.ph||''}"/></div>`;
+  }).join('');
+  const priceBox=key==='priority_answer'?`<div class="priority-price-display" id="priceDsp">⚡ Pay ₹5 (Instant) & Generate</div>`:'';
+  document.getElementById('serviceModalBody').innerHTML=`${html}${priceBox}<button class="modal-btn" id="svcPayBtn" onclick="handleSvcSubmit('${key}',${cfg.price})">Pay ₹${cfg.price} & Generate</button>`;
+  openModal('serviceModal');
+}
+
+// #7 fix — dynamic price on priority answer type change
+function updatePriorityPrice(){
+  const sel=document.getElementById('sf_priority_type');if(!sel)return;
+  const det=sel.value==='detailed_10';const price=det?10:5;const label=det?'Detailed':'Instant';
+  const dsp=document.getElementById('priceDsp');const btn=document.getElementById('svcPayBtn');
+  if(dsp)dsp.textContent=`⚡ Pay ₹${price} (${label}) & Generate`;
+  if(btn){btn.textContent=`Pay ₹${price} & Generate`;btn.onclick=()=>handleSvcSubmit('priority_answer',price);}
+}
+
+async function handleSvcSubmit(key,price){
+  const cfg=SVC[key];const data={};const optional=['udyam_number','opponent_name'];
+  for(const f of cfg.fields){const el=document.getElementById('sf_'+f.id);data[f.id]=el?el.value.trim():'';if(!data[f.id]&&!optional.includes(f.id)){toast(`Fill: ${f.label}`,'error');return;}}
+  state.pendingServiceData=data;state.pendingPaymentService=key;
+  await initiatePayment(key,price);
+}
+
+async function submitService(key,paymentId){
+  const cfg=SVC[key];const data=state.pendingServiceData;
+  const payload={...data,language:state.lang,payment_id:paymentId,mobile:state.mobile||''};
+  if(key==='priority_answer'){payload.priority_flag=true;}
+  try{
+    const res=await fetch(API+cfg.ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await res.json();closeModal('serviceModal');
+    showResult(d.content,cfg.title,key);
+  }catch(e){toast('Generation error. Check backend.','error');}
+}
+
+// CUSTOM SERVICE (#8)
+function openCustomService(){openModal('customServiceModal');}
+function addCustomField(){
+  const l=document.getElementById('customFieldsList');const r=document.createElement('div');r.className='custom-field-row';
+  r.innerHTML=`<input type="text" placeholder="Field name e.g. Property Address"/><button class="rm-field-btn" onclick="this.parentElement.remove()">✕</button>`;
+  l.appendChild(r);
+}
+async function submitCustomService(){
+  const name=document.getElementById('customServiceName').value.trim();
+  const desc=document.getElementById('customServiceDesc').value.trim();
+  if(!name||!desc){toast('Fill service name and description','error');return;}
+  const extras=[...document.querySelectorAll('#customFieldsList input')].map(i=>i.value.trim()).filter(Boolean);
+  const prompt=`Create a legal document.\nService: ${name}\nDetails: ${desc}\nExtra fields: ${extras.join(', ')||'none'}`;
+  closeModal('customServiceModal');hideEmpty();
+  const tid=appendTyping();
+  try{
+    const res=await fetch(`${API}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:prompt,language:state.lang,session_token:state.token,conversation_history:[]})});
+    const d=await res.json();removeTyping(tid);appendAiMsg(d.response||'',null);
+  }catch(e){removeTyping(tid);appendMsg('ai','⚠️ Error. Try again.');}
+}
+
+// RESULT
+function showResult(content,title,serviceType){
+  state.currentResult={content,title,serviceType};
+  document.getElementById('resultModalTitle').textContent=title;
+  document.getElementById('resultContent').textContent=content;
+  document.getElementById('shareCardWrap').style.display='none';
+  openModal('resultModal');
+}
+function copyResult(){navigator.clipboard.writeText(state.currentResult?.content||'');toast('Copied ✓','success');}
+async function downloadPDF(){
+  if(!state.currentResult) return;
+  try{
+    const res=await fetch(`${API}/api/generate-pdf`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:state.currentResult.content,title:state.currentResult.title,service_type:state.currentResult.serviceType})});
+    const blob=await res.blob();const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=`legaldost_${state.currentResult.serviceType}.pdf`;a.click();URL.revokeObjectURL(url);
+    toast('PDF downloaded ✓','success');
+  }catch(e){toast('PDF error','error');}
+}
+
+// SHARE CARD — draws branded canvas card (like reference image)
+function drawShareCanvas(title, bodyText){
+  const wrap=document.getElementById('shareCardWrap');
+  const canvas=document.getElementById('shareCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=600,H=440;
+  canvas.width=W;canvas.height=H;
+  canvas.style.width='100%';canvas.style.maxWidth='100%';
+
+  // Dark BG
+  ctx.fillStyle='#0f0f17';
+  ctx.fillRect(0,0,W,H);
+
+  // Top gradient accent bar
+  const gTop=ctx.createLinearGradient(0,0,W,0);
+  gTop.addColorStop(0,'#f59e0b');gTop.addColorStop(1,'#f97316');
+  ctx.fillStyle=gTop;ctx.fillRect(0,0,W,6);
+
+  // Logo area background strip
+  ctx.fillStyle='#17171f';ctx.fillRect(0,6,W,72);
+
+  // Scale emoji text — use fillText with fallback
+  ctx.font='24px sans-serif';ctx.fillStyle='#f59e0b';
+  ctx.fillText('\u2696\uFE0F LegalDost',22,48);
+  ctx.font='600 13px sans-serif';ctx.fillStyle='#a0a0b5';
+  ctx.fillText('\u0906\u092A\u0915\u093E \u0915\u093E\u0928\u0942\u0928\u0940 \u0926\u094B\u0938\u094D\u0924  \u2022  LegalDost.in',22,66);
+
+  // Divider
+  ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,78);ctx.lineTo(W,78);ctx.stroke();
+
+  // Title pill
+  ctx.fillStyle='rgba(245,158,11,0.12)';
+  roundRect(ctx,22,92,W-44,32,6);ctx.fill();
+  ctx.font='bold 14px sans-serif';ctx.fillStyle='#f59e0b';
+  ctx.fillText(title.slice(0,70),32,113);
+
+  // Body text with word wrap
+  ctx.font='14px sans-serif';ctx.fillStyle='#d0d0e0';
+  const clean=bodyText.replace(/[#*_`]/g,'').replace(/\n+/g,' ').trim();
+  const words=clean.split(' ');
+  let line='',y=146,lh=22,maxW=W-44,maxY=H-70;
+  for(const w of words){
+    const test=line+(line?' ':'')+w;
+    if(ctx.measureText(test).width>maxW&&line){
+      ctx.fillText(line,22,y);line=w;y+=lh;
+      if(y>maxY){ctx.fillStyle='#6a6a80';ctx.fillText('...  (see full response in app)',22,y);break;}
+    } else line=test;
+  }
+  if(y<=maxY&&line) ctx.fillText(line,22,y);
+
+  // Bottom bar
+  ctx.fillStyle='#17171f';ctx.fillRect(0,H-50,W,50);
+  ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,H-50);ctx.lineTo(W,H-50);ctx.stroke();
+  ctx.font='11px sans-serif';ctx.fillStyle='#6a6a80';
+  ctx.fillText('LegalDost.in  \u2022  Your legal rights, explained.',22,H-20);
+  ctx.fillStyle='#f59e0b';ctx.textAlign='right';
+  ctx.fillText('Free legal help for every Indian',W-22,H-20);
+  ctx.textAlign='left';
+
+  // Bottom gradient accent
+  ctx.fillStyle=gTop;ctx.fillRect(0,H-3,W,3);
+
+  wrap.style.display='block';
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+}
+
+// Called from Result modal "Share Card" button
+function buildShareCard(){
+  const result=state.currentResult;
+  if(!result){toast('No content to share','error');return;}
+  drawShareCanvas(result.title, result.content);
+  toast('Share card ready! Download below \u2193','success');
+}
+
+function downloadShareCard(){
+  const c=document.getElementById('shareCanvas');
+  const a=document.createElement('a');
+  a.href=c.toDataURL('image/png');
+  a.download='legaldost_share.png';
+  a.click();
+}
+
+async function shareCard(){
+  const canvas=document.getElementById('shareCanvas');
+  const title=(state.currentResult?state.currentResult.title:'LegalDost');
+  try{
+    canvas.toBlob(async function(blob){
+      const file=new File([blob],'legaldost_share.png',{type:'image/png'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        await navigator.share({title:'LegalDost – '+title,files:[file],text:'Legal rights explained. — LegalDost.in'});
+      } else {
+        const url=URL.createObjectURL(blob);
+        window.open(url,'_blank');
+        toast('Opened in new tab — save & share from there','success');
+      }
+    },'image/png');
+  }catch(e){
+    downloadShareCard();
+    toast('Saved to device — share from gallery','success');
+  }
+}
+
+// Called from chat bubble "Share" button — generates card in a popup
+function shareBubble(btn){
+  const b=btn.closest('.msg').querySelector('.msg-bubble');
+  // Extract just the AI response text, strip follow-up nudge
+  let rawText=b.innerText||'';
+  // Remove "Aur kya" / "Next enti" lines at bottom
+  rawText=rawText.replace(/Aur kya jaanna hai\?.*$/i,'').replace(/Next enti\?.*$/i,'').trim();
+  // Set as current result and open result modal with share card
+  state.currentResult={title:'LegalDost – Legal Advice',content:rawText,serviceType:'chat'};
+  document.getElementById('resultModalTitle').textContent='Share This Response';
+  document.getElementById('resultContent').textContent=rawText;
+  document.getElementById('shareCardWrap').style.display='none';
+  openModal('resultModal');
+  // Auto-draw share card after modal opens
+  setTimeout(()=>buildShareCard(),100);
+}
+
+function copyBubble(btn){
+  const b=btn.closest('.msg').querySelector('.msg-bubble');
+  let txt=b.innerText||'';
+  txt=txt.replace(/Aur kya jaanna hai\?.*$/i,'').replace(/Next enti\?.*$/i,'').trim();
+  navigator.clipboard.writeText(txt);
+  toast('Copied \u2713','success');
+}
+
+// MODALS
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  if(id==='authModal'){document.getElementById('authStep1').style.display='block';document.getElementById('authStep2').style.display='none';}
+}
+document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)closeModal(el.id);});});
+
+// TOAST
+function toast(msg,type=''){
+  const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
+  document.body.appendChild(el);setTimeout(()=>el.remove(),2800);
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// INIT
+function init(){
+  const today=new Date().toDateString();
+  if(localStorage.getItem('ld_chat_date')!==today){
+    localStorage.setItem('ld_chat_date',today);
+    state.usedChats=0;state.warnedLastChat=false;
+    localStorage.setItem('ld_chats_'+today,'0');
+  }
+  // Reload usedChats from localStorage on every page load
+  state.usedChats=parseInt(localStorage.getItem('ld_chats_'+today)||'0');
+
+  // Show admin badge in nav if arrived from admin page
+  if(document.referrer.includes('admin.html')||sessionStorage.getItem('from_admin')==='1'){
+    sessionStorage.setItem('from_admin','1');
+    const adminBadge=document.createElement('a');
+    adminBadge.href='admin.html';
+    adminBadge.title='Go to Admin Dashboard';
+    adminBadge.style.cssText='position:fixed;top:0;left:50%;transform:translateX(-50%);background:#1a1a24;border:1px solid #f59e0b;color:#f59e0b;font-size:11px;font-weight:700;padding:3px 12px;border-radius:0 0 8px 8px;z-index:9999;text-decoration:none;letter-spacing:.5px;';
+    adminBadge.textContent='⚙️ ADMIN MODE';
+    document.body.appendChild(adminBadge);
+  }
+
+  updateUI();renderQuickCards();updateAuthBtn();updateUsageBar();
+}
+init();
+</script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+</html>
