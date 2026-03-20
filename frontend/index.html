@@ -272,6 +272,9 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 </head>
 <body>
 
+<!-- Hidden audio player — loads audio.html invisibly -->
+<iframe id="audioFrame" src="audio.html" style="display:none;width:0;height:0;border:none;" allow="autoplay"></iframe>
+
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <!-- NAV -->
@@ -534,7 +537,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 <script>
 // CONFIG
-const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
+// const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
+const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
 // Admin free access: controlled by admin mobile number in backend
 // Set to false so real users see limits; admin mobile bypasses via backend
 const ADMIN_FREE = false;
@@ -549,7 +553,7 @@ let state = {
   userEmoji:localStorage.getItem('ld_emoji')||'😤',
   category:'msme', chatHistory:[],
   usedChats:parseInt(localStorage.getItem('ld_chats_'+new Date().toDateString())||'0'),
-  currentResult:null, pendingPaymentService:null, pendingServiceData:null,
+  currentResult:null, pendingPaymentService:null, pendingServiceData:null, pendingTeluguMsg:null,
   purchases:JSON.parse(localStorage.getItem('ld_purchases')||'[]'),
   selectedSigma:'😤', warnedLastChat:false,
 };
@@ -731,7 +735,7 @@ function incrementUsage(){
     const g=localStorage.getItem('ld_gender')||'other';
     setTimeout(()=>{
       toast('⚠️ 1 free chat left! Upgrade for ₹49/month','warn');
-      
+      playCommand(g==='female'?'last-chat-maam':'last-chat-sir');
     },600);
   }
   updateUsageBar();
@@ -770,6 +774,27 @@ async function sendMessage(){
       openModal('authModal');
       toast('3 chats ho gaye '+sal+' — Login karein for better experience 🙏','warn');
     },800);
+  }
+
+  // Telugu users: on their 3rd question (usedChats===2 means this is the 3rd),
+  // force login BEFORE answering — store message in state, show login prompt
+  if(state.lang==='te' && !state.token && state.usedChats===2){
+    state.pendingTeluguMsg = text;  // store BEFORE building DOM — no inline JSON
+    hideEmpty();appendMsg('user',text);
+    input.value='';input.style.height='auto';
+    setTimeout(()=>{
+      appendRaw(
+        '<div style="padding:4px 0">' +
+        '<div style="font-size:13px;color:var(--text);margin-bottom:8px">మీ 3వ ప్రశ్నకు సమాధానం పొందడానికి లాగిన్ చేయండి. ఇది మీ ఉచిత ప్రశ్నలను సేవ్ చేస్తుంది.</div>' +
+        '<div style="font-size:12px;color:var(--text2);margin-bottom:10px">Login to get your 3rd answer — it saves your free quota too.</div>' +
+        '<button onclick="openAuth()" ' +
+        'style="background:var(--accent);color:#000;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font)">లాగిన్ చేయండి / Login →</button>' +
+        '</div>'
+      );
+      toast('3వ ప్రశ్న: Login అవసరం','warn');
+    },300);
+    document.getElementById('sendBtn').disabled=false;
+    return;
   }
 
   hideEmpty();appendMsg('user',text);
@@ -851,7 +876,7 @@ function showPaywallInChat(data){
     ? `Aaj ki muft seema khatam ho gayi ${salutation}`
     : `आज की मुफ्त सीमा खत्म हो गई ${salutation}`;
   // Use dedicated voice fn — pure Devanagari, no emoji, no English
-  
+  playCommand(gender==='female'?'quota-over-maam':'quota-over-sir');
   d.innerHTML=`<h3>${displayMsg} 🚫</h3><p>Upgrade karein ya 24 ghante baad free reset ka intezaar karein.</p><div class="plan-cards">${plans}</div>`;
   c.appendChild(d);scrollBottom();
 }
@@ -900,7 +925,13 @@ async function verifyOTP(){
     closeModal('authModal');updateAuthBtn();updateUsageBar();
     toast('Welcome '+state.userName+'! 🎉','success');
     const g=localStorage.getItem('ld_gender')||'other';
-    
+    playCommand(g==='female'?'welcome-maam':'welcome-sir');
+    // Resume Telugu pending message if login was triggered by 3rd question gate
+    if(state.pendingTeluguMsg){
+      const msg=state.pendingTeluguMsg;
+      state.pendingTeluguMsg=null;
+      setTimeout(()=>{document.getElementById('chatInput').value=msg;sendMessage();},700);
+    }
   }catch(e){toast('Network error','error');}
 }
 
@@ -1071,7 +1102,7 @@ function copyResult(){navigator.clipboard.writeText(state.currentResult?.content
 async function downloadPDF(){
   if(!state.currentResult) return;
   const g=localStorage.getItem('ld_gender')||'other';
-  
+  playCommand('pdf-generating');
   try{
     const res=await fetch(`${API}/api/generate-pdf`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:state.currentResult.content,title:state.currentResult.title,service_type:state.currentResult.serviceType})});
     const blob=await res.blob();const url=URL.createObjectURL(blob);
@@ -1299,6 +1330,13 @@ function submitFeedback(){
   toast('Opening WhatsApp... Thank you! 🙏','success');
 }
 
+// ── AUDIO COMMAND SENDER ───────────────────────────────────────
+// ── AUDIO: send command to audio.html iframe ──────────────────
+function playCommand(cmd){
+  var frame=document.getElementById('audioFrame');
+  if(frame&&frame.contentWindow) frame.contentWindow.postMessage(cmd,'*');
+}
+
 // INIT
 function init(){
   const today=new Date().toDateString();
@@ -1357,6 +1395,9 @@ init();
     <p style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Opens WhatsApp. Your feedback is sent directly to the founder.</p>
   </div>
 </div>
+
+
+<!-- Audio manager — hidden iframe, communicates via postMessage -->
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>

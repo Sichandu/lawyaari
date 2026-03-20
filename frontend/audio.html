@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Lawyaari Audio Manager</title>
+</head>
+<body>
+
+<!--
+  ═══════════════════════════════════════════════════════════════
+  LAWYAARI AUDIO MANAGER
+  ═══════════════════════════════════════════════════════════════
+
+  HOW TO USE:
+  1. Record your voice clips on your phone
+  2. Upload them to /frontend/audio/ folder
+  3. Each <audio> tag below has an id — that id is the command name
+  4. index.html sends a command → this file plays the matching audio
+
+  COMMAND LIST:
+  "welcome-sir"      → male user logs in
+  "welcome-maam"     → female user logs in
+  "last-chat-sir"    → 1 free chat remaining (male)
+  "last-chat-maam"   → 1 free chat remaining (female)
+  "quota-over-sir"   → daily limit reached (male)
+  "quota-over-maam"  → daily limit reached (female)
+  "pdf-generating"   → PDF generation started
+  "payment-success"  → payment successful
+
+  TO ADD A NEW CLIP:
+  1. Record it, put it in /frontend/audio/ folder
+  2. Add ONE line below: <audio id="your-command" src="audio/yourfile.mp3" preload="auto"></audio>
+  3. In index.html call: sendAudio('your-command')
+  Done.
+  ═══════════════════════════════════════════════════════════════
+-->
+
+<!-- ═══ UPLOAD YOUR RECORDINGS HERE — change src= to your file ═══ -->
+
+<audio id="welcome-sir"      src="audio/welcome_sir.mp3"      preload="auto"></audio>
+<audio id="welcome-maam"     src="audio/welcome_maam.mp3"     preload="auto"></audio>
+<audio id="last-chat-sir"    src="audio/last_chat_sir.mp3"    preload="auto"></audio>
+<audio id="last-chat-maam"   src="audio/last_chat_maam.mp3"   preload="auto"></audio>
+<audio id="quota-over-sir"   src="audio/quota_over_sir.mp3"   preload="auto"></audio>
+<audio id="quota-over-maam"  src="audio/quota_over_maam.mp3"  preload="auto"></audio>
+<audio id="pdf-generating"   src="audio/pdf_generating.mp3"   preload="auto"></audio>
+<audio id="payment-success"  src="audio/payment_success.mp3"  preload="auto"></audio>
+
+<!-- ═══ ADD MORE CLIPS BELOW THIS LINE ═══ -->
+<!-- <audio id="my-command" src="audio/my_recording.mp3" preload="auto"></audio> -->
+
+<script>
+window.addEventListener('message', function(e) {
+  const cmd = e.data;
+  if (!cmd || typeof cmd !== 'string') return;
+  // Stop all playing audio first
+  document.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
+  // Play the matching one
+  const audio = document.getElementById(cmd);
+  if (audio) audio.play().catch(() => {});
+});
+</script>
+
+</body>
+</html>

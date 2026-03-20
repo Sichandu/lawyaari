@@ -204,7 +204,7 @@ LANGUAGE: Write ALL legal documents in formal English only. No Hindi, Telugu, or
 DATA BINDING RULES (most important):
 - Use ONLY the exact names, amounts, and dates explicitly provided in the input
 - If a required value is missing or blank, write [REQUIRED: field_name] — NEVER invent or guess it
-- Do NOT hallucinate dates — if a date is not given, write [INSERT DATE] as a placeholder
+- Do NOT invent dates — only use dates explicitly given in the input — if a date is not given, write [INSERT DATE] as a placeholder
 - Do NOT mix up party names — Supplier/Claimant is the one sending the notice, Buyer/Opponent receives it
 - AMOUNT FORMAT: Always write as "Rs. X,XX,XXX" (Indian format, e.g. Rs. 1,80,000 not 180000)
 
@@ -719,6 +719,8 @@ Notice Date: {today}
 === PRE-COMPUTED INTEREST ===
 {interest_calculation}
 
+PARTY BINDING RULE: Notice is FROM {req.business_name} TO {req.buyer_name}. DO NOT swap these parties.
+
 === OUTPUT INSTRUCTIONS ===
 Write EXACTLY 4 sections. Use the pre-filled blocks above verbatim where indicated.
 TONE: Firm, authoritative, legally assertive. No "we request" or "we hope".
@@ -897,7 +899,7 @@ C. Facts:
 Write numbered paragraphs using ONLY the facts given. Each sentence complete and specific.
 
 D. Legal Grounds:
-Write out the applicable sections by name. For consumer complaints cite Section 2(7), Section 2(47), Section 35 Consumer Protection Act 2019. For others use only: {issue_info['sections']}
+Write out the applicable sections by name. For consumer complaints ALWAYS cite: Section 2(7) Consumer Protection Act 2019 (definition of consumer), Section 2(47) Consumer Protection Act 2019 (deficiency of service), Section 35 Consumer Protection Act 2019 (right to file complaint). For others use only: {issue_info['sections']}
 
 E. Jurisdiction:
 Write one complete sentence explaining why this forum has jurisdiction — use actual location and issue type
