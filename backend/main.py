@@ -32,26 +32,7 @@ app.add_middleware(
 )
 
 # ─── DB ──────────────────────────────────────────────────────────────────────
-# MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
-# client = MongoClient(MONGO_URL)
-# db = client["lawyaari"]
-
-# users_col       = db["users"]
-# sessions_col    = db["sessions"]
-# otps_col        = db["otps"]
-# chats_col       = db["chats"]
-# payments_col    = db["payments"]
-# analytics_col   = db["analytics"]
-# triggers_col    = db["triggers"]
-
-import os
-from pymongo import MongoClient
-
-MONGO_URL = os.getenv("MONGO_URL")
-
-if not MONGO_URL:
-    raise Exception("MONGO_URL is not set!")
-
+MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
 client = MongoClient(MONGO_URL)
 db = client["lawyaari"]
 
@@ -532,44 +513,46 @@ async def cheque_notice(req: ChequeNoticeRequest):
 
     today = datetime.utcnow().strftime('%d %B %Y')
     system = get_system_prompt(req.language, "legal")
-    prompt = f"""Generate a professional Section 138 NI Act legal notice for a dishonoured cheque.
-
-DATA PROVIDED — USE EXACTLY AS GIVEN, DO NOT MODIFY OR INVENT:
-Complainant (Notice Sender): {req.client_name}
-Complainant Address: {req.client_address}
-Cheque Drawer (Notice Recipient): {req.drawer_name}
-Drawer Address: {req.drawer_address}
-Cheque Number: {req.cheque_number}
-Cheque Date: {req.cheque_date}
-Cheque Amount: Rs. {req.cheque_amount} (write in Indian format e.g. Rs. 1,80,000)
-Bank: {req.bank_name}
-Dishonour Reason: {req.dishonour_reason}
-Notice Date: {today}
-
-DATE RULES:
-- Notice date = {today} (use this exact date)
-- Cheque presentation date: NOT PROVIDED — write "[Date of Presentation to Bank]" as placeholder
-- Do NOT invent any dates — use only what is given above
-
-REQUIRED OUTPUT:
-
-A. Section 138 Suitability Check
-[Assess whether facts meet all 4 conditions for Section 138: (1) cheque for debt/liability (2) presented within 3 months (3) dishonoured (4) notice within 30 days. State clearly if eligible.]
-
-B. Formal Legal Notice
-[Complete ready-to-send notice. Structure:
-- Notice date: {today}
-- To: drawer name and address
-- Re: Section 138 NI Act, cheque no, date, amount
-- Body: state cheque details, dishonour reason, demand payment within 15 days
-- Consequence: criminal proceedings under Section 138 NI Act
-- Sd/-: complainant name and address]
-
-C. Document Checklist
-[Numbered list of documents to keep ready for court]
-
-D. Next Steps
-[Numbered steps: send by registered post, 15-day wait, filing procedure]"""
+    prompt = (
+        "Generate a complete, ready-to-print-and-send legal notice under Section 138 "
+        "of the Negotiable Instruments Act, 1881. "
+        "READY-TO-USE RULE: Write every line with actual data. Zero square brackets. Zero blank fields.\n\n"
+        f"DATA — USE EXACTLY AS GIVEN:\n"
+        f"Complainant: {req.client_name}\n"
+        f"Complainant Address: {req.client_address}\n"
+        f"Cheque Drawer: {req.drawer_name}\n"
+        f"Drawer Address: {req.drawer_address}\n"
+        f"Cheque No: {req.cheque_number}  |  Date: {req.cheque_date}  |  Amount: Rs. {req.cheque_amount}\n"
+        f"Bank: {req.bank_name}\n"
+        f"Dishonour Reason: {req.dishonour_reason}\n"
+        f"Notice Date: {today}\n\n"
+        "OUTPUT — write all 4 sections as a final document:\n\n"
+        "A. Section 138 Suitability Check\n"
+        f"Assess all 4 conditions using the actual facts. Cheque No {req.cheque_number} for "
+        f"Rs. {req.cheque_amount} dishonoured due to {req.dishonour_reason}. "
+        "State whether eligible for Section 138 proceedings in 3-4 complete sentences.\n\n"
+        "B. Formal Legal Notice\n"
+        f"Write the complete notice as it will be physically sent:\n"
+        f"{today}\n\n"
+        f"To,\n{req.drawer_name}\n{req.drawer_address}\n\n"
+        f"Sub: Legal Notice under Section 138 of the Negotiable Instruments Act, 1881 for "
+        f"dishonour of Cheque No. {req.cheque_number} dated {req.cheque_date} for Rs. {req.cheque_amount} "
+        f"drawn on {req.bank_name}\n\n"
+        "Dear Sir/Madam,\n\n"
+        "Write the full body paragraphs covering: (1) the cheque was issued for a legitimate debt/liability, "
+        f"(2) it was presented to {req.bank_name} for payment but dishonoured with reason "
+        f"'{req.dishonour_reason}', (3) demand Rs. {req.cheque_amount} within 15 days of "
+        "receipt of this notice, (4) failure will result in criminal proceedings under Section 138 "
+        "of the Negotiable Instruments Act, 1881.\n\n"
+        f"Yours faithfully,\n\n"
+        f"Sd/-\n{req.client_name}\n{req.client_address}\n\n"
+        "C. Document Checklist\n"
+        "Numbered list of specific documents to keep ready for court filing.\n\n"
+        "D. Next Steps\n"
+        "Numbered steps with timelines: send by Speed Post / Registered Post AD within 30 days "
+        "of dishonour, wait 15 days for response, then file complaint under Section 138 before "
+        "the Magistrate court having jurisdiction."
+    )
 
     response = await call_ai([{"role": "user", "content": prompt}], system, task="legal_document", language=req.language)
     log_analytics("cheque_notice_generated", {"payment_id": req.payment_id})
@@ -583,50 +566,122 @@ async def msme_notice(req: MSMENoticeRequest):
         raise HTTPException(402, "Payment required or not verified")
 
     today = datetime.utcnow().strftime('%d %B %Y')
+
     # Validate critical fields
     if not req.outstanding_amount or req.outstanding_amount.strip() in ['', '0']:
-        return {"content": "Error: Outstanding amount is required. Please fill the amount field and try again.", "service": "msme_notice"}
+        return {"content": "Error: Outstanding amount is required.", "service": "msme_notice"}
     if not req.business_name or req.business_name.strip() == '':
-        return {"content": "Error: Your business name is required. Please fill the supplier/business name field.", "service": "msme_notice"}
+        return {"content": "Error: Your business name is required.", "service": "msme_notice"}
 
+    # ── Interest Calculation (Section 16 MSMED Act: 3x RBI Bank Rate) ──────────
+    RBI_BANK_RATE = 6.50  # percent — update when RBI changes rate
+    MSME_RATE = RBI_BANK_RATE * 3  # = 19.5% per annum
+    try:
+        principal = float(str(req.outstanding_amount).replace(',', '').replace('Rs.', '').replace('Rs', '').strip())
+        from datetime import date as _date
+        parts = req.due_date.replace('-', '/').split('/')
+        if len(parts) == 3:
+            if len(parts[0]) == 4:
+                due_dt = _date(int(parts[0]), int(parts[1]), int(parts[2]))
+            else:
+                due_dt = _date(int(parts[2]), int(parts[1]), int(parts[0]))
+            days_overdue = max(0, (_date.today() - due_dt).days)
+        else:
+            days_overdue = 90
+        interest = round(principal * (MSME_RATE / 100) * (days_overdue / 365), 2)
+        total = round(principal + interest, 2)
+#         interest_block = (
+#             f"Interest Calculation as per Section 16 MSMED Act, 2006:
+# "
+#             f"Principal Outstanding: Rs. {principal:,.2f}
+# "
+#             f"Period of Delay: {days_overdue} days (due date {req.due_date} to {today})
+# "
+#             f"Applicable Rate: {MSME_RATE}% per annum (3 x RBI Bank Rate of {RBI_BANK_RATE}%)
+# "
+#             f"Interest Amount: Rs. {interest:,.2f}
+# "
+#             f"Total Amount Demanded: Rs. {total:,.2f} (Principal + Interest)"
+#         )
+
+        interest_block = f"""Interest Calculation as per Section 16 MSMED Act, 2006:
+
+Principal Outstanding: Rs. {principal:,.2f}
+
+Period of Delay: {days_overdue} days (due date {req.due_date} to {today})
+
+Applicable Rate: {MSME_RATE}% per annum (3 x RBI Bank Rate of {RBI_BANK_RATE}%)
+
+Interest Amount: Rs. {interest:,.2f}
+
+Total Amount Demanded: Rs. {total:,.2f} (Principal + Interest)"""
+        total_display = f"Rs. {total:,.2f}"
+        interest_display = f"Rs. {interest:,.2f}"
+
+#     except Exception:
+#         interest_block = (
+#             f"Interest Calculation as per Section 16 MSMED Act, 2006:
+# "
+#             f"Principal: Rs. {req.outstanding_amount}
+# "
+#             f"Rate: {MSME_RATE}% per annum (3 x RBI Bank Rate of {RBI_BANK_RATE}% per Section 16)
+# "
+#             f"Interest from due date {req.due_date} — exact amount to be calculated at time of filing"
+#         )
+    except Exception:
+        interest_block = f"""Interest Calculation as per Section 16 MSMED Act, 2006:
+
+Principal: Rs. {req.outstanding_amount}
+
+Rate: {MSME_RATE}% per annum (3 x RBI Bank Rate of {RBI_BANK_RATE}% per Section 16)
+
+Interest from due date {req.due_date} — exact amount to be calculated at time of filing
+"""
+        total_display = f"Rs. {req.outstanding_amount} + applicable interest"
+        interest_display = "as computed above"
+
+    udyam = req.udyam_number if req.udyam_number else "Not provided"
     system = get_system_prompt(req.language, "legal")
-    prompt = f"""Generate a professional MSME Payment Recovery Demand Notice under MSMED Act, 2006.
-
-DATA PROVIDED — USE EXACTLY AS GIVEN, DO NOT MODIFY OR SWAP PARTIES:
-Supplier / Claimant (the one sending this notice): {req.business_name}
-Udyam Registration No: {req.udyam_number or '[REQUIRED: Udyam Registration Number]'}
-Buyer / Defaulter (the one who owes money): {req.buyer_name}
-Buyer Address: {req.buyer_address}
-Invoice Number: {req.invoice_number}
-Invoice Date: {req.invoice_date}
-Outstanding Amount: Rs. {req.outstanding_amount}
-Payment Due Date: {req.due_date}
-Notice Date: {today}
-
-PARTY BINDING RULE: The notice is FROM {req.business_name} TO {req.buyer_name}.
-{req.business_name} is the SUPPLIER who is owed money.
-{req.buyer_name} is the BUYER who must pay.
-DO NOT swap or confuse these two parties anywhere in the document.
-
-REQUIRED OUTPUT:
-
-A. MSME Eligibility Check
-[Verify: Is Udyam number provided? Is the supplier an MSME? Is the payment overdue beyond 45 days per Section 15 MSMED Act?]
-
-B. Formal Demand Notice
-[Complete ready-to-send letter. Must include:
-- From: {req.business_name} (Udyam No: {req.udyam_number or '[REQUIRED]'})
-- Date: {today}
-- To: {req.buyer_name}, {req.buyer_address}
-- Subject: Demand Notice under MSMED Act 2006
-- Body: invoice details, amount Rs. {req.outstanding_amount}, overdue since {req.due_date}, cite Section 15 and 16 MSMED Act, demand payment + interest within 15 days, warn of Section 18 proceedings
-- Signed: {req.business_name}]
-
-C. Next Steps
-[Step-by-step: MSME Samadhaan portal → Facilitation Council → Section 18 court proceedings]
-
-D. Evidence Checklist
-[Numbered list of documents: Udyam certificate, invoice copy, delivery proof, bank statement, correspondence]"""
+    prompt = (
+        "Generate a complete, ready-to-send MSME Payment Recovery Demand Notice under MSMED Act 2006.\n"
+        "READY-TO-USE: Every field filled. Zero square brackets. Zero template placeholders.\n\n"
+        f"DATA — USE EXACTLY:\n"
+        f"Supplier (Sender): {req.business_name}\n"
+        f"Udyam No: {udyam}\n"
+        f"Buyer (Recipient): {req.buyer_name}\n"
+        f"Buyer Address: {req.buyer_address}\n"
+        f"Invoice: {req.invoice_number} dated {req.invoice_date}\n"
+        f"Outstanding Principal: Rs. {req.outstanding_amount}\n"
+        f"Due Date: {req.due_date}\n"
+        f"Notice Date: {today}\n\n"
+        f"PRE-COMPUTED INTEREST (use these exact figures):\n{interest_block}\n\n"
+        f"PARTY RULE: Notice FROM {req.business_name} TO {req.buyer_name}. DO NOT swap.\n\n"
+        "WRITE ALL 4 SECTIONS FULLY:\n\n"
+        "A. MSME Eligibility Check\n"
+        f"Write 3 sentences: confirm Udyam No {udyam} establishes MSME status. "
+        f"Payment on invoice {req.invoice_number} due {req.due_date} is overdue beyond 45 days per Section 15. "
+        f"Section 16 interest applies at {MSME_RATE}% p.a.\n\n"
+        "B. Formal Demand Notice\n"
+        f"Write the complete letter verbatim as it will be sent:\n"
+        f"{req.business_name}\n"
+        f"Udyam Registration No: {udyam}\n"
+        f"{today}\n\n"
+        f"To,\n{req.buyer_name}\n{req.buyer_address}\n\n"
+        f"Sub: Demand Notice for Payment of Rs. {req.outstanding_amount} + Interest under MSMED Act 2006 "
+        f"for Invoice {req.invoice_number} dated {req.invoice_date}\n\n"
+        "Dear Sir/Madam,\n\n"
+        f"Write 3-4 complete paragraphs: (1) invoice {req.invoice_number} for Rs. {req.outstanding_amount} "
+        f"dated {req.invoice_date} — payment due {req.due_date} — remains unpaid. "
+        f"(2) Section 15 MSMED Act 2006 obligation. "
+        f"(3) Interest under Section 16: state the pre-computed figures: {interest_display} interest, "
+        f"total demand {total_display}. "
+        f"(4) Pay within 15 days or face Section 18 MSMED Act 2006 proceedings.\n\n"
+        f"Yours faithfully,\n\n{req.business_name}\nUdyam No: {udyam}\n\n"
+        "C. Next Steps\n"
+        "Numbered steps: 1) MSME Samadhaan portal (https://samadhaan.msme.gov.in) 2) Facilitation Council 3) Section 18 court proceedings\n\n"
+        "D. Evidence Checklist\n"
+        f"Numbered list of specific documents for this case: Udyam certificate, invoice {req.invoice_number}, delivery proof, bank statement, demand notice copy, correspondence."
+    )
 
     response = await call_ai([{"role": "user", "content": prompt}], system, task="legal_document", language=req.language)
     log_analytics("msme_notice_generated", {"payment_id": req.payment_id})
@@ -682,13 +737,14 @@ async def legal_reply(req: LegalReplyRequest):
         "  police context → Section 166 IPC (public servant misconduct), Section 154 CrPC (right to FIR)\n"
         "- Section 138 NI Act is ONLY for cheque bounce — NEVER use it in landlord/tenant or loan disputes\n"
         "- Keep legally safe — no false statements\n\n"
-        "REQUIRED OUTPUT FORMAT:\n"
+        "REQUIRED OUTPUT FORMAT — complete, ready-to-send letter, zero square brackets:\n"
         f"Date: {today}\n\n"
-        "To,\n[Name and designation of notice sender]\n\n"
-        "Subject: Response to your notice/communication\n\n"
+        "To,\n"
+        "[From the notice above, extract and write the actual sender name, designation, firm/bank name — no brackets]\n\n"
+        "Subject: [Write a specific subject line referencing the notice date and subject — no brackets]\n\n"
         "Dear Sir/Madam,\n\n"
-        "[Reply body: acknowledge notice → clarify position → assert rights → firm close]\n\n"
-        f"Yours sincerely,\n{req.user_name}\n[Space for signature]"
+        "[Write the complete reply: (1) Acknowledge the notice with its exact date and subject. (2) State your position clearly using the KEY FACTS provided. (3) Assert applicable legal rights with specific law sections. (4) Make a firm demand or request. Each paragraph complete and substantive — no placeholders.]\n\n"
+        f"Yours sincerely,\n{req.user_name}\n_______________\n(Signature)\n{today}"
     )
 
     response = await call_ai([{"role": "user", "content": prompt}], system,
@@ -740,51 +796,42 @@ async def complaint_draft(req: ComplaintDraftRequest):
 
     today = datetime.utcnow().strftime('%d %B %Y')
     system = get_system_prompt(req.language, "legal")
-    prompt = f"""Generate a complete, court-ready formal complaint in Indian legal format.
+    prompt = f"""Generate a complete, ready-to-file formal complaint. Write every section fully — no square brackets, no instructions to fill in later.
 
-DATA PROVIDED — USE EXACTLY AS GIVEN:
+DATA — USE EXACTLY:
 Complainant: {req.user_name}
-Issue Type: {req.issue_type}
+Issue: {req.issue_type}
 Date of Incident: {req.date}
 Location: {req.location}
-Opposite Party: {req.opponent_name or '[REQUIRED: Name of opposite party]'}
+Opposite Party: {req.opponent_name or "Not specified"}
 Facts: {req.issue_description}
-Today's Date: {today}
+Today: {today}
+Authority: {issue_info['authority']}, {req.location}
+Laws: {issue_info['sections']}
 
-Filing Authority: {issue_info['authority']}, {req.location}
-Applicable Laws: {issue_info['sections']}
-{issue_info['copy_to']}
+WRITE THE COMPLETE COMPLAINT DOCUMENT:
 
-STRICT RULES:
-- Use ONLY facts given above — do NOT invent any additional facts
-- Cite laws ONLY if facts clearly support them
-- Amount format: Rs. X,XX,XXX
-- Use firm, direct language — not "I would appreciate" but "I hereby demand" or "You are directed to"
+{req.user_name}
+{req.location}
+{today}
 
-REQUIRED OUTPUT — include ALL sections below:
+A. To:
+{issue_info['authority']}, {req.location}
 
-[Complainant name and address]
-[Date: {today}]
-
-A. To: [Full authority name], {req.location}
-
-B. Subject: [One clear subject line — specific, not generic]
+B. Subject:
+Write one complete, specific subject line using actual issue type and opponent name
 
 C. Facts:
-[Numbered facts — only what is given, no additions or inventions]
+Write numbered paragraphs using ONLY the facts given. Each sentence complete and specific.
 
 D. Legal Grounds:
-[Cite applicable sections. For consumer cases ALWAYS cite:
-  - Section 2(7) Consumer Protection Act 2019 (definition of consumer)
-  - Section 2(47) Consumer Protection Act 2019 (deficiency of service / unfair trade practice)
-  - Section 35 Consumer Protection Act 2019 (right to file complaint)
-  For other types, cite only what clearly applies]
+Write out the applicable sections by name. For consumer complaints cite Section 2(7), Section 2(47), Section 35 Consumer Protection Act 2019. For others use only: {issue_info['sections']}
 
 E. Jurisdiction:
-[State WHY this specific forum has jurisdiction — for consumer: "The value of goods/services is Rs. X which falls within the pecuniary jurisdiction of the District Commission under Section 34 CPA 2019"]
+Write one complete sentence explaining why this forum has jurisdiction — use actual location and issue type
 
 F. Relief Sought:
-[Numbered list of SPECIFIC remedies — replacement/refund + compensation + litigation costs]
+Write numbered specific reliefs using firm language: "direct", "order", "award compensation"
 
 G. Verification:
 I, {req.user_name}, do hereby verify and declare that the contents of this complaint are true and correct to the best of my knowledge and belief. Nothing material has been concealed.
@@ -794,7 +841,7 @@ Signature: _______________
 {req.user_name}
 
 H. List of Annexures:
-[Numbered list — Annexure A, B, C etc. mapping to each piece of evidence mentioned in the facts]
+Write numbered annexures based on evidence mentioned in the facts
 
 {issue_info['copy_to']}"""
 
@@ -826,23 +873,24 @@ Rules:
 - Cite exact Indian laws/sections
 - Be precise, not vague
 
-Output format:
-🔍 Situation:
-[Understanding of the situation]
+Output format — use PLAIN TEXT headers only, NO emoji:
 
-⚖️ Legal Position:
-[Relevant laws, sections, rights]
+Situation:
+[Clear understanding of the legal situation]
 
-✅ What You Should Do:
-1.
-2.
-3.
+Legal Position:
+[Exact Indian laws, sections, acts that apply]
 
-💬 What You Can Say/Write:
-[Exact words or template]
+What You Should Do:
+1. [First action]
+2. [Second action]
+3. [Third action]
 
-⚠️ Important Note:
-[Any warnings or caveats]"""
+What You Can Say or Write:
+[Exact words, draft text, or template the user can use]
+
+Important Note:
+[Any warnings, caveats, or next steps]"""
         task = "high_accuracy"
     else:
         prompt = f"""Answer this legal question concisely: "{req.question}" """
@@ -851,42 +899,96 @@ Output format:
     response = await call_ai([{"role": "user", "content": prompt}], system, task=task, language=req.language)
     return {"content": response, "priority": req.priority_flag, "service": "priority_answer"}
 
-# ─── FONT SETUP (Vera — bundled with ReportLab, works on all servers) ────────
+# ─── FONT SETUP ──────────────────────────────────────────────────────────────
+# FreeSerif: supports Devanagari (Hindi), Telugu, Latin, ₹ symbol
+# Available on all Debian/Ubuntu servers (freefont-ttf package)
+# Fallback: Helvetica (Latin only — no Hindi, but won't crash)
 import os as _os, logging as _logging
-_VERA_PATH      = _os.path.join(_os.path.dirname(__import__('reportlab').__file__), 'fonts', 'Vera.ttf')
-_VERA_BOLD_PATH = _os.path.join(_os.path.dirname(__import__('reportlab').__file__), 'fonts', 'VeraBd.ttf')
+
+# FreeSans from GNU FreeFont package — has full Devanagari + Latin + Telugu coverage
+# DejaVu does NOT have Devanagari. FreeSans DOES.
+# On Render deployment, add to build command:
+#   apt-get install -y fonts-freefont-ttf && pip install -r requirements.txt
+_FREESANS_PATH      = '/usr/share/fonts/truetype/freefont/FreeSans.ttf'
+_FREESANS_BOLD_PATH = '/usr/share/fonts/truetype/freefont/FreeSansBold.ttf'
 
 def _register_fonts():
     try:
         registered = pdfmetrics.getRegisteredFontNames()
         if 'LD-Regular' not in registered:
-            pdfmetrics.registerFont(TTFont('LD-Regular', _VERA_PATH))
+            pdfmetrics.registerFont(TTFont('LD-Regular', _FREESANS_PATH))
         if 'LD-Bold' not in registered:
-            pdfmetrics.registerFont(TTFont('LD-Bold', _VERA_BOLD_PATH))
+            pdfmetrics.registerFont(TTFont('LD-Bold', _FREESANS_BOLD_PATH))
+        _logging.info("PDF fonts registered: FreeSans (supports Devanagari/Hindi)")
         return True
     except Exception as e:
-        _logging.warning(f"Font registration failed: {e}")
+        _logging.error(f"Font registration failed: {e}")
         return False
 
 _FONTS_OK = _register_fonts()
 _FN      = 'LD-Regular' if _FONTS_OK else 'Helvetica'
 _FN_BOLD = 'LD-Bold'    if _FONTS_OK else 'Helvetica-Bold'
 
-def _clean(text: str) -> str:
-    """Convert markdown to ReportLab XML. Escape special chars safely."""
+# Emoji-to-label map: replace emoji + following label text (avoids duplication)
+# Pattern: emoji followed by optional space + the label text = just keep label
+_EMOJI_FULL_PATTERNS = [
+    ("🔍 Situation:",        "Situation:"),
+    ("🔍Situation:",         "Situation:"),
+    ("⚖️ Legal Position:",   "Legal Position:"),
+    ("⚖️Legal Position:",    "Legal Position:"),
+    ("✅ What You Should Do:","What You Should Do:"),
+    ("✅What You Should Do:", "What You Should Do:"),
+    ("💬 What You Can Say/Write:","What You Can Say:"),
+    ("💬 What You Can Say:",  "What You Can Say:"),
+    ("💬What You Can Say:",   "What You Can Say:"),
+    ("⚠️ Important Note:",   "Important Note:"),
+    ("⚠️Important Note:",    "Important Note:"),
+]
+# Fallback: strip lone emoji with no label
+_EMOJI_LABELS = {
+    "🔍": "", "⚖️": "", "✅": "", "💬": "", "⚠️": "",
+    "📝": "", "📦": "", "📣": "", "💡": "", "⭐": "",
+    "🎉": "", "🏆": "", "🔥": "", "👑": "", "💀": "",
+    "😤": "", "😎": "", "🗿": "", "🤌": "", "🥷": "",
+    "🇮🇳": "", "📋": "", "📄": "", "🔒": "", "❓": "",
+    "📞": "", "⚡": "", "→": "->", "←": "<-",
+}
+
+def _strip_emoji(text: str) -> str:
+    """Replace emoji+label combos first, then strip remaining emoji."""
     import re as _r
-    # Bold / italic
+    # Step 1: Replace full emoji+label patterns (prevents double labels)
+    for pattern, replacement in _EMOJI_FULL_PATTERNS:
+        text = text.replace(pattern, replacement)
+    # Step 2: Strip any remaining lone emoji
+    for emoji, label in _EMOJI_LABELS.items():
+        text = text.replace(emoji, label)
+    # Strip all remaining emoji using unicode ranges
+    text = _r.sub(r"[𐀀-􏿿]", "", text)   # Supplementary planes (emoji)
+    text = _r.sub(r"[☀-➿]", "", text)            # Misc symbols
+    text = _r.sub(r"[⌀-⏿]", "", text)            # Technical symbols
+    text = _r.sub(r"[︀-﻿]", "", text)            # Variation selectors
+    # Clean up multiple spaces/colons left after stripping
+    text = _r.sub(r"  +", " ", text)
+    return text.strip()
+
+def _clean(text: str) -> str:
+    """Strip emoji, convert markdown to ReportLab XML, escape special chars."""
+    import re as _r
+    # Step 1: Strip emoji FIRST (before any other processing)
+    text = _strip_emoji(text)
+    # Step 2: Bold / italic markdown
     text = _r.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', text)
     text = _r.sub(r'\*(.+?)\*',   r'<i>\1</i>', text)
-    # Strip # headers (keep text)
+    # Step 3: Strip # headers (keep text)
     text = _r.sub(r'^#+\s*', '', text, flags=_r.MULTILINE)
     text = text.replace('`', '')
-    # Protect our injected tags during XML escaping
+    # Step 4: Protect injected tags during XML escaping
     text = text.replace('<b>', '\x00B\x00').replace('</b>', '\x00/B\x00')
     text = text.replace('<i>', '\x00I\x00').replace('</i>', '\x00/I\x00')
-    # Escape
+    # Step 5: Escape XML special chars
     text = text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-    # Restore tags
+    # Step 6: Restore tags
     text = text.replace('\x00B\x00', '<b>').replace('\x00/B\x00', '</b>')
     text = text.replace('\x00I\x00', '<i>').replace('\x00/I\x00', '</i>')
     return text
@@ -938,7 +1040,7 @@ async def generate_pdf(req: GeneratePDFRequest):
         els.append(_para("Your legal rights, explained.", s_sub))
         els.append(HRFlowable(width="100%", thickness=1.5,
             color=colors.HexColor("#f59e0b"), spaceAfter=10))
-        els.append(_para(req.title, s_title))
+        els.append(_para(_strip_emoji(req.title), s_title))
         els.append(HRFlowable(width="100%", thickness=0.5,
             color=colors.HexColor("#dddddd"), spaceAfter=8))
         els.append(Spacer(1, 0.08*inch))

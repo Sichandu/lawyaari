@@ -731,7 +731,7 @@ function incrementUsage(){
     const g=localStorage.getItem('ld_gender')||'other';
     setTimeout(()=>{
       toast('⚠️ 1 free chat left! Upgrade for ₹49/month','warn');
-      notifyLastChat(g);
+      
     },600);
   }
   updateUsageBar();
@@ -843,16 +843,16 @@ function showPaywallInChat(data){
   const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='paywall-msg';
   const plans=(data.plans||[]).map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="initiatePayment('${p.plan_id}',${p.price})"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats}</div></div>`).join('');
   const gender=localStorage.getItem('ld_gender')||'other';
-  // const salutation=gender==='female'?'Ma'am':'Sir';
-  const salutation = gender === 'female' ? "Ma'am" : "Sir";
-  const msg=state.lang==='te'
-    ? `నేడు మీ ఉచిత కోటా అయిపోయింది ${salutation} 🚫`
+  const salutation=gender==='female'?"Ma'am":'Sir';
+  // Display text — emoji ok for screen
+  const displayMsg=state.lang==='te'
+    ? `నేడు మీ ఉచిత కోటా అయిపోయింది ${salutation}`
     : state.lang==='hinglish'
-    ? `Aaj ki free quota khatam ho gayi hai ${salutation} 🚫`
-    : `आज की free quota खत्म हो गई है ${salutation} 🚫`;
-  // Speak the message
-  speak(msg);
-  d.innerHTML=`<h3>${msg}</h3><p>Upgrade karein ya 24 ghante baad free reset ka intezaar karein.</p><div class="plan-cards">${plans}</div>`;
+    ? `Aaj ki muft seema khatam ho gayi ${salutation}`
+    : `आज की मुफ्त सीमा खत्म हो गई ${salutation}`;
+  // Use dedicated voice fn — pure Devanagari, no emoji, no English
+  
+  d.innerHTML=`<h3>${displayMsg} 🚫</h3><p>Upgrade karein ya 24 ghante baad free reset ka intezaar karein.</p><div class="plan-cards">${plans}</div>`;
   c.appendChild(d);scrollBottom();
 }
 function scrollBottom(){const c=document.getElementById('chatMessages');c.scrollTop=c.scrollHeight;}
@@ -900,7 +900,7 @@ async function verifyOTP(){
     closeModal('authModal');updateAuthBtn();updateUsageBar();
     toast('Welcome '+state.userName+'! 🎉','success');
     const g=localStorage.getItem('ld_gender')||'other';
-    welcomeVoice(state.userName||'User', g);
+    
   }catch(e){toast('Network error','error');}
 }
 
@@ -1062,13 +1062,16 @@ function showResult(content,title,serviceType){
   document.getElementById('resultModalTitle').textContent=title;
   document.getElementById('resultContent').textContent=content;
   document.getElementById('shareCardWrap').style.display='none';
+  // Hide PDF button for priority answers — text response, no PDF needed
+  const pdfBtn=document.querySelector('.ra-pdf');
+  if(pdfBtn) pdfBtn.style.display=(serviceType==='priority_answer'||serviceType==='chat')?'none':'';
   openModal('resultModal');
 }
 function copyResult(){navigator.clipboard.writeText(state.currentResult?.content||'');toast('Copied ✓','success');}
 async function downloadPDF(){
   if(!state.currentResult) return;
   const g=localStorage.getItem('ld_gender')||'other';
-  notifyPdfGenerating(g);
+  
   try{
     const res=await fetch(`${API}/api/generate-pdf`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:state.currentResult.content,title:state.currentResult.title,service_type:state.currentResult.serviceType})});
     const blob=await res.blob();const url=URL.createObjectURL(blob);
@@ -1294,48 +1297,6 @@ function submitFeedback(){
   window.open(`https://wa.me/918185843878?text=${text}`,'_blank');
   closeModal('feedbackModal');
   toast('Opening WhatsApp... Thank you! 🙏','success');
-}
-
-// ══════ VOICE / SPEECH ══════
-function speak(text, rate=0.9){
-  if(!window.speechSynthesis) return;
-  // Cancel any ongoing speech
-  window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='hi-IN';u.rate=rate;u.pitch=1;
-  // Try Hindi voice first
-  const voices=window.speechSynthesis.getVoices();
-  const hiVoice=voices.find(v=>v.lang==='hi-IN'||v.lang.startsWith('hi'));
-  if(hiVoice) u.voice=hiVoice;
-  window.speechSynthesis.speak(u);
-}
-
-function welcomeVoice(name, gender){
-  const sal=gender==='female'?'ma\'am':'sir';
-  const msgs={
-    hi:`Aapka swagath hai, ${name} ${sal}. Lawyaari mein aapka swagat hai.`,
-    te:`${name} ${sal}, mee swaagatham. Lawyaari lo mee swaagatham.`,
-    hinglish:`Welcome back ${name} ${sal}! Lawyaari mein aapka swagat hai.`
-  };
-  const msg=msgs[state.lang]||msgs.hi;
-  setTimeout(()=>speak(msg),600);
-}
-
-function notifyLastChat(gender){
-  const sal=gender==='female'?'ma\'am':'sir';
-  const msgs={
-    hi:`Aapke aaj ke free quota mein sirf 1 hi sawaal bacha hai ${sal}.`,
-    te:`Meeru needu free quota lo inkaa 1 question maatraame undi ${sal}.`,
-    hinglish:`Aapke paas aaj sirf 1 free chat bacha hai ${sal}.`
-  };
-  const msg=msgs[state.lang]||msgs.hi;
-  speak(msg);
-}
-
-function notifyPdfGenerating(gender){
-  const sal=gender==='female'?'ma\'am':'sir';
-  const msg=`Aapka PDF generate ho rahi hai ${sal}, please wait.`;
-  speak(msg);
 }
 
 // INIT

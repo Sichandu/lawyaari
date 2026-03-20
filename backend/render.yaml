@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: lawyaari-backend
+    env: python
+    buildCommand: apt-get install -y fonts-freefont-ttf && pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_SECRET
+        sync: false
+      - key: ADMIN_KEY
+        sync: false
+      - key: ADMIN_MOBILE
+        sync: false
