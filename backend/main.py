@@ -565,125 +565,197 @@ async def msme_notice(req: MSMENoticeRequest):
     if not check_payment(req.payment_id, "msme_notice", mobile):
         raise HTTPException(402, "Payment required or not verified")
 
-    today = datetime.utcnow().strftime('%d %B %Y')
-
-    # Validate critical fields
+    # ── Validate critical fields ────────────────────────────────────────────────
     if not req.outstanding_amount or req.outstanding_amount.strip() in ['', '0']:
-        return {"content": "Error: Outstanding amount is required.", "service": "msme_notice"}
-    if not req.business_name or req.business_name.strip() == '':
+        return {"content": "Error: Outstanding amount is required. Please enter the invoice amount.", "service": "msme_notice"}
+    if not req.business_name or not req.business_name.strip():
         return {"content": "Error: Your business name is required.", "service": "msme_notice"}
+    if not req.buyer_name or not req.buyer_name.strip():
+        return {"content": "Error: Buyer name is required.", "service": "msme_notice"}
 
-    # ── Interest Calculation (Section 16 MSMED Act: 3x RBI Bank Rate) ──────────
-    RBI_BANK_RATE = 6.50  # percent — update when RBI changes rate
-    MSME_RATE = RBI_BANK_RATE * 3  # = 19.5% per annum
-    try:
-        principal = float(str(req.outstanding_amount).replace(',', '').replace('Rs.', '').replace('Rs', '').strip())
-        from datetime import date as _date
-        parts = req.due_date.replace('-', '/').split('/')
-        if len(parts) == 3:
+    # ── Date & Interest Computation ─────────────────────────────────────────────
+    from datetime import date as _date, datetime as _dt
+    today      = datetime.utcnow().strftime('%d %B %Y')
+    today_date = _date.today()
+
+    # Parse due_date (accepts DD/MM/YYYY or YYYY-MM-DD or YYYY/MM/DD)
+    def parse_date(s):
+        s = s.strip().replace('-', '/')
+        parts = s.split('/')
+        if len(parts) != 3:
+            return None
+        try:
             if len(parts[0]) == 4:
-                due_dt = _date(int(parts[0]), int(parts[1]), int(parts[2]))
+                return _date(int(parts[0]), int(parts[1]), int(parts[2]))
             else:
-                due_dt = _date(int(parts[2]), int(parts[1]), int(parts[0]))
-            days_overdue = max(0, (_date.today() - due_dt).days)
-        else:
-            days_overdue = 90
-        interest = round(principal * (MSME_RATE / 100) * (days_overdue / 365), 2)
-        total = round(principal + interest, 2)
-#         interest_block = (
-#             f"Interest Calculation as per Section 16 MSMED Act, 2006:
-# "
-#             f"Principal Outstanding: Rs. {principal:,.2f}
-# "
-#             f"Period of Delay: {days_overdue} days (due date {req.due_date} to {today})
-# "
-#             f"Applicable Rate: {MSME_RATE}% per annum (3 x RBI Bank Rate of {RBI_BANK_RATE}%)
-# "
-#             f"Interest Amount: Rs. {interest:,.2f}
-# "
-#             f"Total Amount Demanded: Rs. {total:,.2f} (Principal + Interest)"
-#         )
+                return _date(int(parts[2]), int(parts[1]), int(parts[0]))
+        except Exception:
+            return None
 
-        interest_block = f"""Interest Calculation as per Section 16 MSMED Act, 2006:
+    due_dt  = parse_date(req.due_date)
+    inv_dt  = parse_date(req.invoice_date)
 
-Principal Outstanding: Rs. {principal:,.2f}
+    # Days overdue since due_date
+    if due_dt:
+        days_overdue = max(0, (today_date - due_dt).days)
+        days_since_invoice = max(0, (today_date - inv_dt).days) if inv_dt else None
+    else:
+        days_overdue = 90  # conservative fallback
+        days_since_invoice = None
 
-Period of Delay: {days_overdue} days (due date {req.due_date} to {today})
+    overdue_str = f"{days_overdue} days" if days_overdue > 0 else "as of notice date"
 
-Applicable Rate: {MSME_RATE}% per annum (3 x RBI Bank Rate of {RBI_BANK_RATE}%)
+    # Interest under Section 16 MSMED Act: 3x RBI Bank Rate
+    # RBI Bank Rate as of 2025 = 6.50%; MSME rate = 19.5% p.a.
+    RBI_BANK_RATE  = 6.50
+    MSME_INT_RATE  = round(RBI_BANK_RATE * 3, 2)   # 19.5%
 
-Interest Amount: Rs. {interest:,.2f}
+    try:
+        principal = float(
+            str(req.outstanding_amount)
+            .replace(',', '').replace('Rs.', '').replace('Rs', '')
+            .replace('₹', '').replace(' ', '').strip()
+        )
+        interest_amount = round(principal * (MSME_INT_RATE / 100) * (days_overdue / 365), 2)
+        total_amount    = round(principal + interest_amount, 2)
 
-Total Amount Demanded: Rs. {total:,.2f} (Principal + Interest)"""
-        total_display = f"Rs. {total:,.2f}"
-        interest_display = f"Rs. {interest:,.2f}"
-
-#     except Exception:
-#         interest_block = (
-#             f"Interest Calculation as per Section 16 MSMED Act, 2006:
-# "
-#             f"Principal: Rs. {req.outstanding_amount}
-# "
-#             f"Rate: {MSME_RATE}% per annum (3 x RBI Bank Rate of {RBI_BANK_RATE}% per Section 16)
-# "
-#             f"Interest from due date {req.due_date} — exact amount to be calculated at time of filing"
-#         )
+        interest_label = f"Rs. {interest_amount:,.2f}"
+        total_label    = f"Rs. {total_amount:,.2f}"
+        principal_label = f"Rs. {principal:,.2f}"
     except Exception:
-        interest_block = f"""Interest Calculation as per Section 16 MSMED Act, 2006:
+        principal       = None
+        interest_amount = None
+        total_amount    = None
+        interest_label  = "to be computed at 19.5% p.a."
+        total_label     = f"Rs. {req.outstanding_amount} + applicable interest"
+        principal_label = f"Rs. {req.outstanding_amount}"
 
-Principal: Rs. {req.outstanding_amount}
+    udyam = req.udyam_number.strip() if req.udyam_number and req.udyam_number.strip() else "Not registered / to be verified"
 
-Rate: {MSME_RATE}% per annum (3 x RBI Bank Rate of {RBI_BANK_RATE}% per Section 16)
-
-Interest from due date {req.due_date} — exact amount to be calculated at time of filing
-"""
-        total_display = f"Rs. {req.outstanding_amount} + applicable interest"
-        interest_display = "as computed above"
-
-    udyam = req.udyam_number if req.udyam_number else "Not provided"
-    system = get_system_prompt(req.language, "legal")
-    prompt = (
-        "Generate a complete, ready-to-send MSME Payment Recovery Demand Notice under MSMED Act 2006.\n"
-        "READY-TO-USE: Every field filled. Zero square brackets. Zero template placeholders.\n\n"
-        f"DATA — USE EXACTLY:\n"
-        f"Supplier (Sender): {req.business_name}\n"
-        f"Udyam No: {udyam}\n"
-        f"Buyer (Recipient): {req.buyer_name}\n"
-        f"Buyer Address: {req.buyer_address}\n"
-        f"Invoice: {req.invoice_number} dated {req.invoice_date}\n"
-        f"Outstanding Principal: Rs. {req.outstanding_amount}\n"
-        f"Due Date: {req.due_date}\n"
-        f"Notice Date: {today}\n\n"
-        f"PRE-COMPUTED INTEREST (use these exact figures):\n{interest_block}\n\n"
-        f"PARTY RULE: Notice FROM {req.business_name} TO {req.buyer_name}. DO NOT swap.\n\n"
-        "WRITE ALL 4 SECTIONS FULLY:\n\n"
-        "A. MSME Eligibility Check\n"
-        f"Write 3 sentences: confirm Udyam No {udyam} establishes MSME status. "
-        f"Payment on invoice {req.invoice_number} due {req.due_date} is overdue beyond 45 days per Section 15. "
-        f"Section 16 interest applies at {MSME_RATE}% p.a.\n\n"
-        "B. Formal Demand Notice\n"
-        f"Write the complete letter verbatim as it will be sent:\n"
-        f"{req.business_name}\n"
-        f"Udyam Registration No: {udyam}\n"
-        f"{today}\n\n"
-        f"To,\n{req.buyer_name}\n{req.buyer_address}\n\n"
-        f"Sub: Demand Notice for Payment of Rs. {req.outstanding_amount} + Interest under MSMED Act 2006 "
-        f"for Invoice {req.invoice_number} dated {req.invoice_date}\n\n"
-        "Dear Sir/Madam,\n\n"
-        f"Write 3-4 complete paragraphs: (1) invoice {req.invoice_number} for Rs. {req.outstanding_amount} "
-        f"dated {req.invoice_date} — payment due {req.due_date} — remains unpaid. "
-        f"(2) Section 15 MSMED Act 2006 obligation. "
-        f"(3) Interest under Section 16: state the pre-computed figures: {interest_display} interest, "
-        f"total demand {total_display}. "
-        f"(4) Pay within 15 days or face Section 18 MSMED Act 2006 proceedings.\n\n"
-        f"Yours faithfully,\n\n{req.business_name}\nUdyam No: {udyam}\n\n"
-        "C. Next Steps\n"
-        "Numbered steps: 1) MSME Samadhaan portal (https://samadhaan.msme.gov.in) 2) Facilitation Council 3) Section 18 court proceedings\n\n"
-        "D. Evidence Checklist\n"
-        f"Numbered list of specific documents for this case: Udyam certificate, invoice {req.invoice_number}, delivery proof, bank statement, demand notice copy, correspondence."
+    # ── Build pre-filled document blocks ────────────────────────────────────────
+    eligibility_block = (
+        f"Supplier {req.business_name} holds Udyam Registration No. {udyam}, confirming its status "
+        f"as a Micro, Small or Medium Enterprise under the MSMED Act, 2006. "
+        f"Invoice No. {req.invoice_number} dated {req.invoice_date} for {principal_label} "
+        f"was due for payment on {req.due_date}. As on {today}, the payment is overdue by {overdue_str}, "
+        f"well beyond the 45-day mandatory payment window stipulated under Section 15 of the MSMED Act, 2006. "
+        f"Interest at {MSME_INT_RATE}% per annum ({RBI_BANK_RATE}% RBI Bank Rate x 3) "
+        f"is accordingly payable under Section 16 of the Act."
     )
 
-    response = await call_ai([{"role": "user", "content": prompt}], system, task="legal_document", language=req.language)
+    interest_calculation = (
+        f"Section 16 Interest Calculation:\n"
+        f"  Principal Amount       : {principal_label}\n"
+        f"  Payment Due Date       : {req.due_date}\n"
+        f"  Notice Date            : {today}\n"
+        f"  Delay Period           : {overdue_str}\n"
+        f"  RBI Bank Rate          : {RBI_BANK_RATE}% per annum\n"
+        f"  Applicable MSME Rate   : {MSME_INT_RATE}% per annum (3 x RBI Bank Rate)\n"
+        f"  Estimated Interest     : {interest_label}\n"
+        f"  TOTAL AMOUNT DEMANDED  : {total_label}"
+    )
+
+    notice_header = (
+        f"{req.business_name}\n"
+        f"Udyam Registration No: {udyam}\n\n"
+        f"{today}\n\n"
+        f"To,\n"
+        f"{req.buyer_name}\n"
+        f"{req.buyer_address}\n\n"
+        f"By Registered Post / Speed Post with Acknowledgement Due\n\n"
+        f"Sub: DEMAND NOTICE for Payment of {principal_label} with Interest of {interest_label} "
+        f"(Total: {total_label}) under the Micro, Small and Medium Enterprises Development Act, 2006 "
+        f"— Invoice No. {req.invoice_number} dated {req.invoice_date}\n\n"
+        f"Dear Sir / Madam,\n"
+    )
+
+    next_steps = (
+        f"1. File a complaint on the MSME Samadhaan Portal "
+        f"(https://samadhaan.msme.gov.in) against {req.buyer_name} "
+        f"for non-payment of Invoice {req.invoice_number}.\n"
+        f"2. Await response or facilitation by the MSME Facilitation Council "
+        f"under Section 18 of the MSMED Act, 2006.\n"
+        f"3. If unresolved within the statutory period, initiate proceedings before "
+        f"the MSME Facilitation Council under Section 18 of the MSMED Act, 2006 "
+        f"for recovery of {total_label} with continuing interest.\n"
+        f"4. Consider reporting the buyer to the Ministry of MSME for delayed payment "
+        f"on the TReDS platform and MSME Delayed Payment Monitoring System (MSME DEPREMS)."
+    )
+
+    evidence_checklist = (
+        f"1. Udyam Registration Certificate of {req.business_name} (Udyam No: {udyam})\n"
+        f"2. Copy of Invoice No. {req.invoice_number} dated {req.invoice_date} "
+        f"for {principal_label}\n"
+        f"3. Proof of delivery / acknowledgement of goods or services by {req.buyer_name}\n"
+        f"4. Bank statement showing non-receipt of payment since {req.due_date}\n"
+        f"5. All prior correspondence / emails / WhatsApp messages with {req.buyer_name} "
+        f"regarding payment\n"
+        f"6. Copy of this demand notice with postal acknowledgement (AD card)\n"
+        f"7. Purchase order / work order from {req.buyer_name} (if available)"
+    )
+
+    # ── System & Final Prompt ───────────────────────────────────────────────────
+    system = get_system_prompt(req.language, "legal")
+    prompt = f"""You are drafting a production-grade MSME payment recovery notice for a real business.
+Use ONLY the data provided. Zero placeholders. Zero soft language. Every word must be print-ready.
+
+=== PRE-FILLED DATA (do not change any figure or name) ===
+Supplier (Claimant): {req.business_name}
+Udyam No: {udyam}
+Buyer (Defaulter): {req.buyer_name}
+Buyer Address: {req.buyer_address}
+Invoice No: {req.invoice_number} dated {req.invoice_date}
+Principal Due: {principal_label}
+Due Date: {req.due_date}
+Days Overdue: {overdue_str}
+Interest Rate: {MSME_INT_RATE}% p.a. (Section 16, 3x RBI Bank Rate)
+Interest Amount: {interest_label}
+Total Demanded: {total_label}
+Notice Date: {today}
+
+=== PRE-COMPUTED ELIGIBILITY ===
+{eligibility_block}
+
+=== PRE-COMPUTED INTEREST ===
+{interest_calculation}
+
+=== OUTPUT INSTRUCTIONS ===
+Write EXACTLY 4 sections. Use the pre-filled blocks above verbatim where indicated.
+TONE: Firm, authoritative, legally assertive. No "we request" or "we hope".
+Use: "You are hereby called upon...", "Failing which, we shall be constrained to..."
+
+A. MSME Eligibility Check
+Write this section using the pre-computed eligibility text above, verbatim.
+
+B. Formal Demand Notice
+Start with the notice header below VERBATIM, then write 5 assertive paragraphs:
+
+{notice_header}
+Para 1: State that {req.business_name} supplied goods/services to {req.buyer_name} as per Invoice {req.invoice_number} dated {req.invoice_date} for {principal_label}. Payment was due on {req.due_date}.
+Para 2: Despite {overdue_str} having elapsed and despite repeated reminders, {req.buyer_name} has willfully withheld payment without lawful cause. This constitutes a violation of Section 15 of the MSMED Act, 2006.
+Para 3: Include the full interest calculation table above verbatim. State that interest continues to accrue daily.
+Para 4: "You are hereby called upon to pay {total_label} to {req.business_name} within 15 days of receipt of this notice. Failing which, {req.business_name} shall be constrained to initiate proceedings before the MSME Facilitation Council under Section 18 of the MSMED Act, 2006, and pursue all other remedies available under law, the costs whereof shall be borne by you."
+Para 5: "This notice is being issued via registered post/speed post and shall be treated as final intimation before legal action. All rights of {req.business_name} are expressly reserved."
+
+Close with:
+Yours faithfully,
+
+{req.business_name}
+Udyam No: {udyam}
+Date: {today}
+
+C. Next Steps
+Use the pre-written next steps below verbatim:
+{next_steps}
+
+D. Evidence Checklist
+Use the pre-written checklist below verbatim:
+{evidence_checklist}"""
+
+    response = await call_ai(
+        [{"role": "user", "content": prompt}],
+        system, task="legal_document", language=req.language
+    )
     log_analytics("msme_notice_generated", {"payment_id": req.payment_id})
     return {"content": response, "service": "msme_notice"}
 
