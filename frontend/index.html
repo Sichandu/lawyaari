@@ -68,7 +68,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 /* CHAT MAIN */
 .chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;position:relative;}
-.quick-cards-area{padding:10px 14px 0;flex-shrink:0;}
+.quick-cards-area{padding:10px 14px 8px;}
 .quick-cards-title{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.5px;margin-bottom:7px;text-transform:uppercase;}
 .quick-cards{display:flex;gap:6px;flex-wrap:wrap;}
 .quick-card{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:6px 11px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis;}
@@ -123,6 +123,18 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .typing-dots span:nth-child(2){animation-delay:.15s;}
 .typing-dots span:nth-child(3){animation-delay:.3s;}
 @keyframes dot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+/* Shimmer loading effect */
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.shimmer{background:linear-gradient(90deg,var(--bg3) 25%,var(--border2) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+/* Pulse ring for special actions */
+@keyframes pulseRing{0%{transform:scale(.95);box-shadow:0 0 0 0 rgba(245,158,11,.5)}70%{transform:scale(1);box-shadow:0 0 0 8px rgba(245,158,11,0)}100%{transform:scale(.95);box-shadow:0 0 0 0 rgba(245,158,11,0)}}
+.pulse{animation:pulseRing 1.5s infinite;}
+/* PDF generating overlay */
+#pdfOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+#pdfOverlay.show{display:flex;}
+.pdf-spinner{width:48px;height:48px;border:4px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+.pdf-overlay-text{color:var(--text);font-size:14px;font-weight:600;}
+.pdf-overlay-sub{color:var(--text3);font-size:12px;}
 /* Progress bar */
 .progress-bar-wrap{width:100%;background:var(--bg3);border-radius:4px;height:4px;overflow:hidden;margin:8px 0;}
 .progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),#f97316);border-radius:4px;animation:progressAnim 1.5s ease-in-out infinite;}
@@ -234,11 +246,12 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
   .chat-messages{flex:1;overflow-y:auto;padding:10px;min-height:0;}
   .input-area{padding:7px 10px 10px;flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);}
   .usage-bar{flex-shrink:0;padding:5px 10px 2px;}
-  .quick-cards-area{flex-shrink:0;padding:6px 10px 0;}
-  .msg-bubble{max-width:88%;font-size:13px;}
+  .quick-cards-area{padding:6px 10px 8px;}
+  .msg-bubble{max-width:90%;font-size:14px;line-height:1.6;}
   nav{padding:0 10px;}
   .modal{padding:18px;}
   .logo-badge{display:none;}
+  .logo-icon{display:none;}
   /* 1A: Hide auth btn and footer on mobile — replaced by 3-dots */
   .auth-btn{display:none;}
   footer{display:none;}
@@ -281,7 +294,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 <nav>
   <div style="display:flex;align-items:center;gap:8px;min-width:0;">
     <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-    <a href="#" class="logo">⚖️ Lawyaari <span class="logo-badge">BETA</span></a>
+    <a href="#" class="logo"><span class="logo-icon">⚖️ </span>Lawyaari <span class="logo-badge">BETA</span></a>
   </div>
   <div class="nav-right">
     <div class="lang-dropdown">
@@ -359,12 +372,11 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
   <!-- CHAT MAIN -->
   <main class="chat-main">
-    <div class="quick-cards-area">
-      <div class="quick-cards-title" id="quickTitle">Quick Questions</div>
-      <div class="quick-cards" id="quickCards"></div>
-    </div>
-
     <div class="chat-messages" id="chatMessages">
+      <div class="quick-cards-area" id="quickCardsArea">
+        <div class="quick-cards-title" id="quickTitle">Quick Questions</div>
+        <div class="quick-cards" id="quickCards"></div>
+      </div>
       <div class="empty-state" id="emptyState">
         <div class="icon">⚖️</div>
         <h2 id="emptyTitle">आपका क़ानूनी दोस्त</h2>
@@ -463,7 +475,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       <div class="user-sigma" id="profileEmoji">😤</div>
       <div class="user-name-big" id="profileName">User</div>
       <div id="profileBadge" class="user-plan-badge">FREE</div><br/>
-      <button class="share-earn-btn" onclick="shareAndEarn()">🔗 Share & Earn</button>
+      <button class="share-earn-btn" onclick="shareAndEarn()">🔗 Sabko Jagao</button>
     </div>
     <div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Purchase History</div>
     <div id="purchaseList"><p style="font-size:12px;color:var(--text3)">No premium purchases yet.</p></div>
@@ -537,8 +549,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 <script>
 // CONFIG
-// const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
-const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
+const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
 // Admin free access: controlled by admin mobile number in backend
 // Set to false so real users see limits; admin mobile bypasses via backend
 const ADMIN_FREE = false;
@@ -710,6 +721,20 @@ function getLimit(){
   if(plan==='pro') return 10;
   return state.lang==='te'?3:5;
 }
+function getResetTimeIST(){
+  // Quota resets daily at midnight IST (UTC+5:30)
+  const now=new Date();
+  const istMs=now.getTime()+(5.5*60*60*1000);
+  const istNow=new Date(istMs);
+  const nextMid=new Date(istNow);
+  nextMid.setUTCHours(24,0,0,0);
+  const left=nextMid-istNow;
+  const h=Math.floor(left/3600000);
+  const m=Math.floor((left%3600000)/60000);
+  if(h>0)return `${h}h ${m}m`;
+  if(m>0)return `${m}m`;
+  return 'kuch hi der mein';
+}
 function updateUsageBar(){
   const adminMob = localStorage.getItem('ld_admin_mobile');
   const isAdmin = state.mobile && adminMob && state.mobile === adminMob;
@@ -719,7 +744,18 @@ function updateUsageBar(){
   const countEl=document.getElementById('usageCount');
   countEl.textContent=`${rem}/${limit}`;
   countEl.className='usage-count'+(rem<=1?' warn':'');
-  const ctas={hi:`Confusion is expensive. ₹49 isn't 🍵🕵️`,te:`Confusion costly. ₹49 కాదు 🍵🕵️`,hinglish:`Confusion expensive. ₹49 nahi 🍵🕵️`};
+  const resetIn=getResetTimeIST();
+  const ctas={
+    hi: rem===0
+      ? `Free quota khatam — ${resetIn} mein reset hogi 🔄`
+      : `Confusion is expensive. ₹49 isn't 🍵🕵️`,
+    te: rem===0
+      ? `Free quota అయిపోయింది — ${resetIn} లో reset అవుతుంది 🔄`
+      : `Confusion costly. ₹49 కాదు 🍵🕵️`,
+    hinglish: rem===0
+      ? `Free quota khatam — ${resetIn} mein reset hogi 🔄`
+      : `Confusion expensive. ₹49 nahi 🍵🕵️`
+  };
   document.getElementById('usageCta').textContent=ctas[state.lang]||ctas.hi;
 }
 function incrementUsage(){
@@ -815,7 +851,10 @@ async function sendMessage(){
   document.getElementById('sendBtn').disabled=false;scrollBottom();
 }
 
-function hideEmpty(){const e=document.getElementById('emptyState');if(e)e.style.display='none';}
+function hideEmpty(){
+  const e=document.getElementById('emptyState');if(e)e.style.display='none';
+  const q=document.getElementById('quickCardsArea');if(q)q.style.display='none';
+}
 
 function appendMsg(role,text){
   const c=document.getElementById('chatMessages');
@@ -972,10 +1011,9 @@ function openProfileModal(){
 }
 
 function shareAndEarn(){
-  const ref=`LD${(state.mobile||'0000').slice(-4)}`;
-  const text=`⚖️ Lawyaari – आपका क़ानूनी दोस्त\nFree legal help in Hindi, Telugu & Hinglish!\n\nMy ref code: ${ref}\nlawyaari.com`;
-  if(navigator.share) navigator.share({title:'Lawyaari',text});
-  else{navigator.clipboard.writeText(text);toast('Referral link copied! 🔗','success');}
+  const text=`⚖️ Lawyaari — Aapka Kanooni Dost!\nHindi, Telugu & Hinglish mein free legal help!\n\n🔗 lawyaari.com`;
+  if(navigator.share) navigator.share({title:'Lawyaari',text,url:'https://lawyaari.com'}).catch(()=>{});
+  else{navigator.clipboard.writeText('https://lawyaari.com');toast('Link copied! Share karo 🔗','success');}
 }
 
 // PAYWALL
@@ -1102,13 +1140,17 @@ function copyResult(){navigator.clipboard.writeText(state.currentResult?.content
 async function downloadPDF(){
   if(!state.currentResult) return;
   const g=localStorage.getItem('ld_gender')||'other';
+  const overlay=document.getElementById('pdfOverlay');
+  if(overlay) overlay.classList.add('show');
   playCommand('pdf-generating');
   try{
     const res=await fetch(`${API}/api/generate-pdf`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:state.currentResult.content,title:state.currentResult.title,service_type:state.currentResult.serviceType})});
     const blob=await res.blob();const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download=`legaldost_${state.currentResult.serviceType}.pdf`;a.click();URL.revokeObjectURL(url);
+    const a=document.createElement('a');a.href=url;a.download=`lawyaari_${state.currentResult.serviceType}.pdf`;a.click();URL.revokeObjectURL(url);
     toast('PDF downloaded ✓','success');
-  }catch(e){toast('PDF error','error');}
+    if(overlay) overlay.classList.remove('show');
+  }catch(e){toast('PDF error — try again','error');
+  if(overlay) overlay.classList.remove('show');}
 }
 
 // SHARE CARD — draws branded canvas card (like reference image)
@@ -1145,9 +1187,9 @@ function drawShareCanvas(question, bodyText){
   // Logo strip
   ctx.fillStyle='#14141e';ctx.fillRect(0,5,W,60);
   ctx.font='bold 18px sans-serif';ctx.fillStyle='#f59e0b';
-  ctx.fillText('⚖️  Lawyaari',20,38);
+  ctx.fillText('\u2696\uFE0F  Lawyaari',20,38);
   ctx.font='12px sans-serif';ctx.fillStyle='#888';
-  ctx.fillText('lawyaari.com  •  Free legal help for every Indian',20,56);
+  ctx.fillText('lawyaari.com  •  Aapka kanooni dost',20,56);
 
   // Divider
   ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
@@ -1179,7 +1221,7 @@ function drawShareCanvas(question, bodyText){
   ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(0,H-44);ctx.lineTo(W,H-44);ctx.stroke();
   ctx.font='11px sans-serif';ctx.fillStyle='#555';
-  ctx.fillText('Lawyaari.in  •  Not legal advice. Consult a lawyer.',20,H-16);
+  ctx.fillText('lawyaari.com  •  Not legal advice. Consult a lawyer.',20,H-16);
   ctx.fillStyle='#f59e0b';ctx.textAlign='right';
   ctx.fillText('lawyaari.com',W-20,H-16);
   ctx.textAlign='left';
@@ -1221,7 +1263,7 @@ async function shareCard(){
     canvas.toBlob(async function(blob){
       const file=new File([blob],'legaldost_share.png',{type:'image/png'});
       if(navigator.canShare&&navigator.canShare({files:[file]})){
-        await navigator.share({title:'Lawyaari – '+title,files:[file],text:'Legal rights explained. — Lawyaari.in'});
+        await navigator.share({title:'Lawyaari – '+title,files:[file],text:'Aapka kanooni dost — lawyaari.com'});
       } else {
         const url=URL.createObjectURL(blob);
         window.open(url,'_blank');
@@ -1399,6 +1441,11 @@ init();
 
 <!-- Audio manager — hidden iframe, communicates via postMessage -->
 
+<div id="pdfOverlay">
+  <div class="pdf-spinner"></div>
+  <div class="pdf-overlay-text">PDF generate ho rahi hai...</div>
+  <div class="pdf-overlay-sub">Kripya prateeksha karein 🙏</div>
+</div>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
