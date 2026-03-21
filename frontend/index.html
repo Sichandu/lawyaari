@@ -413,7 +413,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
     <a href="disclaimer.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Disclaimer</a>
     <a href="#" onclick="openFeedback();return false;" style="color:var(--accent3);text-decoration:none;">Feedback</a>
   </div>
-  <div>© 2026 Lawyaari · lawyaari.com · Not a legal firm</div>
+  <div>© 2026 Lawyaari · Not a legal firm</div>
 </footer>
 
 <!-- AUTH MODAL -->
@@ -1146,7 +1146,7 @@ async function shareCard(){
     canvas.toBlob(async function(blob){
       const file=new File([blob],'legaldost_share.png',{type:'image/png'});
       if(navigator.canShare&&navigator.canShare({files:[file]})){
-        await navigator.share({title:'Lawyaari – '+title,files:[file],text:'Aapka kanooni dost — lawyaari.com'});
+        await navigator.share({title:'Lawyaari – '+title,files:[file],text:'Aapka kanooni dost — lawyaari.netlify.app'});
       } else {
         const url=URL.createObjectURL(blob);
         window.open(url,'_blank');
