@@ -350,13 +350,13 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
       <div class="sidebar-section">⭐ Premium Services</div>
       <!-- 3 default premium -->
-      <div class="service-item" onclick="openService('cheque_notice')"><span class="sname">📝 Cheque Bounce</span><span class="sprice">₹149</span></div>
-      <div class="service-item" onclick="openService('msme_notice')"><span class="sname">📦 MSME Recovery</span><span class="sprice">₹249</span></div>
-      <div class="service-item" onclick="openService('complaint_draft')"><span class="sname">📣 Complaint Draft</span><span class="sprice">₹69</span></div>
+      <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">📝 Cheque Bounce</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+      <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">📦 MSME Recovery</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+      <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">📣 Complaint Draft</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
       <!-- Hidden premium — shown on expand -->
       <div id="extraServices" style="display:none">
-        <div class="service-item" onclick="openService('legal_reply')"><span class="sname">💬 Legal Reply</span><span class="sprice">₹19</span></div>
-        <div class="service-item" onclick="openService('priority_answer')"><span class="sname">⚡ Priority Answer</span><span class="sprice">₹7</span></div>
+        <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">💬 Legal Reply</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+        <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">⚡ Priority Answer</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
       </div>
       <div style="padding:6px 10px;">
         <button onclick="toggleExtraServices(this)" id="viewAllServicesBtn"
@@ -388,7 +388,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
     <div class="usage-bar" id="usageBarWrap">
       <div class="usage-inner" id="usageInner">
         <span class="usage-count" id="usageCount">5/5</span>
-        <span id="usageCta" style="color:var(--text2)">Confusion is expensive. ₹49 isn't 🍵🕵️</span>
+        <span id="usageCta" style="color:var(--text2)">Free mein poochho — jaldi jaldi! 🚀</span>
         <button class="upgrade-pro-btn" onclick="openPaywall()">PRO →</button>
       </div>
     </div>
@@ -455,7 +455,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       <button class="modal-btn" onclick="sendOTP()">Send OTP →</button>
     </div>
     <div id="authStep2" style="display:none">
-      <p style="font-size:12px;color:var(--text2);margin-bottom:6px">Here is Your OTP</p>
+      <p style="font-size:12px;color:var(--text2);margin-bottom:6px">OTP (shown for demo):</p>
       <div class="otp-display" id="otpDisplay">------</div>
       <div class="form-group" style="margin-top:12px">
         <label>Enter OTP</label>
@@ -487,9 +487,14 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 <div class="modal-overlay" id="paywallModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('paywallModal')">✕</button>
-    <h2>🚀 Upgrade Plan</h2>
-    <p class="modal-sub">Daily limit reached. Upgrade now, or wait 24 hours for free reset.</p>
-    <div class="plan-cards" id="paywallPlans"></div>
+    <h2>🔒 Coming Very Soon!</h2>
+    <p class="modal-sub">Premium plans are being set up. Wait 24 hours for free reset, or share feedback below!</p>
+    <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:28px;margin-bottom:8px;">🔒</div>
+      <div style="font-weight:700;color:var(--text);margin-bottom:6px;">Unlock Very Soon!</div>
+      <div style="font-size:12px;color:var(--text2);">Payment system is being set up.<br/>Free services fully working meanwhile!</div>
+    </div>
+    <div class="plan-cards" id="paywallPlans" style="display:none"></div>
   </div>
 </div>
 
@@ -549,8 +554,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 <script>
 // CONFIG
-const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
 // const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
+const API = window.BACKEND_URL = 'https://lawyaari.onrender.com';
 // Admin free access: controlled by admin mobile number in backend
 // Set to false so real users see limits; admin mobile bypasses via backend
 const ADMIN_FREE = false;
@@ -641,10 +646,10 @@ const NEXT_STEPS = {
 };
 
 const INTENT_MAP = {
-  cheque_bounce:{kw:['cheque bounce','cheque bounced','dishonour','138','cheque wapas','చెక్ బౌన్స్'],service:'cheque_notice',cta:{hi:'क़ानूनी नोटिस बनाएं (₹149)',te:'లీగల్ నోటీస్ ₹149',hinglish:'Legal Notice banao (₹149)'},price:149},
-  msme_payment:{kw:['payment nahi','payment not received','invoice due','outstanding','చెల్లించలేదు'],service:'msme_notice',cta:{hi:'MSME नोटिस (₹249)',te:'MSME నోటీస్ ₹249',hinglish:'MSME Notice (₹249)'},price:249},
-  complaint:{kw:['complaint','shikayat','police complaint','fraud','धोखा','ఫిర్యాదు'],service:'complaint_draft',cta:{hi:'शिकायत ड्राफ्ट (₹69)',te:'ఫిర్యాదు ₹69',hinglish:'Complaint draft (₹69)'},price:69},
-  legal_reply:{kw:['notice mila','notice received','reply karna','jawab dena','threat message','నోటీస్ వచ్చింది'],service:'legal_reply',cta:{hi:'क़ानूनी जवाब (₹19)',te:'రిప్లై ₹19',hinglish:'Legal Reply (₹19)'},price:19},
+  cheque_bounce:{kw:['cheque bounce','cheque bounced','dishonour','138','cheque wapas','చెక్ బౌన్స్'],service:'cheque_notice',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:149},
+  msme_payment:{kw:['payment nahi','payment not received','invoice due','outstanding','చెల్లించలేదు'],service:'msme_notice',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:249},
+  complaint:{kw:['complaint','shikayat','police complaint','fraud','धोखा','ఫిర్యాదు'],service:'complaint_draft',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:69},
+  legal_reply:{kw:['notice mila','notice received','reply karna','jawab dena','threat message','నోటీస్ వచ్చింది'],service:'legal_reply',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:19},
 };
 
 function detectIntent(text){
@@ -749,13 +754,13 @@ function updateUsageBar(){
   const ctas={
     hi: rem===0
       ? `Free quota khatam — ${resetIn} mein reset hogi 🔄`
-      : `Confusion is expensive. ₹49 isn't 🍵🕵️`,
+      : `Free mein poochho — jaldi jaldi! 🚀`,
     te: rem===0
       ? `Free quota అయిపోయింది — ${resetIn} లో reset అవుతుంది 🔄`
-      : `Confusion costly. ₹49 కాదు 🍵🕵️`,
+      : `Free lo aduguo — jaldi! 🚀`,
     hinglish: rem===0
       ? `Free quota khatam — ${resetIn} mein reset hogi 🔄`
-      : `Confusion expensive. ₹49 nahi 🍵🕵️`
+      : `Free mein poochho — jaldi! 🚀`
   };
   document.getElementById('usageCta').textContent=ctas[state.lang]||ctas.hi;
 }
@@ -876,7 +881,7 @@ function appendAiMsg(text,intent){
   const c=document.getElementById('chatMessages');
   const d=document.createElement('div');d.className='msg ai';
   let intentHtml='';
-  if(intent){const cta=intent.cta||'';intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="openService('${intent.service}')">Generate →</button></div>`;}
+  if(intent){const cta=intent.cta||'';intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="showComingSoon()" style="opacity:.7">🔒 Unlock Soon</button></div>`;}
   // Simple follow-up nudge — language responsive, not static questions
   const followUp={hi:'<em style="color:var(--text3);font-size:12px">Aur kya jaanna hai? 🤔</em>',te:'<em style="color:var(--text3);font-size:12px">Next enti? 🤔</em>',hinglish:'<em style="color:var(--text3);font-size:12px">Aur kya jaanna hai? 🤔</em>'}[state.lang]||'<em style="color:var(--text3);font-size:12px">Aur kya jaanna hai? 🤔</em>';
   const nextHtml=`<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:7px">${followUp}</div>`;
@@ -886,8 +891,8 @@ function appendAiMsg(text,intent){
       <button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button>
       <button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>
       <div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px">
-        <button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" style="font-size:11px">⚡ ₹7 Expert</button>
-        <span style="font-size:9px;color:var(--text3);font-style:italic">Thala for a reason</span>
+        <button class="msg-action-btn" onclick="showComingSoon()" style="font-size:11px;opacity:.55;cursor:not-allowed" title="Coming very soon!">🔒 Expert</button>
+        <span style="font-size:9px;color:var(--text3);font-style:italic;opacity:.5">Unlock soon</span>
       </div>
     </div></div>`;
   c.appendChild(d);scrollBottom();
@@ -906,7 +911,7 @@ function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
 
 function showPaywallInChat(data){
   const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='paywall-msg';
-  const plans=(data.plans||[]).map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="initiatePayment('${p.plan_id}',${p.price})"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats}</div></div>`).join('');
+  const plans=(data.plans||[]).map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats} <span style='font-size:9px;color:var(--text3)'>🔒 Soon</span></div></div>`).join('');
   const gender=localStorage.getItem('ld_gender')||'other';
   const salutation=gender==='female'?"Ma'am":'Sir';
   // Display text — emoji ok for screen
@@ -1019,140 +1024,17 @@ function shareAndEarn(){
 
 // PAYWALL
 function openPaywall(){
-  const plans=[{name:'Pro',price:49,chats:'10/day',plan_id:'pro'},{name:'Unlimited',price:99,chats:'Unlimited',plan_id:'unlimited'}];
-  document.getElementById('paywallPlans').innerHTML=plans.map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="initiatePayment('${p.plan_id}',${p.price})"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats}</div></div>`).join('');
-  openModal('paywallModal');
+  // PAYMENTS DISABLED
+  showComingSoon();
 }
 
 // PAYMENT
 async function initiatePayment(service,amount){
-  // Admin mobile bypass
-  const adminMob = localStorage.getItem('ld_admin_mobile');
-  const isAdminUser = state.mobile && adminMob && state.mobile === adminMob;
-  if(isAdminUser){
-    const pid='ADMIN_'+Date.now();
-    toast('Admin access ✓ — generating free','success');
-    closeModal('paywallModal');closeModal('serviceModal');
-    if(state.pendingPaymentService){await submitService(state.pendingPaymentService,pid);state.pendingPaymentService=null;}
-    return pid;
-  }
-  if(!state.token){toast('Login first','error');openAuth();return;}
-  try{
-    const res=await fetch(`${API}/api/create-order`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount,service,mobile:state.mobile})});
-    const order=await res.json();
-    if(order.demo){
-      const vr=await fetch(`${API}/api/verify-payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({razorpay_order_id:order.order_id,razorpay_payment_id:'demo_'+Date.now(),razorpay_signature:'demo',service,mobile:state.mobile})});
-      const vd=await vr.json();
-      if(vd.success){addPurchase(service,amount);toast('Payment demo ✓','success');closeModal('paywallModal');if(state.pendingPaymentService){await submitService(state.pendingPaymentService,vd.payment_id);state.pendingPaymentService=null;}return vd.payment_id;}
-    }
-    new Razorpay({key:order.key,amount:order.amount*100,currency:'INR',name:'Lawyaari',description:service,order_id:order.order_id,
-      handler:async r=>{const vr=await fetch(`${API}/api/verify-payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({razorpay_order_id:r.razorpay_order_id,razorpay_payment_id:r.razorpay_payment_id,razorpay_signature:r.razorpay_signature,service,mobile:state.mobile})});const vd=await vr.json();if(vd.success){addPurchase(service,amount);toast('Payment success ✓','success');if(state.pendingPaymentService){await submitService(state.pendingPaymentService,vd.payment_id);state.pendingPaymentService=null;}}},
-      prefill:{contact:state.mobile},theme:{color:'#f59e0b'}
-    }).open();
-  }catch(e){toast('Payment error','error');}
+  // PAYMENTS DISABLED — Razorpay setup in progress
+  showComingSoon();
+  return null;
 }
 
-function addPurchase(service,amount){
-  const names={cheque_notice:'Cheque Bounce Notice',msme_notice:'MSME Recovery',legal_reply:'Legal Reply',complaint_draft:'Complaint Draft',priority_answer:'Priority Answer',pro:'Pro Plan',unlimited:'Unlimited Plan'};
-  const exp=new Date();exp.setMonth(exp.getMonth()+1);
-  state.purchases.unshift({name:names[service]||service,service,amount,date:new Date().toLocaleDateString('en-IN'),expiry:exp.toISOString()});
-  localStorage.setItem('ld_purchases',JSON.stringify(state.purchases));
-  if(['pro','unlimited'].includes(service)) localStorage.setItem('ld_plan',service);
-}
-
-// SERVICES
-const SVC = {
-  cheque_notice:{title:'📝 Cheque Bounce Notice',desc:'Section 138 legal notice — ₹149',price:149,ep:'/api/cheque-notice',fields:[{id:'client_name',label:'Your Name',type:'input',ph:'Full name'},{id:'client_address',label:'Your Address',type:'textarea',ph:'Full address'},{id:'drawer_name',label:'Drawer Name',type:'input',ph:'Who gave the cheque'},{id:'drawer_address',label:'Drawer Address',type:'textarea',ph:'Address'},{id:'cheque_number',label:'Cheque No',type:'input',ph:'001234'},{id:'cheque_date',label:'Cheque Date',type:'input',ph:'DD/MM/YYYY'},{id:'cheque_amount',label:'Amount ₹',type:'input',ph:'50000'},{id:'bank_name',label:'Bank',type:'input',ph:'SBI'},{id:'dishonour_reason',label:'Dishonour Reason',type:'input',ph:'Insufficient funds'}]},
-  msme_notice:{title:'📦 MSME Recovery',desc:'Demand notice under MSMED Act — ₹249',price:249,ep:'/api/msme-notice',fields:[{id:'business_name',label:'Your Business',type:'input',ph:'MSME name'},{id:'buyer_name',label:'Buyer Name',type:'input',ph:'Client name'},{id:'buyer_address',label:'Buyer Address',type:'textarea',ph:'Full address'},{id:'invoice_number',label:'Invoice No',type:'input',ph:'INV-001'},{id:'invoice_date',label:'Invoice Date',type:'input',ph:'DD/MM/YYYY'},{id:'outstanding_amount',label:'Outstanding ₹',type:'input',ph:'200000'},{id:'due_date',label:'Due Date',type:'input',ph:'DD/MM/YYYY'},{id:'udyam_number',label:'Udyam No (optional)',type:'input',ph:'UDYAM-XX-0-0000000'}]},
-  legal_reply:{title:'💬 Legal Reply Generator',desc:'Reply to any notice — ₹19',price:19,ep:'/api/legal-reply',fields:[{id:'received_message',label:'Notice/Message Received',type:'textarea',ph:'Paste the EXACT legal notice text (from bank, court, landlord, recovery agent, police). This service is for LEGAL notices only.'},{id:'context',label:'Who sent the notice?',type:'select',opts:['bank','landlord','employer','police','recovery_agent','other']},{id:'your_facts',label:'Your Key Facts to Assert (Important!)',type:'textarea',ph:'State YOUR side clearly. E.g: I paid Rs.18400 via NEFT on 05 Jan 2026 (UTR:NEFTXXXX). Or: I vacated on 15 Feb 2026. Or: Cheque was security deposit not for debt. The AI builds your reply around these facts.'},{id:'tone',label:'Tone',type:'select',opts:['polite','firm','strict_legal']},{id:'user_name',label:'Your Name',type:'input',ph:'Full name'}]},
-  complaint_draft:{title:'📣 Complaint Draft',desc:'Formal complaint — ₹69',price:69,ep:'/api/complaint-draft',fields:[{id:'issue_type',label:'Issue Type',type:'select',opts:['police','cybercrime','consumer','labour','medical','other']},{id:'issue_description',label:'Problem Description',type:'textarea',ph:'What happened...'},{id:'location',label:'Location',type:'input',ph:'City, State'},{id:'opponent_name',label:'Opponent (optional)',type:'input',ph:'Person/company'},{id:'date',label:'Incident Date',type:'input',ph:'DD/MM/YYYY'},{id:'user_name',label:'Your Name',type:'input',ph:'Full name'}]},
-  priority_answer:{title:'⚡ Priority Answer',desc:'Structured expert legal answer — ₹7',price:7,ep:'/api/priority-answer',fields:[{id:'question',label:'Your Legal Question',type:'textarea',ph:'Describe in detail...'},{id:'priority_type',label:'Answer Type',type:'select',opts:['instant_7','detailed_10']}]},
-};
-
-function openService(key){
-  const cfg=SVC[key];if(!cfg) return;
-  state.currentService=key;
-  document.getElementById('serviceModalTitle').textContent=cfg.title;
-  document.getElementById('serviceModalDesc').textContent=cfg.desc;
-  const html=cfg.fields.map(f=>{
-    if(f.type==='select') return `<div class="form-group"><label>${f.label}</label><select id="sf_${f.id}" ${f.onchange?`onchange="${f.onchange}"`:''}>${(f.opts||[]).map(o=>`<option value="${o}">${o.replace(/_/g,' ')}</option>`).join('')}</select></div>`;
-    if(f.type==='textarea') return `<div class="form-group"><label>${f.label}</label><textarea id="sf_${f.id}" placeholder="${f.ph||''}"></textarea></div>`;
-    return `<div class="form-group"><label>${f.label}</label><input type="text" id="sf_${f.id}" placeholder="${f.ph||''}"/></div>`;
-  }).join('');
-  const priceBox='';
-  document.getElementById('serviceModalBody').innerHTML=`${html}${priceBox}<button class="modal-btn" id="svcPayBtn" onclick="handleSvcSubmit('${key}',${cfg.price})">Pay ₹${cfg.price} & Generate</button>`;
-  openModal('serviceModal');
-}
-
-// #7 fix — dynamic price on priority answer type change
-
-
-async function handleSvcSubmit(key,price){
-  const cfg=SVC[key];const data={};const optional=['udyam_number','opponent_name','your_facts'];
-  for(const f of cfg.fields){const el=document.getElementById('sf_'+f.id);data[f.id]=el?el.value.trim():'';if(!data[f.id]&&!optional.includes(f.id)){toast(`Fill: ${f.label}`,'error');return;}}
-  state.pendingServiceData=data;state.pendingPaymentService=key;
-  await initiatePayment(key,cfg.price);
-}
-
-async function submitService(key,paymentId){
-  const cfg=SVC[key];const data=state.pendingServiceData;
-  const payload={...data,language:state.lang,payment_id:paymentId,mobile:state.mobile||''};
-  if(key==='priority_answer'){payload.priority_flag=true;}
-  try{
-    const res=await fetch(API+cfg.ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    const d=await res.json();closeModal('serviceModal');
-    showResult(d.content,cfg.title,key);
-  }catch(e){toast('Generation error. Check backend.','error');}
-}
-
-// CUSTOM SERVICE (#8)
-function openCustomService(){openModal('customServiceModal');}
-function addCustomField(){
-  const l=document.getElementById('customFieldsList');const r=document.createElement('div');r.className='custom-field-row';
-  r.innerHTML=`<input type="text" placeholder="Field name e.g. Property Address"/><button class="rm-field-btn" onclick="this.parentElement.remove()">✕</button>`;
-  l.appendChild(r);
-}
-async function submitCustomService(){
-  const name=document.getElementById('customServiceName').value.trim();
-  const desc=document.getElementById('customServiceDesc').value.trim();
-  if(!name||!desc){toast('Fill service name and description','error');return;}
-  const extras=[...document.querySelectorAll('#customFieldsList input')].map(i=>i.value.trim()).filter(Boolean);
-  const prompt=`Create a legal document.\nService: ${name}\nDetails: ${desc}\nExtra fields: ${extras.join(', ')||'none'}`;
-  closeModal('customServiceModal');hideEmpty();
-  const tid=appendTyping();
-  try{
-    const res=await fetch(`${API}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:prompt,language:state.lang,session_token:state.token,conversation_history:[]})});
-    const d=await res.json();removeTyping(tid);appendAiMsg(d.response||'',null);
-  }catch(e){removeTyping(tid);appendMsg('ai','⚠️ Error. Try again.');}
-}
-
-// RESULT
-function showResult(content,title,serviceType){
-  state.currentResult={content,title,serviceType};
-  document.getElementById('resultModalTitle').textContent=title;
-  document.getElementById('resultContent').textContent=content;
-  document.getElementById('shareCardWrap').style.display='none';
-  // Hide PDF button for priority answers — text response, no PDF needed
-  const pdfBtn=document.querySelector('.ra-pdf');
-  if(pdfBtn) pdfBtn.style.display=(serviceType==='priority_answer'||serviceType==='chat')?'none':'';
-  openModal('resultModal');
-}
-function copyResult(){navigator.clipboard.writeText(state.currentResult?.content||'');toast('Copied ✓','success');}
-async function downloadPDF(){
-  if(!state.currentResult) return;
-  const g=localStorage.getItem('ld_gender')||'other';
-  const overlay=document.getElementById('pdfOverlay');
-  if(overlay) overlay.classList.add('show');
-  playCommand('pdf-generating');
-  try{
-    const res=await fetch(`${API}/api/generate-pdf`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:state.currentResult.content,title:state.currentResult.title,service_type:state.currentResult.serviceType})});
-    const blob=await res.blob();const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download=`lawyaari_${state.currentResult.serviceType}.pdf`;a.click();URL.revokeObjectURL(url);
-    toast('PDF downloaded ✓','success');
-    if(overlay) overlay.classList.remove('show');
-  }catch(e){toast('PDF error — try again','error');
-  if(overlay) overlay.classList.remove('show');}
-}
 
 // SHARE CARD — draws branded canvas card (like reference image)
 function wrapText(ctx, text, x, y, maxW, lineH, maxY){
@@ -1380,6 +1262,26 @@ function playCommand(cmd){
   if(frame&&frame.contentWindow) frame.contentWindow.postMessage(cmd,'*');
 }
 
+// ── PAYMENTS TEMPORARILY DISABLED ─────────────────────────────
+// To re-enable: remove showComingSoon, rename openService_ORIG → openService
+// and restore all onclick handlers above
+function showComingSoon(){
+  // Show a friendly coming-soon toast + modal
+  const msg = {
+    hi:       '⚡ Bahut jaldi aa raha hai! Payment system update ho raha hai.',
+    te:       '⚡ చాలా త్వరలో వస్తుంది! Payment system నవీకరించబడుతోంది.',
+    hinglish: '⚡ Coming soon! Payment system update ho raha hai.'
+  }[state.lang] || '⚡ Coming soon!';
+  toast(msg, 'warn');
+  // Show the coming-soon modal
+  openModal('comingSoonModal');
+}
+
+function openService(key){
+  // Payments disabled — show coming soon
+  showComingSoon();
+}
+
 // INIT
 function init(){
   const today=new Date().toDateString();
@@ -1447,6 +1349,34 @@ init();
   <div class="pdf-overlay-text">PDF generate ho rahi hai...</div>
   <div class="pdf-overlay-sub">Kripya prateeksha karein 🙏</div>
 </div>
+<!-- COMING SOON MODAL -->
+<div class="modal-overlay" id="comingSoonModal">
+  <div class="modal" style="max-width:380px;text-align:center;">
+    <button class="modal-close" onclick="closeModal('comingSoonModal')">✕</button>
+    <div style="font-size:48px;margin-bottom:12px;">⚡</div>
+    <h2 style="margin-bottom:8px;">Bahut Jaldi!</h2>
+    <p class="modal-sub" style="font-size:14px;line-height:1.7;margin-bottom:16px;">
+      Premium services are being set up.<br/>
+      We'll notify you the moment payments go live.<br/>
+      <strong style="color:var(--accent);">Free services are fully working!</strong>
+    </p>
+    <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:6px;">Meanwhile, use for free:</div>
+      <div style="font-size:13px;color:var(--text);line-height:1.8;">
+        ✅ Hindi legal Q&A — 5/day<br/>
+        ✅ Telugu legal Q&A — 3/day<br/>
+        ✅ Hinglish Q&A — 5/day<br/>
+        ✅ Quick questions on all 10 topics
+      </div>
+    </div>
+    <button onclick="openFeedback();closeModal('comingSoonModal')" 
+      style="width:100%;padding:11px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);">
+      📝 Notify Me When Live
+    </button>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px;">lawyaari.com</div>
+  </div>
+</div>
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
