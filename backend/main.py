@@ -21,7 +21,7 @@ import razorpay
 
 load_dotenv()
 
-app = FastAPI(title="Lawyaari API", version="2.0.0")
+app = FastAPI(title="Bklchai API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,7 +34,7 @@ app.add_middleware(
 # ─── DB ──────────────────────────────────────────────────────────────────────
 MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
 client = MongoClient(MONGO_URL)
-db = client["lawyaari"]
+db = client["bklchai"]
 
 users_col       = db["users"]
 sessions_col    = db["sessions"]
@@ -197,7 +197,7 @@ def get_system_prompt(language: str, category: str = "general") -> str:
     # Legal documents MUST be in formal English regardless of UI language
     # Hinglish/casual language in a legal notice is unprofessional and can be rejected
     if category == "legal":
-        return """You are Lawyaari, a professional legal document drafting assistant for Indian law.
+        return """You are Bklchai, a professional legal document drafting assistant for Indian law.
 
 LANGUAGE: Write ALL legal documents in formal English only. No Hindi, Telugu, or Hinglish.
 
@@ -230,7 +230,7 @@ End every document with: "Note: This document is AI-generated. Consult a qualifi
         "hinglish": "Respond in Hinglish (Hindi written in English script). Keep it casual yet accurate.",
     }.get(language, "Respond in Hindi.")
 
-    return f"""You are Lawyaari, an AI legal assistant for Indian citizens — especially MSMEs, workers, and common people.
+    return f"""You are Bklchai, an AI legal assistant for Indian citizens — especially MSMEs, workers, and common people.
 {lang_instruction}
 
 Scope: Indian law only. Categories: MSME, Banking, Cyber Crime, Police Rights, Medical Rights, Consumer Rights, Labour Law, Property, Women Rights, Tax.
@@ -1110,7 +1110,7 @@ async def generate_pdf(req: GeneratePDFRequest):
         els = []
 
         # ── Letterhead ──
-        els.append(_para("Lawyaari  |  lawyaari.com", s_header))
+        els.append(_para("Bklchai  |  bklchai.com", s_header))
         els.append(_para("Your legal rights, explained.", s_sub))
         els.append(HRFlowable(width="100%", thickness=1.5,
             color=colors.HexColor("#f59e0b"), spaceAfter=10))
@@ -1157,7 +1157,7 @@ async def generate_pdf(req: GeneratePDFRequest):
             color=colors.HexColor("#dddddd"), spaceAfter=6))
         els.append(_para(
             f"Generated: {datetime.utcnow().strftime('%d %B %Y')}  |  "
-            "Lawyaari is not a legal firm. This document is AI-generated. "
+            "Bklchai is not a legal firm. This document is AI-generated. "
             "Consult a qualified lawyer before taking any legal action.",
             s_footer
         ))
@@ -1241,7 +1241,7 @@ async def verify_payment(req: VerifyPaymentRequest):
 # ─── ADMIN ────────────────────────────────────────────────────────────────────
 @app.get("/api/admin/stats")
 async def admin_stats(x_admin_key: Optional[str] = Header(None)):
-    if x_admin_key != os.getenv("ADMIN_KEY", "lawyaari-admin-2024"):
+    if x_admin_key != os.getenv("ADMIN_KEY", "bklchai-admin-2024"):
         raise HTTPException(403, "Forbidden")
 
     total_users = users_col.count_documents({})
@@ -1288,4 +1288,4 @@ async def admin_stats(x_admin_key: Optional[str] = Header(None)):
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "version": "2.0.0", "service": "lawyaari"}
+    return {"status": "ok", "version": "2.0.0", "service": "bklchai"}

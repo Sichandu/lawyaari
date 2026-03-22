@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Lawyaari – आपका क़ानूनी दोस्त</title>
+<title>Bklchai – आपका क़ानूनी दोस्त</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -294,7 +294,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 <nav>
   <div style="display:flex;align-items:center;gap:8px;min-width:0;">
     <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-    <a href="#" class="logo"><span class="logo-icon">⚖️ </span>Lawyaari <span class="logo-badge">BETA</span></a>
+    <a href="#" class="logo"><span class="logo-icon">⚖️ </span>Bklchai <span class="logo-badge">BETA</span></a>
   </div>
   <div class="nav-right">
     <div class="lang-dropdown">
@@ -413,7 +413,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
     <a href="disclaimer.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Disclaimer</a>
     <a href="#" onclick="openFeedback();return false;" style="color:var(--accent3);text-decoration:none;">Feedback</a>
   </div>
-  <div>© 2026 Lawyaari · Not a legal firm</div>
+  <div>© 2026 Bklchai · bklchai.com · Not a legal firm</div>
 </footer>
 
 <!-- AUTH MODAL -->
@@ -555,7 +555,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 <script>
 // CONFIG
 // const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
-const API = window.BACKEND_URL = 'https://lawyaari.onrender.com';
+const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
 // Admin free access: controlled by admin mobile number in backend
 // Set to false so real users see limits; admin mobile bypasses via backend
 const ADMIN_FREE = false;
@@ -1017,9 +1017,9 @@ function openProfileModal(){
 }
 
 function shareAndEarn(){
-  const text=`⚖️ Lawyaari — Aapka Kanooni Dost!\nHindi, Telugu & Hinglish mein free legal help!\n\n🔗 lawyaari.com`;
-  if(navigator.share) navigator.share({title:'Lawyaari',text,url:'https://lawyaari.com'}).catch(()=>{});
-  else{navigator.clipboard.writeText('https://lawyaari.com');toast('Link copied! Share karo 🔗','success');}
+  const text=`⚖️ Bklchai — Aapka Kanooni Dost!\nHindi, Telugu & Hinglish mein free legal help!\n\n🔗 bklchai.com`;
+  if(navigator.share) navigator.share({title:'Bklchai',text,url:'https://bklchai.com'}).catch(()=>{});
+  else{navigator.clipboard.writeText('https://bklchai.com');toast('Link copied! Share karo 🔗','success');}
 }
 
 // PAYWALL
@@ -1070,9 +1070,9 @@ function drawShareCanvas(question, bodyText){
   // Logo strip
   ctx.fillStyle='#14141e';ctx.fillRect(0,5,W,60);
   ctx.font='bold 18px sans-serif';ctx.fillStyle='#f59e0b';
-  ctx.fillText('\u2696\uFE0F  Lawyaari',20,38);
+  ctx.fillText('\u2696\uFE0F  Bklchai',20,38);
   ctx.font='12px sans-serif';ctx.fillStyle='#888';
-  ctx.fillText('lawyaari.com  •  Aapka kanooni dost',20,56);
+  ctx.fillText('bklchai.com  •  Aapka kanooni dost',20,56);
 
   // Divider
   ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
@@ -1104,9 +1104,9 @@ function drawShareCanvas(question, bodyText){
   ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(0,H-44);ctx.lineTo(W,H-44);ctx.stroke();
   ctx.font='11px sans-serif';ctx.fillStyle='#555';
-  ctx.fillText('lawyaari.com  •  Not legal advice. Consult a lawyer.',20,H-16);
+  ctx.fillText('bklchai.com  •  Not legal advice. Consult a lawyer.',20,H-16);
   ctx.fillStyle='#f59e0b';ctx.textAlign='right';
-  ctx.fillText('lawyaari.com',W-20,H-16);
+  ctx.fillText('bklchai.com',W-20,H-16);
   ctx.textAlign='left';
   ctx.fillStyle=g;ctx.fillRect(0,H-3,W,3);
 
@@ -1126,7 +1126,7 @@ function buildShareCard(){
   const result=state.currentResult;
   if(!result){toast('No content to share','error');return;}
   // title is the question for chat responses, service name for premium docs
-  drawShareCanvas(result.title||'Lawyaari Response', result.content||'');
+  drawShareCanvas(result.title||'Bklchai Response', result.content||'');
   document.getElementById('shareCardWrap').style.display='block';
   toast('Share card ready! ↓','success');
 }
@@ -1141,12 +1141,12 @@ function downloadShareCard(){
 
 async function shareCard(){
   const canvas=document.getElementById('shareCanvas');
-  const title=(state.currentResult?state.currentResult.title:'Lawyaari');
+  const title=(state.currentResult?state.currentResult.title:'Bklchai');
   try{
     canvas.toBlob(async function(blob){
       const file=new File([blob],'legaldost_share.png',{type:'image/png'});
       if(navigator.canShare&&navigator.canShare({files:[file]})){
-        await navigator.share({title:'Lawyaari – '+title,files:[file],text:'Aapka kanooni dost — lawyaari.netlify.app'});
+        await navigator.share({title:'Bklchai – '+title,files:[file],text:'Aapka kanooni dost — bklchai.com'});
       } else {
         const url=URL.createObjectURL(blob);
         window.open(url,'_blank');
@@ -1249,7 +1249,7 @@ function submitFeedback(){
 
   const typeLabel={suggestion:'💡 Suggestion',bug:'🐛 Bug Report',complaint:'😤 Complaint',praise:'🙌 Praise',feature:'🚀 Feature Request'}[type]||type;
   const lang=state.lang||'hi';
-  const text=`*Lawyaari Feedback*%0A%0A*Type:* ${typeLabel}%0A*Name:* ${name}%0A*Language:* ${lang}%0A*Phone:* ${phone||'Not given'}%0A%0A*Message:*%0A${encodeURIComponent(msg)}%0A%0A_Sent from lawyaari.com_`;
+  const text=`*Bklchai Feedback*%0A%0A*Type:* ${typeLabel}%0A*Name:* ${name}%0A*Language:* ${lang}%0A*Phone:* ${phone||'Not given'}%0A%0A*Message:*%0A${encodeURIComponent(msg)}%0A%0A_Sent from bklchai.com_`;
   window.open(`https://wa.me/918185843878?text=${text}`,'_blank');
   closeModal('feedbackModal');
   toast('Opening WhatsApp... Thank you! 🙏','success');
@@ -1313,7 +1313,7 @@ init();
   <div class="modal" style="max-width:480px">
     <button class="modal-close" onclick="closeModal('feedbackModal')">✕</button>
     <h2>📝 Share Your Feedback</h2>
-    <p class="modal-sub">Help us improve Lawyaari. Your feedback goes directly to the founder.</p>
+    <p class="modal-sub">Help us improve Bklchai. Your feedback goes directly to the founder.</p>
     <div class="form-group">
       <label>Your Name (optional)</label>
       <input type="text" id="fb_name" placeholder="What should we call you?"/>
@@ -1373,7 +1373,7 @@ init();
       style="width:100%;padding:11px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);">
       📝 Notify Me When Live
     </button>
-    <div style="font-size:11px;color:var(--text3);margin-top:10px;">lawyaari.com</div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px;">bklchai.com</div>
   </div>
 </div>
 
