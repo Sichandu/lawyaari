@@ -52,7 +52,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .sidebar{width:235px;min-width:235px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:transform .25s;}
 .sidebar-header{padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;}
 .sidebar-scroll{flex:1;overflow-y:auto;padding:6px;}
-.category-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .15s;margin-bottom:2px;font-size:12px;border:1px solid transparent;}
+.category-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .15s;margin-bottom:2px;border:1px solid transparent;}
 .category-item:hover{background:var(--bg3);}
 .category-item.active{background:var(--bg3);border-color:var(--border2);}
 .category-item .icon{font-size:16px;width:22px;text-align:center;flex-shrink:0;}
@@ -312,6 +312,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
   <!-- 3-dots dropdown menu -->
   <div class="dots-menu" id="dotsMenu">
     <div class="dots-item" onclick="handleAuthClick();closeDotsMenu()"><span class="di">👤</span><span id="dotAuthLabel">Login / Register</span></div>
+    <a class="dots-item" href="timepass.html"><span class="di">⚡</span>Timepass Zone</a>
     <div class="dots-item" onclick="openFeedback();closeDotsMenu()"><span class="di">📝</span>Feedback</div>
     <a class="dots-item" href="about.html"><span class="di">ℹ️</span>About Us</a>
     <a class="dots-item" href="contact.html"><span class="di">📞</span>Contact</a>
@@ -366,7 +367,9 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       </div>
 
       <div class="sidebar-section">💬 Support</div>
+      <div class="service-item" onclick="window.location.href='timepass.html'"><span class="sname">⚡ Timepass Zone</span><span class="sprice" style="background:rgba(245,158,11,.1);color:var(--accent)">Free</span></div>
       <div class="service-item" onclick="openFeedback()"><span class="sname">📝 Give Feedback</span><span class="sprice" style="background:rgba(16,185,129,.1);color:var(--accent3)">Help</span></div>
+      <a href="timepass.html" class="service-item" style="text-decoration:none;display:flex;align-items:center;justify-content:space-between;"><span class="sname">🎮 Timepass</span><span class="sprice" style="background:rgba(16,185,129,.1);color:var(--accent3)">Free</span></a>
     </div>
   </aside>
 
@@ -411,6 +414,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
     <a href="terms.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Terms</a>
     <a href="privacy.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Privacy</a>
     <a href="disclaimer.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Disclaimer</a>
+    <a href="timepass.html" style="color:var(--accent);text-decoration:none;">⚡ Timepass</a>
     <a href="#" onclick="openFeedback();return false;" style="color:var(--accent3);text-decoration:none;">Feedback</a>
   </div>
   <div>© 2026 Bklchai · bklchai.com · Not a legal firm</div>
@@ -440,7 +444,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
         </select>
       </div>
       <div class="form-group">
-        <label>Pick Your Social Vibe 😤</label>
+        <label>Pick Your Social Vibe </label>
         <div class="sigma-picker" id="sigmaPicker">
           <span class="sigma-opt selected" data-emoji="😤" onclick="pickSigma(this)">😤</span>
           <span class="sigma-opt" data-emoji="🗿" onclick="pickSigma(this)">🗿</span>
@@ -450,12 +454,17 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
           <span class="sigma-opt" data-emoji="🥷" onclick="pickSigma(this)">🥷</span>
           <span class="sigma-opt" data-emoji="👑" onclick="pickSigma(this)">👑</span>
           <span class="sigma-opt" data-emoji="🔥" onclick="pickSigma(this)">🔥</span>
+          <span class="sigma-opt" data-emoji="🚀" onclick="pickSigma(this)">🚀</span>
+          <span class="sigma-opt" data-emoji="💎" onclick="pickSigma(this)">💎</span>
+          <span class="sigma-opt" data-emoji="📈" onclick="pickSigma(this)">📈</span>
+          <span class="sigma-opt" data-emoji="💰" onclick="pickSigma(this)">💰</span>
+          <span class="sigma-opt" data-emoji="⚡" onclick="pickSigma(this)">⚡</span>
         </div>
       </div>
       <button class="modal-btn" onclick="sendOTP()">Send OTP →</button>
     </div>
     <div id="authStep2" style="display:none">
-      <p style="font-size:12px;color:var(--text2);margin-bottom:6px">OTP (shown for demo):</p>
+      <p style="font-size:12px;color:var(--text2);margin-bottom:6px">Here is Your OTP:</p>
       <div class="otp-display" id="otpDisplay">------</div>
       <div class="form-group" style="margin-top:12px">
         <label>Enter OTP</label>
@@ -545,7 +554,10 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
     <!-- Single share card block — auto-shown when share button clicked -->
     <div id="shareCardWrap" style="display:none;margin-top:14px;text-align:center;">
       <canvas id="shareCanvas" style="border-radius:10px;max-width:100%;box-shadow:0 4px 20px rgba(0,0,0,.5);display:block;margin:0 auto;"></canvas>
-      <button class="share-dl-btn" onclick="shareCard()" style="margin-top:10px;width:100%;padding:11px;font-size:14px;font-weight:700;background:var(--accent3);color:#000;border:none;border-radius:8px;cursor:pointer;font-family:var(--font);">↗ Share Card</button>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+  <button onclick="shareCard()" style="flex:2;padding:11px;font-size:13px;font-weight:700;background:var(--accent3);color:#000;border:none;border-radius:8px;cursor:pointer;font-family:var(--font);">↗ Share Card</button>
+  <button onclick="downloadShareCard()" style="flex:1;padding:11px;font-size:12px;font-weight:600;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:8px;cursor:pointer;font-family:var(--font);">⬇ Save Image</button>
+</div>
     </div>
     <!-- Generate button — shows the card below -->
     <button onclick="buildShareCard()" style="width:100%;margin-top:10px;padding:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--accent3);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);">🎴 Generate Share Card</button>
@@ -559,7 +571,7 @@ const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
 // Admin free access: controlled by admin mobile number in backend
 // Set to false so real users see limits; admin mobile bypasses via backend
 const ADMIN_FREE = false;
-// Admin mobile stored after login — if this mobile logs in, skip frontend limits too
+// Admin mobile stored after login — if this mobile logs in, bypass frontend limits too
 const ADMIN_MOBILE = localStorage.getItem('ld_admin_mobile') || '';
 
 // STATE
@@ -570,7 +582,7 @@ let state = {
   userEmoji:localStorage.getItem('ld_emoji')||'😤',
   category:'msme', chatHistory:[],
   usedChats:parseInt(localStorage.getItem('ld_chats_'+new Date().toDateString())||'0'),
-  currentResult:null, pendingPaymentService:null, pendingServiceData:null, pendingTeluguMsg:null,
+  currentResult:null, pendingPaymentService:null, pendingServiceData:null, pendingTeluguMsg:null, askedQuestions:{},
   purchases:JSON.parse(localStorage.getItem('ld_purchases')||'[]'),
   selectedSigma:'😤', warnedLastChat:false,
 };
@@ -707,8 +719,50 @@ function updateDotsAuth(){
 }
 function selectCategory(cat,el){
   state.category=cat;
+  if(state.askedQuestions) state.askedQuestions={}; // reset per topic
   document.querySelectorAll('.category-item').forEach(e=>e.classList.remove('active'));
-  el.classList.add('active');renderQuickCards();
+  el.classList.add('active');
+  renderQuickCards();
+
+  const chatMessages=document.getElementById('chatMessages');
+  const qa=document.getElementById('quickCardsArea');
+  const hasChats=chatMessages && chatMessages.querySelectorAll('.msg').length>0;
+
+  if(!hasChats){
+    // No chat yet — show cards in their normal top position
+    if(qa) qa.style.display='block';
+    if(chatMessages) chatMessages.scrollTop=0;
+  } else {
+    // Mid-chat — inject fresh quick cards inline at bottom of chat
+    if(qa) qa.style.display='none'; // keep top hidden
+    // Remove any previous injected topic switch cards
+    document.querySelectorAll('.topic-switch-cards').forEach(e=>e.remove());
+    const qs=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]
+            ||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
+    if(qs.length>0){
+      const catNames={msme:'MSME Rights',banking:'Banking Rights',police:'Police Rights',
+        cyber:'Cyber Crime',medical:'Medical Rights',consumer:'Consumer Rights',
+        labour:'Labour Law',property:'Property & Tenant',women:'Women Rights',tax:'Tax & GST'};
+      const catName=catNames[cat]||cat;
+      const label={hi:`${catName} ke sawaal:`,te:`${catName} ప్రశ్నలు:`,hinglish:`${catName} questions:`}[state.lang]||`${catName} questions:`;
+      const wrap=document.createElement('div');
+      wrap.className='topic-switch-cards';
+      wrap.style.cssText='margin:10px 0 4px 0;';
+      const cards=qs.map(q=>
+        `<div onclick="fillAndSend(this.dataset.q)" data-q="${q.replace(/"/g,'&quot;')}"
+          style="cursor:pointer;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);transition:all .15s;line-height:1.4;display:inline-block;"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'"
+          onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'"
+        >→ ${q}</div>`
+      ).join('');
+      wrap.innerHTML=`<div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:6px;letter-spacing:.4px">⚖️ ${label}</div><div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;">${cards}</div>`;
+      const msgWrap=document.createElement('div');
+      msgWrap.className='msg ai';
+      msgWrap.innerHTML=`<div class="msg-avatar">⚖️</div><div><div class="msg-bubble">${wrap.outerHTML}</div></div>`;
+      chatMessages.appendChild(msgWrap);
+      scrollBottom();
+    }
+  }
   if(window.innerWidth<=680) closeSidebar();
 }
 function renderQuickCards(){
@@ -771,14 +825,25 @@ function incrementUsage(){
   state.usedChats++;
   localStorage.setItem('ld_chats_'+new Date().toDateString(),state.usedChats);
   const limit=getLimit(),rem=Math.max(0,limit-state.usedChats);
-  // #6A — warn when 1 left
-  if(rem===1&&!state.warnedLastChat){
-    state.warnedLastChat=true;
-    const g=localStorage.getItem('ld_gender')||'other';
+  const g=localStorage.getItem('ld_gender')||'other';
+  const sal=g==='female'?'Ma\'am':'Sir';
+
+  // Show login nudge AFTER 3rd chat answer (usedChats just became 3)
+  if(!state.token && state.usedChats===3){
     setTimeout(()=>{
-      toast('⚠️ 1 free chat left! Upgrade for ₹49/month','warn');
+      openModal('authModal');
+      toast('3 free chats ho gaye '+sal+' — Login karein for better experience 🙏','warn');
+    },900);
+  }
+
+  // "1 chat left" warning — only AFTER answer, separate from login nudge
+  // fires when rem===1 AND we haven't warned yet AND login nudge isn't showing
+  if(rem===1&&!state.warnedLastChat&&(state.token||state.usedChats>3)){
+    state.warnedLastChat=true;
+    setTimeout(()=>{
+      toast('⚠️ Sirf 1 free chat bacha hai '+sal+'! Upgrade karein.','warn');
       playCommand(g==='female'?'last-chat-maam':'last-chat-sir');
-    },600);
+    },1200);
   }
   updateUsageBar();
 }
@@ -806,16 +871,6 @@ async function sendMessage(){
       hideEmpty();showPaywallInChat(paywallData);
       return;
     }
-  }
-
-  // Ask login after exactly 3 chats if not logged in
-  if(!state.token && state.usedChats===3){
-    const gender=localStorage.getItem('ld_gender')||'other';
-    const sal=gender==='female'?'Ma\'am':'Sir';
-    setTimeout(()=>{
-      openModal('authModal');
-      toast('3 chats ho gaye '+sal+' — Login karein for better experience 🙏','warn');
-    },800);
   }
 
   // Telugu users: on their 3rd question (usedChats===2 means this is the 3rd),
@@ -850,7 +905,7 @@ async function sendMessage(){
     else{
       state.chatHistory.push({role:'user',content:text});
       state.chatHistory.push({role:'assistant',content:data.response||''});
-      appendAiMsg(data.response||'',data.intent);
+      appendAiMsg(data.response||'',data.intent,text);
       incrementUsage();
     }
   }catch(err){removeTyping(tid);appendMsg('ai','⚠️ Backend not reachable. Check if server is running on port 8000.');}
@@ -877,14 +932,56 @@ function appendRaw(html){
   c.appendChild(d);scrollBottom();
 }
 
-function appendAiMsg(text,intent){
+function getNextQuestions(asked){
+  // Track asked questions per category in state
+  if(!state.askedQuestions) state.askedQuestions={};
+  const key=state.category+'_'+state.lang;
+  if(!state.askedQuestions[key]) state.askedQuestions[key]=[];
+  // Add the newly asked question
+  if(asked && asked.trim()) state.askedQuestions[key].push(asked.trim());
+  // Get all questions for this topic
+  const all=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]
+          ||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
+  // Filter out ALL previously asked questions
+  const asked_set=state.askedQuestions[key];
+  const remaining=all.filter(q=>!asked_set.includes(q.trim()));
+  return remaining.slice(0,4); // max 4 shown
+}
+
+function appendAiMsg(text,intent,askedQuestion){
   const c=document.getElementById('chatMessages');
   const d=document.createElement('div');d.className='msg ai';
   let intentHtml='';
-  if(intent){const cta=intent.cta||'';intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="showComingSoon()" style="opacity:.7">🔒 Unlock Soon</button></div>`;}
-  // Simple follow-up nudge — language responsive, not static questions
-  const followUp={hi:'<em style="color:var(--text3);font-size:12px">Aur kya jaanna hai? 🤔</em>',te:'<em style="color:var(--text3);font-size:12px">Next enti? 🤔</em>',hinglish:'<em style="color:var(--text3);font-size:12px">Aur kya jaanna hai? 🤔</em>'}[state.lang]||'<em style="color:var(--text3);font-size:12px">Aur kya jaanna hai? 🤔</em>';
-  const nextHtml=`<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:7px">${followUp}</div>`;
+  if(intent){
+    const cta=intent.cta||'';
+    intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="showComingSoon()" style="opacity:.7">🔒 Unlock Soon</button></div>`;
+  }
+
+  // Build next questions — remaining from current topic
+  const nextQs=getNextQuestions(askedQuestion||'');
+  let nextHtml='';
+  if(nextQs.length>0){
+    const label={hi:'Aur puchho:',te:'ఇంకా అడగండి:',hinglish:'Aur puchho:'}[state.lang]||'Aur puchho:';
+    const cards=nextQs.map(q=>
+      `<div onclick="fillAndSend(this.dataset.q)" data-q="${q.replace(/"/g,'&quot;')}"
+        style="cursor:pointer;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);transition:all .15s;line-height:1.4;display:inline-block;"
+        onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'"
+        onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'"
+      >→ ${q}</div>`
+    ).join('');
+    nextHtml=`<div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
+      <div style="font-size:10px;color:var(--text3);font-weight:700;margin-bottom:6px;letter-spacing:.4px">${label}</div>
+      <div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;">${cards}</div>
+    </div>`;
+  } else {
+    // Fallback nudge if no more questions in this topic
+    const nudge={hi:'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>',
+                 te:'<em style="color:var(--text3);font-size:12px">Inkaa adagaalantaa? 🤔</em>',
+                 hinglish:'<em style="color:var(--text3);font-size:12px">Aur kuch puchho? 🤔</em>'}[state.lang]
+              ||'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>';
+    nextHtml=`<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:7px">${nudge}</div>`;
+  }
+
   d.innerHTML=`<div class="msg-avatar">⚖️</div><div>
     <div class="msg-bubble">${esc(text).replace(/\n/g,'<br>')}${intentHtml}${nextHtml}</div>
     <div class="msg-actions">
@@ -1072,7 +1169,7 @@ function drawShareCanvas(question, bodyText){
   ctx.font='bold 18px sans-serif';ctx.fillStyle='#f59e0b';
   ctx.fillText('\u2696\uFE0F  Bklchai',20,38);
   ctx.font='12px sans-serif';ctx.fillStyle='#888';
-  ctx.fillText('bklchai.com  •  Aapka kanooni dost',20,56);
+  ctx.fillText('bklchai.com  •  Pocket Lawyer for Indian Citizens',20,56);
 
   // Divider
   ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
@@ -1099,12 +1196,23 @@ function drawShareCanvas(question, bodyText){
   const ansClean=bodyText.replace(/[#*_`]/g,'').replace(/\n+/g,' ').trim();
   wrapText(ctx, ansClean, 60, 140, W-80, 20, H-60);
 
+  // Disclaimer — English only, proper spacing above bottom bar
+  ctx.font='10px sans-serif';ctx.fillStyle='#5a5a6a';ctx.textAlign='left';
+  const disc='Disclaimer: AI-generated info only. Not legal advice. Consult a qualified lawyer before taking action.';
+  const discWords=disc.split(' ');let discLine='',discY=H-72;
+  for(const w of discWords){
+    const test=discLine+(discLine?' ':'')+w;
+    if(ctx.measureText(test).width>W-42&&discLine){ctx.fillText(discLine,20,discY);discLine=w;discY+=13;}
+    else discLine=test;
+  }
+  if(discLine) ctx.fillText(discLine,20,discY);
+
   // Bottom bar
   ctx.fillStyle='#14141e';ctx.fillRect(0,H-44,W,44);
   ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(0,H-44);ctx.lineTo(W,H-44);ctx.stroke();
   ctx.font='11px sans-serif';ctx.fillStyle='#555';
-  ctx.fillText('bklchai.com  •  Not legal advice. Consult a lawyer.',20,H-16);
+  ctx.fillText('bklchai.com  •  Free legal help for every Indian',20,H-16);
   ctx.fillStyle='#f59e0b';ctx.textAlign='right';
   ctx.fillText('bklchai.com',W-20,H-16);
   ctx.textAlign='left';
@@ -1139,49 +1247,28 @@ function downloadShareCard(){
   a.click();
 }
 
-async function shareCard(){
+// FIXED: shareCard() shares only the image card, no text message.
+function shareCard(){
   const canvas=document.getElementById('shareCanvas');
-  const title=(state.currentResult?state.currentResult.title:'Bklchai');
-  try{
-    canvas.toBlob(async function(blob){
-      const file=new File([blob],'legaldost_share.png',{type:'image/png'});
-      if(navigator.canShare&&navigator.canShare({files:[file]})){
-        await navigator.share({title:'Bklchai – '+title,files:[file],text:'Aapka kanooni dost — bklchai.com'});
-      } else {
-        const url=URL.createObjectURL(blob);
-        window.open(url,'_blank');
-        toast('Opened in new tab — save & share from there','success');
-      }
-    },'image/png');
-  }catch(e){
-    downloadShareCard();
-    toast('Saved to device — share from gallery','success');
-  }
-}
-
-// Called from chat bubble "Share" button
-function shareBubble(btn){
-  const msgEl=btn.closest('.msg');
-  // Get the user question from the previous user message
-  const allMsgs=[...document.querySelectorAll('.msg')];
-  const idx=allMsgs.indexOf(msgEl);
-  let question='Legal Question';
-  for(let i=idx-1;i>=0;i--){
-    if(allMsgs[i].classList.contains('user')){
-      question=allMsgs[i].querySelector('.msg-bubble')?.innerText||'Legal Question';
-      break;
+  if(!canvas){ toast('No image to share', 'error'); return; }
+  canvas.toBlob(function(blob){
+    const file = new File([blob], 'bklchai_share.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({
+        files: [file],
+        title: 'Bklchai - Legal Card',
+      }).catch(err => {
+        if (err.name !== 'AbortError') {
+          toast('Could not share automatically. Download image instead.', 'error');
+          downloadShareCard(); // fallback download
+        }
+      });
+    } else {
+      // fallback: download
+      downloadShareCard();
+      toast('Image saved. Share it manually on WhatsApp.', 'success');
     }
-  }
-  // Get AI answer — strip nudge text
-  const b=msgEl.querySelector('.msg-bubble');
-  let rawText=(b?.innerText||'').replace(/Aur kya jaanna hai\?.*$/i,'').replace(/Next enti\?.*$/i,'').trim();
-  state.currentResult={title:question,content:rawText,serviceType:'chat'};
-  document.getElementById('resultModalTitle').textContent='Share This Response';
-  document.getElementById('resultContent').textContent=rawText;
-  document.getElementById('shareCardWrap').style.display='none';
-  openModal('resultModal');
-  // Auto-draw with Q+A
-  setTimeout(()=>{drawShareCanvas(question,rawText);},120);
+  }, 'image/png');
 }
 
 function copyBubble(btn){
@@ -1190,6 +1277,27 @@ function copyBubble(btn){
   txt=txt.replace(/Aur kya jaanna hai\?.*$/i,'').replace(/Next enti\?.*$/i,'').trim();
   navigator.clipboard.writeText(txt);
   toast('Copied \u2713','success');
+}
+
+function shareBubble(btn) {
+  const msgEl = btn.closest('.msg');
+  const allMsgs = [...document.querySelectorAll('.msg')];
+  const idx = allMsgs.indexOf(msgEl);
+  let question = 'Legal Question';
+  for (let i = idx - 1; i >= 0; i--) {
+    if (allMsgs[i].classList.contains('user')) {
+      question = allMsgs[i].querySelector('.msg-bubble')?.innerText || 'Legal Question';
+      break;
+    }
+  }
+  const b = msgEl.querySelector('.msg-bubble');
+  let rawText = (b?.innerText || '').replace(/Aur kya jaanna hai\?.*$/i, '').replace(/Next enti\?.*$/i, '').trim();
+  state.currentResult = { title: question, content: rawText, serviceType: 'chat' };
+  document.getElementById('resultModalTitle').textContent = 'Share This Response';
+  document.getElementById('resultContent').textContent = rawText;
+  document.getElementById('shareCardWrap').style.display = 'none';
+  openModal('resultModal');
+  setTimeout(() => { drawShareCanvas(question, rawText); }, 120);
 }
 
 // MODALS

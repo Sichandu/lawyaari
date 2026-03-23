@@ -2,80 +2,123 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Disclaimer – LegalDost</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title id="pgTitle">अस्वीकरण – BKLChai</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#2a2a38;--border2:#3a3a50;--accent:#f59e0b;--accent3:#10b981;--text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;}
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#2a2a38;--border2:#3a3a50;
+  --accent:#f59e0b;--accent3:#10b981;--text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;}
-nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.logo{font-size:18px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;}
-.back-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 14px;border-radius:8px;font-size:12px;text-decoration:none;transition:all .15s;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans','Noto Sans Devanagari',sans-serif;min-height:100vh;}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-size:17px;font-weight:700;color:var(--text);text-decoration:none;}
+.nav-right{display:flex;gap:8px;align-items:center;}
+.back-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
+  padding:6px 13px;border-radius:8px;font-size:12px;text-decoration:none;transition:.15s;}
 .back-btn:hover{color:var(--text);border-color:var(--accent);}
-.container{max-width:760px;margin:0 auto;padding:40px 20px 60px;}
-h1{font-size:26px;font-weight:700;margin-bottom:6px;}
-.subtitle{font-size:13px;color:var(--text3);margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border);}
-h2{font-size:17px;font-weight:600;color:var(--accent);margin:28px 0 10px;}
-h3{font-size:14px;font-weight:600;color:var(--text);margin:16px 0 6px;}
-p{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:12px;}
-ul,ol{padding-left:20px;margin-bottom:12px;}
-li{font-size:13px;color:var(--text2);line-height:1.8;}
-.highlight{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:14px 16px;margin:16px 0;}
+.lang-toggle{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden;}
+.lt-btn{background:none;border:none;color:var(--text3);padding:5px 10px;font-size:11px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:.15s;}
+.lt-btn.active{background:var(--accent);color:#000;}
+.container{max-width:760px;margin:0 auto;padding:36px 20px 60px;}
+h1{font-size:24px;font-weight:700;margin-bottom:6px;}
+.subtitle{font-size:13px;color:var(--text3);margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+h2{font-size:16px;font-weight:600;color:var(--accent);margin:26px 0 9px;}
+h3{font-size:14px;font-weight:600;color:var(--text);margin:14px 0 5px;}
+p{font-size:13px;color:var(--text2);line-height:1.85;margin-bottom:11px;}
+ul,ol{padding-left:20px;margin-bottom:11px;}
+li{font-size:13px;color:var(--text2);line-height:1.85;}
+.highlight{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:14px 16px;margin:14px 0;}
 .highlight p{margin:0;color:var(--text);}
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:20px;text-align:center;font-size:11px;color:var(--text3);}
-footer a{color:var(--text3);text-decoration:none;margin:0 8px;}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:18px;text-align:center;font-size:11px;color:var(--text3);}
+footer a{color:var(--text3);text-decoration:none;margin:0 7px;}
 footer a:hover{color:var(--accent);}
-@media(max-width:600px){.container{padding:24px 16px 40px;}h1{font-size:22px;}}
+.lang-section{display:none;}
+.lang-section.active{display:block;}
+@media(max-width:600px){.container{padding:22px 14px 40px;}h1{font-size:20px;}}
 </style>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="logo">⚖️ LegalDost</a>
-  <a href="index.html" class="back-btn">← Back to App</a>
+  <a href="index.html" class="logo">⚖️ BKLChai</a>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lt-btn active" onclick="setLang('hi')" id="lt-hi">हिं</button>
+      <button class="lt-btn" onclick="setLang('te')" id="lt-te">తె</button>
+      <button class="lt-btn" onclick="setLang('en')" id="lt-en">EN</button>
+    </div>
+    <a href="index.html" class="back-btn">← App</a>
+  </div>
 </nav>
+
 <div class="container">
-
-<h1>Disclaimer</h1>
-<p class="subtitle">Important information about the nature of LegalDost's services.</p>
-
-<div class="highlight"><p>⚠️ <strong>LegalDost is NOT a law firm and does NOT provide legal advice.</strong> All content generated by our AI is for informational purposes only.</p></div>
-
-<h2>Not Legal Advice</h2>
-<p>The information, documents, and responses provided by LegalDost are generated by artificial intelligence. They are meant to provide general legal information and awareness — not legal advice tailored to your specific situation.</p>
-<p>Use of LegalDost does not create an attorney-client relationship between you and LegalDost or any of its personnel.</p>
-
-<h2>AI Limitations</h2>
-<p>AI-generated legal documents may contain:</p>
+  <div class="lang-section active" id="sec-hi">
+    <h1>अस्वीकरण</h1>
+    <p class="subtitle">BKLChai की services की nature के बारे में ज़रूरी जानकारी।</p>
+<div class="highlight"><p>⚠️ <strong>BKLChai एक law firm नहीं है और legal advice नहीं देता।</strong></p></div>
+<h2>Legal Advice नहीं है</h2>
+<p>BKLChai द्वारा generate की गई सभी information, documents, और responses AI द्वारा बनाई गई हैं। ये general legal awareness के लिए हैं — आपकी specific situation के लिए tailored legal advice नहीं।</p>
+<p>BKLChai का use करने से आपके और BKLChai के बीच attorney-client relationship नहीं बनता।</p>
+<h2>AI की Limitations</h2>
 <ul>
-  <li>Errors in legal citations or section numbers</li>
-  <li>Outdated legal references (laws change frequently)</li>
-  <li>Missing context specific to your local jurisdiction or state</li>
-  <li>Incorrect application of law to complex fact patterns</li>
+<li>Legal citations में errors हो सकती हैं</li>
+<li>Laws बदलती रहती हैं — AI का knowledge updated नहीं हो सकता</li>
+<li>Complex cases में AI गलत हो सकता है</li>
 </ul>
-
+<h2>Lawyer से ज़रूर मिलें</h2>
+<p>Court filings, criminal cases, property disputes, या family law matters में हमेशा एक qualified, licensed advocate से consult करें।</p>
+<h2>Liability</h2>
+<p>BKLChai किसी भी loss या damage के लिए liable नहीं है जो हमारी service के use से हो।</p>
+  </div>
+  <div class="lang-section" id="sec-te">
+    <h1>నిరాకరణ</h1>
+    <p class="subtitle">BKLChai సేవల స్వభావం గురించి ముఖ్యమైన సమాచారం.</p>
+<div class="highlight"><p>⚠️ <strong>BKLChai law firm కాదు మరియు legal advice ఇవ్వదు.</strong></p></div>
+<h2>Legal Advice కాదు</h2>
+<p>BKLChai generate చేసిన అన్ని documents మరియు responses AI-generated. ఇవి general legal awareness కోసం మాత్రమే.</p>
+<h2>AI పరిమితులు</h2>
+<ul>
+<li>Legal citations లో errors ఉండవచ్చు</li>
+<li>Laws మారవచ్చు — AI knowledge updated కాకపోవచ్చు</li>
+</ul>
+<h2>Lawyer ని సంప్రదించండి</h2>
+<p>Court cases, criminal matters, property disputes లో ఎప్పుడూ qualified lawyer ని consult చేయండి.</p>
+  </div>
+  <div class="lang-section" id="sec-en">
+    <h1>Disclaimer</h1>
+    <p class="subtitle">Important information about the nature of BKLChai's services.</p>
+<div class="highlight"><p>⚠️ <strong>BKLChai is NOT a law firm and does NOT provide legal advice.</strong></p></div>
+<h2>Not Legal Advice</h2>
+<p>All content generated by BKLChai is AI-generated for general legal information only — not advice tailored to your specific situation. Use of BKLChai does not create an attorney-client relationship.</p>
+<h2>AI Limitations</h2>
+<ul>
+<li>Legal citations may contain errors</li>
+<li>Laws change — AI knowledge may not be current</li>
+<li>AI may be incorrect in complex legal scenarios</li>
+</ul>
 <h2>Always Consult a Lawyer</h2>
-<p>Before sending any AI-generated notice, complaint, or legal reply — especially in matters involving significant money, property, criminal charges, or family law — please have it reviewed by a qualified, licensed advocate in your jurisdiction.</p>
-
-<h2>Accuracy of Information</h2>
-<p>While we strive to keep our AI up to date with Indian law, we make no warranties about the accuracy, completeness, or fitness of any information provided. Laws and regulations change, and AI models have knowledge cutoff dates.</p>
-
-<h2>Third-Party Services</h2>
-<p>LegalDost uses third-party AI services (Groq, OpenAI) to generate responses. We are not responsible for the content generated by these models beyond our prompt engineering.</p>
-
+<p>For court filings, criminal cases, property disputes, or family law — always consult a qualified, licensed advocate.</p>
 <h2>Limitation of Liability</h2>
-<p>To the maximum extent permitted by law, LegalDost disclaims all liability for any direct, indirect, incidental, consequential, or punitive damages arising from your use or reliance on our service.</p>
-
-<h2>Contact</h2>
-<p>If you believe any content on LegalDost is factually incorrect or legally harmful, contact us immediately on WhatsApp: +91 81858 43878.</p>
-
+<p>BKLChai is not liable for any loss arising from reliance on our AI-generated content.</p>
+  </div>
 </div>
+
 <footer>
-  <div style="margin-bottom:8px;">
+  <div style="margin-bottom:7px;">
     <a href="index.html">Home</a><a href="about.html">About</a><a href="contact.html">Contact</a>
     <a href="faq.html">FAQ</a><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="disclaimer.html">Disclaimer</a>
   </div>
-  © 2026 LegalDost · lawyaari.com · Not a law firm
+  © 2026 BKLChai · bklchai.com
 </footer>
+
+<script>
+function setLang(lang){
+  document.querySelectorAll('.lang-section').forEach(e=>e.classList.remove('active'));
+  document.getElementById('sec-'+lang).classList.add('active');
+  document.querySelectorAll('.lt-btn').forEach(e=>e.classList.remove('active'));
+  document.getElementById('lt-'+lang).classList.add('active');
+}
+</script>
 </body>
 </html>

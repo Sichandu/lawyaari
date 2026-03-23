@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BKLChai Timepass — Gyaan + Masti</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#2a2a38;--border2:#3a3a50;
+  --accent:#f59e0b;--accent2:#ef4444;--accent3:#10b981;--text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans','Noto Sans Devanagari',sans-serif;min-height:100vh;}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-size:17px;font-weight:700;color:var(--text);text-decoration:none;}
+.back-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 13px;border-radius:8px;font-size:12px;text-decoration:none;}
+.container{max-width:860px;margin:0 auto;padding:20px 16px 60px;}
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px;}
+.page-sub{font-size:13px;color:var(--text3);margin-bottom:18px;}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px;}
+.tab{background:var(--bg3);color:var(--text2);padding:7px 13px;border-radius:20px;font-size:11.5px;font-weight:600;cursor:pointer;transition:.15s;border:1px solid var(--border2);}
+.tab.active,.tab:hover{background:var(--accent);color:#000;border-color:var(--accent);}
+.panel{display:none;}.panel.active{display:block;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;}
+.card-title{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px;}
+.fact-box{background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:13px 15px;margin-bottom:9px;font-size:13px;color:var(--text);line-height:1.75;}
+.fact-box .cat{font-size:10px;color:var(--accent);font-weight:700;margin-bottom:5px;display:block;}
+/* Quiz */
+.qopt{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:11px 15px;font-size:13px;cursor:pointer;transition:.15s;text-align:left;color:var(--text);font-family:inherit;width:100%;margin-bottom:7px;}
+.qopt:hover{border-color:var(--accent);}
+.qopt.correct{border-color:var(--accent3);background:rgba(16,185,129,.1);color:var(--accent3);}
+.qopt.wrong{border-color:var(--accent2);background:rgba(239,68,68,.1);color:var(--accent2);}
+.qfeed{font-size:13px;padding:10px 14px;border-radius:8px;margin-top:10px;line-height:1.6;}
+.qfeed.win{background:rgba(16,185,129,.1);color:var(--accent3);}
+.qfeed.lose{background:rgba(239,68,68,.1);color:var(--accent2);}
+/* News */
+.news-item{border-bottom:1px solid var(--border);padding:11px 0;}
+.news-item:last-child{border:none;}
+.news-headline{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.5;}
+.news-item a{text-decoration:none;color:inherit;}
+.news-item a:hover .news-headline{color:var(--accent);}
+.news-meta{font-size:11px;color:var(--text3);}
+/* Helplines */
+.hline-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.hline-card{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;}
+.hline-num{font-size:22px;font-weight:700;color:var(--accent);margin-bottom:3px;}
+.hline-label{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.hline-desc{font-size:11px;color:var(--text3);}
+.hline-call{display:inline-block;margin-top:6px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--accent);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;text-decoration:none;}
+/* Calculators */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.calc-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 12px;border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:8px;}
+.calc-input:focus{outline:none;border-color:var(--accent);}
+.calc-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
+.calc-result{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px;margin-top:8px;text-align:center;}
+.calc-result-main{font-size:22px;font-weight:700;color:var(--accent);}
+.calc-result-sub{font-size:12px;color:var(--text2);margin-top:4px;}
+/* Buttons */
+.btn{background:var(--accent);color:#000;border:none;padding:9px 20px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;}
+.btn-g{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);padding:7px 16px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-g:hover{border-color:var(--accent);color:var(--accent);}
+/* Score */
+.score-row{display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border-radius:10px;padding:10px 14px;margin-bottom:10px;}
+.sl{font-size:11px;color:var(--text3);}.sv{font-size:17px;font-weight:700;color:var(--accent);}
+.prog{background:var(--border);border-radius:4px;height:4px;margin-top:6px;}
+.progb{background:var(--accent);height:100%;border-radius:4px;transition:width .5s;}
+/* Loader */
+.loader{text-align:center;padding:24px;color:var(--text3);font-size:13px;}
+.spin{display:inline-block;width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:7px;}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* Word */
+.word-big{font-size:26px;font-weight:700;color:var(--accent);margin-bottom:5px;}
+.art-num{font-size:30px;font-weight:700;color:var(--accent);margin-bottom:3px;}
+/* Mood */
+.mood-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0;}
+.mood-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:11px 4px;text-align:center;cursor:pointer;transition:.15s;font-family:inherit;}
+.mood-btn:hover,.mood-btn.sel{border-color:var(--accent);background:rgba(245,158,11,.07);}
+.mood-em{font-size:22px;display:block;margin-bottom:3px;}.mood-lb{font-size:10px;color:var(--text3);}
+/* Student */
+.resource-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
+.resource-item:last-child{border:none;}
+.resource-icon{font-size:22px;flex-shrink:0;}
+.resource-label{font-size:13px;font-weight:600;color:var(--text);}
+.resource-desc{font-size:11px;color:var(--text3);margin-top:2px;}
+.resource-link{margin-left:auto;background:var(--bg3);border:1px solid var(--border2);color:var(--accent);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap;}
+/* Tabs inside calculators */
+.calc-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.ctab{background:var(--bg3);border:1px solid var(--border2);color:var(--text3);padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
+.ctab.active{background:rgba(245,158,11,.15);border-color:var(--accent);color:var(--accent);}
+.ccalc{display:none;}.ccalc.active{display:block;}
+@media(max-width:600px){.hline-grid{grid-template-columns:1fr 1fr;}.calc-grid{grid-template-columns:1fr;}.tabs{gap:4px;}.tab{font-size:11px;padding:5px 9px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">⚖️ BKLChai</a>
+  <a href="index.html" class="back-btn">← App</a>
+</nav>
+<div class="container">
+  <div class="page-title">⚡ Timepass Zone</div>
+  <div class="page-sub">Gyaan + Masti + Tools — Bilkul Free!</div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('facts',this)">🧠 Facts</button>
+    <button class="tab" onclick="showTab('quiz',this)">🎯 Quiz</button>
+    <button class="tab" onclick="showTab('helplines',this)">📞 Helplines</button>
+    <button class="tab" onclick="showTab('calc',this)">🧮 Calculator</button>
+    <button class="tab" onclick="showTab('news',this)">📰 News</button>
+    <button class="tab" onclick="showTab('joke',this)">😄 Jokes</button>
+    <button class="tab" onclick="showTab('word',this)">📖 Words</button>
+    <button class="tab" onclick="showTab('const',this)">🇮🇳 Constitution</button>
+    <button class="tab" onclick="showTab('student',this)">🎓 Students</button>
+  </div>
+
+  <!-- FACTS -->
+  <div class="panel active" id="panel-facts">
+    <div class="card">
+      <div class="card-title">⚖️ Indian Kanoon Facts</div>
+      <div id="factsBox"><div class="loader"><span class="spin"></span>Loading...</div></div>
+      <button class="btn" onclick="loadFacts()">🔄 Nayi Facts</button>
+    </div>
+    <div class="card">
+      <div class="card-title">🌍 Random Knowledge (Wikipedia)</div>
+      <div id="wikiBox"><div class="loader"><span class="spin"></span>Loading...</div></div>
+      <button class="btn-g" style="margin-top:10px" onclick="loadWiki()">🔄 Aur Ek</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="panel" id="panel-quiz">
+    <div class="card">
+      <div class="score-row"><span class="sl">Score</span><span class="sv" id="qScore">0</span>
+        <span class="sl">Played</span><span class="sv" id="qCount">0</span></div>
+      <div class="prog"><div class="progb" id="qProg" style="width:0%"></div></div>
+    </div>
+    <div class="card"><div id="quizBody"></div></div>
+  </div>
+
+  <!-- HELPLINES -->
+  <div class="panel" id="panel-helplines">
+    <div class="card">
+      <div class="card-title">🆘 Emergency Helplines</div>
+      <div class="hline-grid" id="hlEmergency"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">⚖️ Legal & Rights Helplines</div>
+      <div class="hline-grid" id="hlLegal"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🏦 Finance & Consumer Helplines</div>
+      <div class="hline-grid" id="hlFinance"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">💊 Health & Mental Health Helplines</div>
+      <div class="hline-grid" id="hlHealth"></div>
+    </div>
+  </div>
+
+  <!-- CALCULATORS -->
+  <div class="panel" id="panel-calc">
+    <div class="card">
+      <div class="calc-tabs">
+        <button class="ctab active" onclick="showCalc('emi',this)">🏦 EMI</button>
+        <button class="ctab" onclick="showCalc('gst',this)">📊 GST</button>
+        <button class="ctab" onclick="showCalc('interest',this)">💰 Interest</button>
+        <button class="ctab" onclick="showCalc('penalty',this)">⚖️ MSME Penalty</button>
+        <button class="ctab" onclick="showCalc('sip',this)">📈 SIP Returns</button>
+        <button class="ctab" onclick="showCalc('salary',this)">💼 Take-Home Salary</button>
+      </div>
+
+      <!-- EMI -->
+      <div class="ccalc active" id="ccalc-emi">
+        <div class="card-title">🏦 Loan EMI Calculator</div>
+        <div class="calc-label">Loan Amount (₹)</div>
+        <input class="calc-input" id="emi_p" type="number" placeholder="500000" oninput="calcEMI()"/>
+        <div class="calc-label">Annual Interest Rate (%)</div>
+        <input class="calc-input" id="emi_r" type="number" placeholder="8.5" step="0.1" oninput="calcEMI()"/>
+        <div class="calc-label">Loan Duration (Months)</div>
+        <input class="calc-input" id="emi_n" type="number" placeholder="60" oninput="calcEMI()"/>
+        <div class="calc-result" id="emi_result" style="display:none">
+          <div class="calc-result-main" id="emi_val"></div>
+          <div class="calc-result-sub" id="emi_sub"></div>
+        </div>
+      </div>
+
+      <!-- GST -->
+      <div class="ccalc" id="ccalc-gst">
+        <div class="card-title">📊 GST Calculator</div>
+        <div class="calc-label">Amount (₹)</div>
+        <input class="calc-input" id="gst_amt" type="number" placeholder="10000" oninput="calcGST()"/>
+        <div class="calc-label">GST Rate (%)</div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px">
+          <button class="ctab" onclick="setGST(5,this)">5%</button>
+          <button class="ctab" onclick="setGST(12,this)">12%</button>
+          <button class="ctab active" onclick="setGST(18,this)">18%</button>
+          <button class="ctab" onclick="setGST(28,this)">28%</button>
+        </div>
+        <input class="calc-input" id="gst_rate" type="number" placeholder="18" oninput="calcGST()"/>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button class="ctab active" id="gst_add_btn" onclick="setGSTMode('add',this)">Add GST</button>
+          <button class="ctab" id="gst_remove_btn" onclick="setGSTMode('remove',this)">Remove GST</button>
+        </div>
+        <div class="calc-result" id="gst_result" style="display:none">
+          <div class="calc-result-main" id="gst_val"></div>
+          <div class="calc-result-sub" id="gst_sub"></div>
+        </div>
+      </div>
+
+      <!-- Interest -->
+      <div class="ccalc" id="ccalc-interest">
+        <div class="card-title">💰 Interest Calculator</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button class="ctab active" id="int_si_btn" onclick="setIntMode('simple',this)">Simple</button>
+          <button class="ctab" id="int_ci_btn" onclick="setIntMode('compound',this)">Compound</button>
+        </div>
+        <div class="calc-label">Principal Amount (₹)</div>
+        <input class="calc-input" id="int_p" type="number" placeholder="100000" oninput="calcInterest()"/>
+        <div class="calc-label">Annual Rate (%)</div>
+        <input class="calc-input" id="int_r" type="number" placeholder="12" step="0.1" oninput="calcInterest()"/>
+        <div class="calc-label">Time (Years)</div>
+        <input class="calc-input" id="int_t" type="number" placeholder="2" step="0.5" oninput="calcInterest()"/>
+        <div class="calc-result" id="int_result" style="display:none">
+          <div class="calc-result-main" id="int_val"></div>
+          <div class="calc-result-sub" id="int_sub"></div>
+        </div>
+      </div>
+
+      <!-- MSME Penalty -->
+      <div class="ccalc" id="ccalc-penalty">
+        <div class="card-title">⚖️ MSME Delayed Payment Interest (Section 16)</div>
+        <div class="fact-box" style="margin-bottom:12px;font-size:12px">Section 16 MSMED Act: Interest = 3× RBI Bank Rate (currently 6.5%) = <strong>19.5% p.a.</strong></div>
+        <div class="calc-label">Outstanding Amount (₹)</div>
+        <input class="calc-input" id="msme_p" type="number" placeholder="375000" oninput="calcMSME()"/>
+        <div class="calc-label">Payment Due Date</div>
+        <input class="calc-input" id="msme_d" type="date" oninput="calcMSME()"/>
+        <div class="calc-result" id="msme_result" style="display:none">
+          <div class="calc-result-main" id="msme_val"></div>
+          <div class="calc-result-sub" id="msme_sub"></div>
+        </div>
+      </div>
+
+      <!-- SIP -->
+      <div class="ccalc" id="ccalc-sip">
+        <div class="card-title">📈 SIP Returns Calculator</div>
+        <div class="calc-label">Monthly Investment (₹)</div>
+        <input class="calc-input" id="sip_m" type="number" placeholder="5000" oninput="calcSIP()"/>
+        <div class="calc-label">Expected Annual Return (%)</div>
+        <input class="calc-input" id="sip_r" type="number" placeholder="12" step="0.5" oninput="calcSIP()"/>
+        <div class="calc-label">Duration (Years)</div>
+        <input class="calc-input" id="sip_t" type="number" placeholder="10" oninput="calcSIP()"/>
+        <div class="calc-result" id="sip_result" style="display:none">
+          <div class="calc-result-main" id="sip_val"></div>
+          <div class="calc-result-sub" id="sip_sub"></div>
+        </div>
+      </div>
+
+      <!-- Salary -->
+      <div class="ccalc" id="ccalc-salary">
+        <div class="card-title">💼 Take-Home Salary Calculator (India)</div>
+        <div class="calc-label">Monthly Gross Salary (₹)</div>
+        <input class="calc-input" id="sal_g" type="number" placeholder="50000" oninput="calcSalary()"/>
+        <div class="calc-label">PF Contribution (%) — Default 12%</div>
+        <input class="calc-input" id="sal_pf" type="number" placeholder="12" step="1" oninput="calcSalary()"/>
+        <div class="calc-result" id="sal_result" style="display:none">
+          <div class="calc-result-main" id="sal_val"></div>
+          <div class="calc-result-sub" id="sal_sub"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWS -->
+  <div class="panel" id="panel-news">
+    <div class="card">
+      <div class="card-title">📰 India News</div>
+      <div id="newsBox"><div class="loader"><span class="spin"></span>Loading...</div></div>
+      <button class="btn-g" style="margin-top:10px" onclick="loadNews()">🔄 Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-title">💡 Legal Tip</div>
+      <div id="tipBox" class="fact-box" style="border-left-color:var(--accent3)"></div>
+    </div>
+  </div>
+
+  <!-- JOKES -->
+  <div class="panel" id="panel-joke">
+    <div class="card">
+      <div class="card-title">😂 Joke (JokeAPI)</div>
+      <div style="font-size:14px;font-weight:600;line-height:1.6;margin-bottom:8px" id="jokeQ">Loading...</div>
+      <div style="font-size:13px;color:var(--accent);display:none;padding:10px 14px;background:rgba(245,158,11,.08);border-radius:8px;line-height:1.6" id="jokeA"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn" onclick="loadJoke()">😂 Nayi Joke</button>
+        <button class="btn-g" onclick="document.getElementById('jokeA').style.display='block'">👁 Punchline</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🎭 Desi Legal Jokes</div>
+      <div id="desiJoke" class="fact-box" style="font-size:13px;"></div>
+      <button class="btn-g" style="margin-top:10px" onclick="nextDesi()">🔄 Next</button>
+    </div>
+  </div>
+
+  <!-- WORDS -->
+  <div class="panel" id="panel-word">
+    <div class="card">
+      <div class="card-title">⚖️ Legal Word of the Day</div>
+      <div id="legalWord"></div>
+      <button class="btn-g" style="margin-top:10px" onclick="loadLegalWord()">🔄 New Word</button>
+    </div>
+    <div class="card">
+      <div class="card-title">📖 English Word of the Day</div>
+      <div id="dictBox"><div class="loader">Loading...</div></div>
+      <button class="btn-g" style="margin-top:10px" onclick="loadDict()">🔄 New Word</button>
+    </div>
+  </div>
+
+  <!-- CONSTITUTION -->
+  <div class="panel" id="panel-const">
+    <div class="card">
+      <div class="card-title">🇮🇳 Fundamental Rights — Article by Article</div>
+      <div id="artBox"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" onclick="nextArt()">Next →</button>
+        <button class="btn-g" onclick="randArt()">🎲 Random</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🌡 Aaj Ka Mood</div>
+      <div class="mood-grid">
+        <div class="mood-btn" onclick="setMood(this,'😤','Frustrated')"><span class="mood-em">😤</span><span class="mood-lb">Frustrated</span></div>
+        <div class="mood-btn" onclick="setMood(this,'😰','Worried')"><span class="mood-em">😰</span><span class="mood-lb">Worried</span></div>
+        <div class="mood-btn" onclick="setMood(this,'💪','Confident')"><span class="mood-em">💪</span><span class="mood-lb">Ready</span></div>
+        <div class="mood-btn" onclick="setMood(this,'🤔','Confused')"><span class="mood-em">🤔</span><span class="mood-lb">Confused</span></div>
+      </div>
+      <div id="moodBox" style="display:none" class="fact-box"></div>
+    </div>
+  </div>
+
+  <!-- STUDENTS -->
+  <div class="panel" id="panel-student">
+    <div class="card">
+      <div class="card-title">🎓 Student Resources — Free Platforms</div>
+      <div id="studentResources"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">💼 Young Adult Life Hacks</div>
+      <div id="lifeHacks"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📜 Important Documents Every Indian Should Have</div>
+      <div id="importantDocs"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+const FACTS=[
+  {c:'FIR Rights',t:'FIR refuse kare toh SP ya Judicial Magistrate ko directly complaint karo. (Section 154 CrPC)'},
+  {c:'MSME',t:'MSME buyers ko 45 din mein payment karna zaroori hai. Nahi kiya toh 19.5% p.a. interest dena hoga! (MSMED Act 2006)'},
+  {c:'Tenant',t:'Makan malik bina 30 din notice ke ghar khali nahi karwa sakta. Agreement hamesha writing mein lo!'},
+  {c:'Consumer',t:'District Consumer Forum mein ₹200 mein ₹1 lakh tak ka case file kar sakte hain.'},
+  {c:'Cheque Bounce',t:'Cheque bounce ke 30 din andar legal notice bhejo — Section 138 NI Act case tabhi banega.'},
+  {c:'RTI',t:'RTI sirf ₹10 mein! 30 din mein government se koi bhi document maango. BPL card = free!'},
+  {c:'Cyber Crime',t:'Online fraud hone par 1930 call karo. Paise wapas ke liye 24 ghante ka "golden hour" hota hai!'},
+  {c:'Labour',t:'Employer 7 din se zyada salary rok nahi sakta — Payment of Wages Act 1936.'},
+  {c:'Women Rights',t:'Workplace harassment ke liye ICC (Internal Complaints Committee) hona mandatory hai — POSH Act 2013.'},
+  {c:'GST',t:'₹40 lakh se kam turnover — GST registration zaroori nahi! Service providers ke liye limit ₹20 lakh.'},
+  {c:'Bail',t:'Arrest ke baad 24 ghante mein Magistrate ke saamne pesh karna zaroori hai — Article 22, Constitution.'},
+  {c:'Property',t:'Paper kho gaya? FIR + newspaper notice ke baad Sub-Registrar se duplicate papers ke liye apply karo.'},
+];
+const TIPS=['WhatsApp messages court mein evidence hain — sab likha rakho!','Document sign karne se pehle poora padho.','Police ke saamne bina lawyer ke statement mat do.','Rent agreement screenshot karo aur cloud mein save karo.','Consumer complaint mein invoice + WhatsApp screenshot sabse bada proof hai.'];
+const DESI=['Lawyer bola: "Mere client ne kuch nahi kiya." Judge: "Tab 50 cases kyon hain?" Lawyer: "Sir, practice!" 😄','MSME wala lawyer se: "Buyer 6 mahine se payment nahi de raha." Lawyer: "MSMED Act notice bhejo." MSME wala: "Woh bhi MSME hai!" Lawyer: "Toh MSME Samadhaan mein chai peeyo saath mein! ☕"','Landlord: "Kal tak ghar khali karo." Tenant: "Section 106, Transfer of Property Act — 30 din notice zaroori hai." Landlord: "Tune law padha hai?" Tenant: "Nahi sir, BKLChai use karta hoon!" ⚖️','Police: "Insurance kahan hai?" Driver: "Ghar par." Police: "Challan hoga!" Driver: "Consumer Forum mein complain karunga — service mein deficiency hai!" 😅','Judge: "Aapne crime kyun kiya?" Accused: "Bhool gaya sir." Judge: "Law bhool gaya ya crime?" Accused: "Sir, dono ek saath yaad nahi reh sakte!" 😂'];
+const QUIZ=[
+  {q:'MSME buyer ko invoice ke kitne din mein payment karni hoti hai?',o:['30 din','45 din','60 din','90 din'],a:1,e:'Section 15 MSMED Act 2006 — 45 din mandatory window hai.'},
+  {q:'FIR refuse par seedha kahan jaayein?',o:['High Court','SP Office','Home Ministry','District Court'],a:1,e:'SP ya Judicial Magistrate ke paas directly complaint karo.'},
+  {q:'District Consumer Forum mein ₹1 lakh tak fee kitni?',o:['₹50','₹100','₹200','Free'],a:2,e:'Consumer Protection Act 2019 — sirf ₹200 court fee!'},
+  {q:'Cheque bounce ke baad legal notice ke liye kitne din?',o:['15 din','30 din','45 din','60 din'],a:1,e:'Section 138 NI Act — 30 din ke andar notice bhejna zaroori.'},
+  {q:'RTI file karne ki fee?',o:['Free','₹10','₹50','₹100'],a:1,e:'RTI fee sirf ₹10. BPL card holders free!'},
+  {q:'Article 21 kya deta hai?',o:['Education','Jeevan aur Swatantrata','Property','Baraabari'],a:1,e:'Right to Life and Personal Liberty — Constitution ka sabse important article!'},
+  {q:'Cyber crime helpline number?',o:['100','1930','112','181'],a:1,e:'1930 — National Cyber Crime Helpline.'},
+  {q:'POSH Act kab lagu hua?',o:['2005','2010','2013','2019'],a:2,e:'POSH Act (Sexual Harassment at Workplace) — 2013.'},
+  {q:'Salary kitne din tak rok sakte hain legally?',o:['7 din','15 din','30 din','45 din'],a:0,e:'Payment of Wages Act 1936 — 7 din se zyada nahi!'},
+  {q:'Supreme Court mein seedha petition kab file kar sakte hain?',o:['Kisi bhi case mein','Sirf criminal cases','Fundamental rights violation par','Sirf property cases'],a:2,e:'Article 32 — Fundamental rights violation par sidha Supreme Court ja sakte hain!'},
+];
+const ARTS=[
+  {n:'Art. 14',t:'Right to Equality',c:'Law ke saamne sab barabar. Government kisi bhi citizen ke saath unfair discrimination nahi kar sakti.',a:'Govt office ne unfairly treat kiya? High Court mein writ petition file karo!'},
+  {n:'Art. 19',t:'Freedom of Speech',c:'Bolne, likhne, protest karne ki azaadi — desh ki safety ke khilaf nahi.',a:'Social media post hata di? Freedom of speech violation ho sakti hai.'},
+  {n:'Art. 21',t:'Right to Life & Liberty',c:'Kisi bhi insaan ko jeevan ya swatantrata se sirf valid legal process ke through hi vaanchit kiya ja sakta hai.',a:'Illegal detention? Habeas Corpus petition sidha High Court mein!'},
+  {n:'Art. 22',t:'Protection Against Arrest',c:'Arrest hone ke baad: reason batana zaroori, lawyer milne ka haq, 24 ghante mein Magistrate ke saamne pesh karna.',a:'Police ne bina reason bataye arrest kiya? Fundamental rights violation hai!'},
+  {n:'Art. 32',t:'Right to Remedies',c:'Koi bhi fundamental right toota — sidha Supreme Court! Dr. Ambedkar ne ise "Constitution ki soul" kaha.',a:'Supreme Court mein writ petition — yeh aapka right hai!'},
+  {n:'Art. 300A',t:'Right to Property',c:'Aapki property sirf law ke through hi li ja sakti hai.',a:'Illegal land acquisition? District Court mein challenge karo!'},
+];
+const LEGAL_WORDS=[
+  {w:'Habeas Corpus',d:'Latin for "show the body." Illegal detention challenge karne ka writ.',u:'Kisi ko illegally jail mein rakha — Habeas Corpus petition High Court mein file karo!'},
+  {w:'Injunction',d:'Court ka order jo kisi ko kuch karne se rokta hai.',u:'Builder aapki zameen par illegal construction kar raha hai? Injunction lo!'},
+  {w:'Affidavit',d:'Sworn statement — court mein evidence ki tarah kaam karta hai.',u:'Property, scholarship, court — hamesha kaam aata hai.'},
+  {w:'Caveat',d:'"Beware." Court mein file karo taaki bina sunaye koi order na aaye.',u:'Opposite party secretly order le rahi hai? Caveat file karo!'},
+  {w:'Subpoena',d:'Court ka summons — witness ke taur par bulana.',u:'Court ka subpoena aaya — aana mandatory hai!'},
+  {w:'Suo Motu',d:'Court khud kisi matter ka cognizance leta hai, bina kisi petition ke.',u:'Media mein khabar aai — Supreme Court ne suo motu case le liya!'},
+  {w:'Writ Petition',d:'Court ko direct appeal karna fundamental rights enforce karne ke liye.',u:'Government ka action wrong hai? High Court ya Supreme Court mein writ file karo!'},
+];
+const HELPLINES = {
+  emergency:[
+    {n:'100',l:'Police',d:'Crime, emergency, law & order',c:'tel:100'},
+    {n:'101',l:'Fire Brigade',d:'Fire emergency',c:'tel:101'},
+    {n:'102',l:'Ambulance',d:'Medical emergency',c:'tel:102'},
+    {n:'112',l:'National Emergency',d:'All emergencies — single number',c:'tel:112'},
+    {n:'1091',l:'Women Helpline',d:'Women in distress',c:'tel:1091'},
+    {n:'1098',l:'Childline',d:'Children in distress',c:'tel:1098'},
+  ],
+  legal:[
+    {n:'1930',l:'Cyber Crime',d:'Online fraud, cyber crime',c:'tel:1930'},
+    {n:'14445',l:'Legal Aid',d:'Free legal help (NALSA)',c:'tel:14445'},
+    {n:'181',l:'Women Safety',d:'Women safety & rights',c:'tel:181'},
+    {n:'1800-11-0031',l:'NHRC',d:'Human rights violations',c:'tel:18001100031'},
+    {n:'14567',l:'Senior Citizen',d:'Elder abuse & rights',c:'tel:14567'},
+    {n:'1860-267-8999',l:'Labour Ministry',d:'Labour disputes & rights',c:'tel:18602678999'},
+  ],
+  finance:[
+    {n:'1800-425-2255',l:'RBI Ombudsman',d:'Bank complaints',c:'tel:18004252255'},
+    {n:'1800-11-4000',l:'Consumer Helpline',d:'Consumer complaints (INGRAM)',c:'tel:18001140000'},
+    {n:'1800-26-88800',l:'SEBI',d:'Securities market complaints',c:'tel:18002688800'},
+    {n:'1800-419-4723',l:'IRDAI',d:'Insurance complaints',c:'tel:18004194723'},
+    {n:'14747',l:'TRAI',d:'Telecom complaints',c:'tel:14747'},
+    {n:'1800-11-2011',l:'Income Tax',d:'IT helpline',c:'tel:18001112011'},
+  ],
+  health:[
+    {n:'1800-599-0019',l:'iCall Mental Health',d:'Free counselling',c:'tel:18005990019'},
+    {n:'9152987821',l:'iCall TISS',d:'Mental health support',c:'tel:9152987821'},
+    {n:'104',l:'Medical Advice',d:'Free medical advice',c:'tel:104'},
+    {n:'14410',l:'Tobacco Quitline',d:'Help quitting tobacco',c:'tel:14410'},
+    {n:'1800-11-6767',l:'NIMHANS',d:'Mental health helpline',c:'tel:18001116767'},
+    {n:'1800-11-0031',l:'NACO HIV',d:'HIV/AIDS helpline',c:'tel:18001100031'},
+  ],
+};
+const STUDENT_RESOURCES=[
+  {icon:'📚',label:'SWAYAM — Free Courses',desc:'Government of India ka free online course platform — IIT, IIM professors',link:'https://swayam.gov.in',linkLabel:'Visit →'},
+  {icon:'🎓',label:'NPTEL',desc:'IIT & IISc ke free engineering, science courses — certificates bhi milte hain',link:'https://nptel.ac.in',linkLabel:'Visit →'},
+  {icon:'💰',label:'NSP — Scholarship Portal',desc:'Central aur State scholarships ke liye — OBC, SC/ST, minorities',link:'https://scholarships.gov.in',linkLabel:'Apply →'},
+  {icon:'📜',label:'DigiLocker',desc:'Aadhar, marksheets, certificates — saare documents digitally store karo',link:'https://digilocker.gov.in',linkLabel:'Open →'},
+  {icon:'🏛',label:'ePathshala',desc:'NCERT books free mein — Class 1 se 12 tak',link:'https://epathshala.nic.in',linkLabel:'Read →'},
+  {icon:'💼',label:'NCS — Job Portal',desc:'National Career Service — government jobs, internships, skills',link:'https://www.ncs.gov.in',linkLabel:'Jobs →'},
+  {icon:'🔬',label:'Khan Academy India',desc:'Maths, science, economics — bilkul free',link:'https://khanacademy.org',linkLabel:'Study →'},
+  {icon:'⚖️',label:'BKLChai — Legal Help',desc:'Legal rights, RTI, consumer complaints — free mein jaano',link:'index.html',linkLabel:'Use Free →'},
+];
+const LIFE_HACKS=[
+  {icon:'🪪',label:'Aadhar Update Free karo',desc:'UIDAI portal par mobile number, address — free update. Post office mein jaoge toh ₹50 lagenge.',link:'https://myaadhaar.uidai.gov.in'},
+  {icon:'🏦',label:'Zero Balance Account',desc:'Jan Dhan Yojana mein zero balance account khol sakte hain kisi bhi bank mein — Rupay debit card free!',link:'https://pmjdy.gov.in'},
+  {icon:'🏥',label:'Ayushman Bharat',desc:'₹5 lakh tak free treatment — Ayushman card banao online ya CSC par',link:'https://pmjay.gov.in'},
+  {icon:'📱',label:'UMANG App',desc:'500+ government services ek app mein — PF, passport, driving licence sab ek jagah',link:'https://web.umang.gov.in'},
+  {icon:'⚡',label:'PM Surya Ghar Yojana',desc:'Free solar panel scheme — 300 units free bijli per month. Apply online',link:'https://pmsuryaghar.gov.in'},
+  {icon:'📊',label:'Income Tax Portal',desc:'ITR khud file karo — ek paisa kharcha nahi. Refund bhi milta hai!',link:'https://incometax.gov.in'},
+];
+const DOCS=[
+  {icon:'🪪',n:'Aadhar Card',d:'Everything ke liye — bank, school, government'},
+  {icon:'🗳',n:'Voter ID (EPIC)',d:'Age 18 ke baad banwao — citizenship proof'},
+  {icon:'🏎',n:'Driving Licence',d:'2-wheeler ke liye 16+, car 18+'},
+  {icon:'💰',n:'PAN Card',d:'Tax, investment, bank account mandatory'},
+  {icon:'📋',n:'Ration Card',d:'Subsidized food, documents proof'},
+  {icon:'🏥',n:'Health Insurance',d:'Ayushman ya private — must have'},
+  {icon:'📜',n:'Will / Nomination',d:'Har account mein nominee add karo'},
+  {icon:'🎓',n:'Mark Sheets in DigiLocker',d:'Original ke saath digital copy hamesha rakho'},
+];
+const MOOD_TIPS={
+  'Frustrated':{m:'Frustrated hain?',t:'Frustration mein koi legal decision mat lo. Pehle facts likho — kya hua, kab, kaun. Yeh list court mein weapon hai.'},
+  'Worried':{m:'Worry mat karo!',t:'90% legal problems ke liye court nahi jaana padta. BKLChai mein type karo — ek notice hi bahut hota hai!'},
+  'Confident':{m:'Perfect time for action!',t:'Aaj hi ek step lo — RTI file karo, consumer complaint draft karo, ya MSME notice bhejo!'},
+  'Confused':{m:'Confused? Normal hai!',t:'Likho: "Mujhe [kya problem] because [koi ne kya kiya]." Phir BKLChai mein type karo — law mil jayegi!'},
+};
+
+// ── STATE ──────────────────────────────────────────────────────
+let qScore=0,qCount=0,qIdx=0,qDone=false,desiIdx=0,artIdx=0,lWordIdx=0;
+let gstMode='add',intMode='simple';
+const fmtINR=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n);
+
+// ── TAB ────────────────────────────────────────────────────────
+function showTab(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  el.classList.add('active');
+  if(id==='news') loadNews();
+  if(id==='word'){loadDict();loadLegalWord();}
+  if(id==='helplines') renderHelplines();
+  if(id==='student') renderStudent();
+}
+
+// ── FACTS ──────────────────────────────────────────────────────
+function loadFacts(){
+  const sh=[...FACTS].sort(()=>Math.random()-.5).slice(0,5);
+  document.getElementById('factsBox').innerHTML=sh.map(f=>`<div class="fact-box"><span class="cat">⚖️ ${f.c}</span>${f.t}</div>`).join('');
+}
+async function loadWiki(){
+  const b=document.getElementById('wikiBox');
+  b.innerHTML='<div class="loader"><span class="spin"></span>Loading from Wikipedia...</div>';
+  try{
+    const r=await fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary');
+    const d=await r.json();
+    b.innerHTML=`<div class="fact-box"><span class="cat">📚 ${d.title}</span>${(d.extract||'').slice(0,300)}...<br/><a href="${d.content_urls?.desktop?.page||'#'}" target="_blank" style="color:var(--accent);font-size:11px">Read more →</a></div>`;
+  }catch(e){b.innerHTML='<div class="fact-box">Wikipedia se load nahi hua. Try again!</div>';}
+}
+
+// ── QUIZ ───────────────────────────────────────────────────────
+function renderQuiz(){
+  const q=QUIZ[qIdx%QUIZ.length];
+  document.getElementById('qScore').textContent=qScore;
+  document.getElementById('qCount').textContent=qCount;
+  document.getElementById('qProg').style.width=Math.min(100,(qCount/QUIZ.length)*100)+'%';
+  document.getElementById('quizBody').innerHTML=`<div style="font-size:14px;font-weight:600;margin-bottom:12px;line-height:1.6">Q${qCount+1}. ${q.q}</div><div>${q.o.map((o,i)=>`<button class="qopt" onclick="ansQ(${i})">${o}</button>`).join('')}</div><div id="qFeed"></div>`;
+  qDone=false;
+}
+function ansQ(i){
+  if(qDone) return;qDone=true;
+  const q=QUIZ[qIdx%QUIZ.length];
+  document.querySelectorAll('.qopt')[q.a].classList.add('correct');
+  if(i!==q.a) document.querySelectorAll('.qopt')[i].classList.add('wrong');
+  if(i===q.a) qScore++;qCount++;
+  document.getElementById('qFeed').innerHTML=`<div class="qfeed ${i===q.a?'win':'lose'}">${i===q.a?'✅ Sahi!':'❌ Galat!'} — ${q.e}</div><button class="btn" onclick="qIdx++;renderQuiz()" style="margin-top:10px">Next →</button>`;
+}
+
+// ── HELPLINES ──────────────────────────────────────────────────
+function renderHelplines(){
+  function renderSection(arr,id){
+    document.getElementById(id).innerHTML=arr.map(h=>`
+      <div class="hline-card">
+        <div class="hline-num">${h.n}</div>
+        <div class="hline-label">${h.l}</div>
+        <div class="hline-desc">${h.d}</div>
+        <a href="${h.c}" class="hline-call">📞 Call Now</a>
+      </div>`).join('');
+  }
+  renderSection(HELPLINES.emergency,'hlEmergency');
+  renderSection(HELPLINES.legal,'hlLegal');
+  renderSection(HELPLINES.finance,'hlFinance');
+  renderSection(HELPLINES.health,'hlHealth');
+}
+
+// ── CALCULATORS ────────────────────────────────────────────────
+function showCalc(id,el){
+  document.querySelectorAll('.ccalc').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.ctab').forEach(c=>{if(c.closest('.calc-tabs'))c.classList.remove('active');});
+  document.getElementById('ccalc-'+id).classList.add('active');
+  el.classList.add('active');
+}
+function calcEMI(){
+  const p=+document.getElementById('emi_p').value;
+  const r=+document.getElementById('emi_r').value/1200;
+  const n=+document.getElementById('emi_n').value;
+  if(!p||!r||!n) return;
+  const emi=p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+  const total=emi*n;
+  const interest=total-p;
+  const res=document.getElementById('emi_result');
+  res.style.display='block';
+  document.getElementById('emi_val').textContent=fmtINR(emi)+' / month';
+  document.getElementById('emi_sub').textContent=`Total Payment: ${fmtINR(total)} | Interest: ${fmtINR(interest)} | Principal: ${fmtINR(p)}`;
+}
+let gstRateVal=18;
+function setGST(rate,el){
+  gstRateVal=rate;
+  document.getElementById('gst_rate').value=rate;
+  document.querySelectorAll('#ccalc-gst .ctab').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  calcGST();
+}
+function setGSTMode(mode,el){
+  gstMode=mode;
+  document.querySelectorAll('[id^=gst_add_btn],[id^=gst_remove_btn]').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  calcGST();
+}
+function calcGST(){
+  const amt=+document.getElementById('gst_amt').value;
+  const rate=+document.getElementById('gst_rate').value||gstRateVal;
+  if(!amt) return;
+  let gstAmt,total;
+  if(gstMode==='add'){gstAmt=amt*rate/100;total=amt+gstAmt;}
+  else{total=amt;gstAmt=amt-amt*100/(100+rate);total=amt;}
+  const base=gstMode==='add'?amt:amt-gstAmt;
+  const res=document.getElementById('gst_result');
+  res.style.display='block';
+  document.getElementById('gst_val').textContent=gstMode==='add'?fmtINR(total)+' (with GST)':fmtINR(base)+' (without GST)';
+  document.getElementById('gst_sub').textContent=`GST (${rate}%): ${fmtINR(gstAmt)} | Base: ${fmtINR(base)} | Total: ${fmtINR(gstMode==='add'?total:amt)}`;
+}
+function setIntMode(mode,el){
+  intMode=mode;
+  document.getElementById('int_si_btn').classList.toggle('active',mode==='simple');
+  document.getElementById('int_ci_btn').classList.toggle('active',mode==='compound');
+  calcInterest();
+}
+function calcInterest(){
+  const p=+document.getElementById('int_p').value;
+  const r=+document.getElementById('int_r').value/100;
+  const t=+document.getElementById('int_t').value;
+  if(!p||!r||!t) return;
+  let interest,total;
+  if(intMode==='simple'){interest=p*r*t;total=p+interest;}
+  else{total=p*Math.pow(1+r,t);interest=total-p;}
+  document.getElementById('int_result').style.display='block';
+  document.getElementById('int_val').textContent=fmtINR(interest)+' Interest';
+  document.getElementById('int_sub').textContent=`Principal: ${fmtINR(p)} | ${intMode==='simple'?'Simple':'Compound'} Interest: ${fmtINR(interest)} | Total: ${fmtINR(total)}`;
+}
+function calcMSME(){
+  const p=+String(document.getElementById('msme_p').value).replace(/,/g,'');
+  const dueStr=document.getElementById('msme_d').value;
+  if(!p||!dueStr) return;
+  const due=new Date(dueStr);
+  const today=new Date();
+  const days=Math.max(0,Math.floor((today-due)/(1000*60*60*24)));
+  const rate=19.5/100;
+  const interest=p*rate*days/365;
+  const total=p+interest;
+  document.getElementById('msme_result').style.display='block';
+  document.getElementById('msme_val').textContent=fmtINR(total)+' Total Demand';
+  document.getElementById('msme_sub').textContent=`Principal: ${fmtINR(p)} | Days overdue: ${days} | Interest @19.5% p.a.: ${fmtINR(interest)}`;
+}
+function calcSIP(){
+  const m=+document.getElementById('sip_m').value;
+  const r=+document.getElementById('sip_r').value/1200;
+  const n=+document.getElementById('sip_t').value*12;
+  if(!m||!r||!n) return;
+  const total=m*(Math.pow(1+r,n)-1)/r*(1+r);
+  const invested=m*n;
+  const gain=total-invested;
+  document.getElementById('sip_result').style.display='block';
+  document.getElementById('sip_val').textContent=fmtINR(total)+' Estimated Value';
+  document.getElementById('sip_sub').textContent=`Invested: ${fmtINR(invested)} | Gains: ${fmtINR(gain)} | Returns: ${((gain/invested)*100).toFixed(1)}%`;
+}
+function calcSalary(){
+  const g=+document.getElementById('sal_g').value;
+  const pfPct=+document.getElementById('sal_pf').value||12;
+  if(!g) return;
+  const pf=g*pfPct/100;
+  const professional_tax=g>25000?200:g>15000?150:0;
+  const basic=g*0.4;
+  const hra=g*0.2;
+  const taxable=g-pf-hra;
+  const incomeTax=Math.max(0,(g*12-250000)*0.05/12);
+  const net=g-pf-professional_tax-incomeTax;
+  document.getElementById('sal_result').style.display='block';
+  document.getElementById('sal_val').textContent=fmtINR(net)+' Take-Home';
+  document.getElementById('sal_sub').textContent=`PF: ${fmtINR(pf)} | Prof. Tax: ₹${professional_tax} | ~Income Tax: ${fmtINR(incomeTax)} | Gross: ${fmtINR(g)}`;
+}
+
+// ── NEWS ───────────────────────────────────────────────────────
+async function loadNews(){
+  const b=document.getElementById('newsBox');
+  b.innerHTML='<div class="loader"><span class="spin"></span>Loading...</div>';
+  document.getElementById('tipBox').innerHTML='💡 '+TIPS[Math.floor(Math.random()*TIPS.length)];
+  try{
+    const rss='https://timesofindia.indiatimes.com/rssfeeds/1221656.cms';
+    const r=await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rss)}&count=8`,{signal:AbortSignal.timeout(6000)});
+    const d=await r.json();
+    if(d.items?.length){b.innerHTML=d.items.slice(0,6).map(i=>`<div class="news-item"><a href="${i.link}" target="_blank" rel="noopener"><div class="news-headline">${i.title}</div><div class="news-meta">📰 ${new Date(i.pubDate).toLocaleDateString('en-IN')}</div></a></div>`).join('');}
+    else throw new Error('no items');
+  }catch(e){
+    b.innerHTML=`<div class="news-item"><div class="news-headline">MSME — 45 din mein payment na mile toh MSME Samadhaan portal par complaint karo</div><div class="news-meta">⚖️ MSMED Act 2006</div></div><div class="news-item"><div class="news-headline">Consumer Protection — Online fraud ke liye District Forum mein ₹200 mein case</div><div class="news-meta">⚖️ CPA 2019</div></div><div class="news-item"><a href="https://news.google.com/search?q=India+legal+rights" target="_blank"><div class="news-headline">More news → Google par dekhein</div><div class="news-meta">📰 Google News</div></a></div>`;
+  }
+}
+
+// ── JOKES ──────────────────────────────────────────────────────
+async function loadJoke(){
+  document.getElementById('jokeQ').textContent='Loading...';
+  document.getElementById('jokeA').style.display='none';
+  try{
+    const r=await fetch('https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,racist,sexist,explicit&type=twopart');
+    const d=await r.json();
+    document.getElementById('jokeQ').textContent=d.setup||'Why did the lawyer cross the road?';
+    document.getElementById('jokeA').textContent=d.delivery||'To get to the other side of the law!';
+  }catch(e){
+    document.getElementById('jokeQ').textContent='Why do lawyers wear neckties?';
+    document.getElementById('jokeA').textContent='So the noose will be in the right place! 😂';
+  }
+}
+function nextDesi(){desiIdx=(desiIdx+1)%DESI.length;document.getElementById('desiJoke').textContent=DESI[desiIdx];}
+
+// ── WORDS ──────────────────────────────────────────────────────
+function loadLegalWord(){
+  const w=LEGAL_WORDS[Math.floor(Math.random()*LEGAL_WORDS.length)];
+  document.getElementById('legalWord').innerHTML=`<div class="word-big">${w.w}</div><div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:8px">${w.d}</div><div class="fact-box"><span class="cat">💡 Use Case</span>${w.u}</div>`;
+}
+async function loadDict(){
+  const b=document.getElementById('dictBox');
+  b.innerHTML='<div class="loader"><span class="spin"></span>Loading...</div>';
+  const words=['justice','equity','liability','contempt','verdict','statute','plaintiff','defendant','remedy','evidence','tort','injunction','precedent','jurisdiction'];
+  const word=words[Math.floor(Math.random()*words.length)];
+  try{
+    const r=await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    const d=await r.json();
+    const def=d[0]?.meanings?.[0]?.definitions?.[0]?.definition||'Legal term.';
+    const ph=d[0]?.phonetics?.[0]?.text||'';
+    b.innerHTML=`<div class="word-big">${word}</div>${ph?`<div style="color:var(--text3);font-size:12px;margin-bottom:7px">${ph}</div>`:''}<div style="font-size:13px;color:var(--text2);line-height:1.7">${def}</div>`;
+  }catch(e){b.innerHTML=`<div class="word-big">${word}</div><div style="font-size:13px;color:var(--text2)">Legal/law term — look up in Black's Law Dictionary.</div>`;}
+}
+
+// ── CONSTITUTION ───────────────────────────────────────────────
+function renderArt(){
+  const a=ARTS[artIdx];
+  document.getElementById('artBox').innerHTML=`<div class="art-num">${a.n}</div><div style="font-size:15px;font-weight:700;margin-bottom:10px">${a.t}</div><div class="fact-box" style="border-left-color:var(--accent3)">${a.c}</div><div class="fact-box" style="margin-top:8px;border-left-color:var(--accent2)"><span class="cat" style="color:var(--accent2)">⚡ Action</span>${a.a}</div>`;
+}
+function nextArt(){artIdx=(artIdx+1)%ARTS.length;renderArt();}
+function randArt(){artIdx=Math.floor(Math.random()*ARTS.length);renderArt();}
+function setMood(el,em,label){
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');
+  const a=MOOD_TIPS[label];
+  const b=document.getElementById('moodBox');b.style.display='block';
+  b.innerHTML=`<span class="cat">${em} ${a.m}</span>${a.t}<br/><br/><a href="index.html" style="background:var(--accent);color:#000;padding:6px 14px;border-radius:7px;text-decoration:none;font-size:12px;font-weight:700">⚖️ BKLChai mein poochho →</a>`;
+}
+
+// ── STUDENT ───────────────────────────────────────────────────
+function renderStudent(){
+  document.getElementById('studentResources').innerHTML=STUDENT_RESOURCES.map(r=>`
+    <div class="resource-item">
+      <div class="resource-icon">${r.icon}</div>
+      <div><div class="resource-label">${r.label}</div><div class="resource-desc">${r.desc}</div></div>
+      <a href="${r.link}" target="_blank" class="resource-link">${r.linkLabel}</a>
+    </div>`).join('');
+  document.getElementById('lifeHacks').innerHTML=LIFE_HACKS.map(r=>`
+    <div class="resource-item">
+      <div class="resource-icon">${r.icon}</div>
+      <div><div class="resource-label">${r.label}</div><div class="resource-desc">${r.desc}</div></div>
+      <a href="${r.link}" target="_blank" class="resource-link">Open →</a>
+    </div>`).join('');
+  document.getElementById('importantDocs').innerHTML=DOCS.map(d=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:20px">${d.icon}</span>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">${d.n}</div><div style="font-size:11px;color:var(--text3)">${d.d}</div></div>
+    </div>`).join('');
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+loadFacts();loadWiki();renderQuiz();loadLegalWord();renderArt();
+document.getElementById('desiJoke').textContent=DESI[0];
+loadJoke();document.getElementById('tipBox').innerHTML='💡 '+TIPS[0];
+document.getElementById('gst_rate').value=18;
+</script>
+</body>
+</html>

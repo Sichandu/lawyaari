@@ -2,96 +2,129 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Privacy Policy – LegalDost</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title id="pgTitle">गोपनीयता नीति – BKLChai</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#2a2a38;--border2:#3a3a50;--accent:#f59e0b;--accent3:#10b981;--text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;}
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#2a2a38;--border2:#3a3a50;
+  --accent:#f59e0b;--accent3:#10b981;--text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;}
-nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.logo{font-size:18px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;}
-.back-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 14px;border-radius:8px;font-size:12px;text-decoration:none;transition:all .15s;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans','Noto Sans Devanagari',sans-serif;min-height:100vh;}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-size:17px;font-weight:700;color:var(--text);text-decoration:none;}
+.nav-right{display:flex;gap:8px;align-items:center;}
+.back-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
+  padding:6px 13px;border-radius:8px;font-size:12px;text-decoration:none;transition:.15s;}
 .back-btn:hover{color:var(--text);border-color:var(--accent);}
-.container{max-width:760px;margin:0 auto;padding:40px 20px 60px;}
-h1{font-size:26px;font-weight:700;margin-bottom:6px;}
-.subtitle{font-size:13px;color:var(--text3);margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border);}
-h2{font-size:17px;font-weight:600;color:var(--accent);margin:28px 0 10px;}
-h3{font-size:14px;font-weight:600;color:var(--text);margin:16px 0 6px;}
-p{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:12px;}
-ul,ol{padding-left:20px;margin-bottom:12px;}
-li{font-size:13px;color:var(--text2);line-height:1.8;}
-.highlight{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:14px 16px;margin:16px 0;}
+.lang-toggle{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden;}
+.lt-btn{background:none;border:none;color:var(--text3);padding:5px 10px;font-size:11px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:.15s;}
+.lt-btn.active{background:var(--accent);color:#000;}
+.container{max-width:760px;margin:0 auto;padding:36px 20px 60px;}
+h1{font-size:24px;font-weight:700;margin-bottom:6px;}
+.subtitle{font-size:13px;color:var(--text3);margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+h2{font-size:16px;font-weight:600;color:var(--accent);margin:26px 0 9px;}
+h3{font-size:14px;font-weight:600;color:var(--text);margin:14px 0 5px;}
+p{font-size:13px;color:var(--text2);line-height:1.85;margin-bottom:11px;}
+ul,ol{padding-left:20px;margin-bottom:11px;}
+li{font-size:13px;color:var(--text2);line-height:1.85;}
+.highlight{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:14px 16px;margin:14px 0;}
 .highlight p{margin:0;color:var(--text);}
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:20px;text-align:center;font-size:11px;color:var(--text3);}
-footer a{color:var(--text3);text-decoration:none;margin:0 8px;}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:18px;text-align:center;font-size:11px;color:var(--text3);}
+footer a{color:var(--text3);text-decoration:none;margin:0 7px;}
 footer a:hover{color:var(--accent);}
-@media(max-width:600px){.container{padding:24px 16px 40px;}h1{font-size:22px;}}
+.lang-section{display:none;}
+.lang-section.active{display:block;}
+@media(max-width:600px){.container{padding:22px 14px 40px;}h1{font-size:20px;}}
 </style>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="logo">⚖️ LegalDost</a>
-  <a href="index.html" class="back-btn">← Back to App</a>
+  <a href="index.html" class="logo">⚖️ BKLChai</a>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lt-btn active" onclick="setLang('hi')" id="lt-hi">हिं</button>
+      <button class="lt-btn" onclick="setLang('te')" id="lt-te">తె</button>
+      <button class="lt-btn" onclick="setLang('en')" id="lt-en">EN</button>
+    </div>
+    <a href="index.html" class="back-btn">← App</a>
+  </div>
 </nav>
+
 <div class="container">
-
-<h1>Privacy Policy</h1>
-<p class="subtitle">Last updated: March 2026. Your privacy matters to us.</p>
-
-<div class="highlight"><p>LegalDost collects minimal data necessary to provide our service. We do not sell your data to anyone.</p></div>
-
-<h2>1. Information We Collect</h2>
+  <div class="lang-section active" id="sec-hi">
+    <h1>गोपनीयता नीति</h1>
+    <p class="subtitle">Last updated: March 2026. आपकी privacy हमारे लिए important है।</p>
+<div class="highlight"><p>BKLChai minimum data collect करता है। हम आपका data कभी किसी को नहीं बेचते।</p></div>
+<h2>1. हम क्या Data collect करते हैं</h2>
 <ul>
-  <li><strong>Mobile number:</strong> Used for OTP-based login only.</li>
-  <li><strong>Name & Gender:</strong> Provided voluntarily during registration for personalization.</li>
-  <li><strong>Chat messages:</strong> Stored to improve AI accuracy and for admin analytics.</li>
-  <li><strong>Payment information:</strong> Processed by Razorpay. We do not store card details.</li>
-  <li><strong>Device info:</strong> IP address and user agent for security and rate limiting.</li>
+<li><strong>Mobile number:</strong> OTP login के लिए</li>
+<li><strong>Name & Gender:</strong> Personalization के लिए (optional)</li>
+<li><strong>Chat messages:</strong> AI accuracy improve करने के लिए</li>
+<li><strong>Payment info:</strong> Razorpay द्वारा process होती है — हम card details store नहीं करते</li>
 </ul>
-
-<h2>2. How We Use Your Information</h2>
+<h2>2. Data कैसे use होता है</h2>
 <ul>
-  <li>To provide and improve our legal assistance service</li>
-  <li>To process payments via Razorpay</li>
-  <li>To send OTP for login verification</li>
-  <li>To track usage limits (free tier enforcement)</li>
-  <li>To analyze aggregate usage patterns (no individual targeting)</li>
+<li>Legal assistance service provide करने के लिए</li>
+<li>Razorpay के through payment process करने के लिए</li>
+<li>Free tier usage limits track करने के लिए</li>
 </ul>
-
-<h2>3. Data Storage</h2>
-<p>Your data is stored on secure MongoDB Atlas servers. Chat history and OTP records are retained for service improvement. Payment records are retained for compliance purposes.</p>
-
-<h2>4. Data Sharing</h2>
-<p>We do <strong>not sell</strong> your personal data. We share data only with:</p>
+<h2>3. Data Sharing</h2>
+<p>हम आपका personal data <strong>sell नहीं करते</strong>। Data सिर्फ Razorpay (payments) और Groq/OpenAI (AI responses) के साथ share होता है।</p>
+<h2>4. आपके Rights</h2>
 <ul>
-  <li><strong>Razorpay:</strong> For payment processing</li>
-  <li><strong>Groq / OpenAI:</strong> Your chat messages are sent to AI providers for response generation. Do not include highly sensitive personal information in chats.</li>
+<li>Data access: +91 81858 43878 पर WhatsApp करें</li>
+<li>Data delete: Account deletion request WhatsApp पर करें</li>
 </ul>
-
-<h2>5. Your Rights</h2>
+  </div>
+  <div class="lang-section" id="sec-te">
+    <h1>గోప్యతా విధానం</h1>
+    <p class="subtitle">Last updated: March 2026.</p>
+<div class="highlight"><p>BKLChai minimum data మాత్రమే collect చేస్తుంది. మీ data ఎవ్వరికీ అమ్మదు.</p></div>
+<h2>1. మేము ఏ Data collect చేస్తాము</h2>
 <ul>
-  <li>Right to access your data: WhatsApp us with your mobile number</li>
-  <li>Right to delete your data: WhatsApp us to request account deletion</li>
-  <li>Right to opt out of analytics: Contact us</li>
+<li><strong>Mobile number:</strong> OTP login కోసం</li>
+<li><strong>Chat messages:</strong> AI accuracy మెరుగుపరచడానికి</li>
+<li><strong>Payment info:</strong> Razorpay ద్వారా process — card details store చేయం</li>
 </ul>
-
-<h2>6. Cookies</h2>
-<p>We use localStorage (browser storage) to save your session token and preferences. No third-party tracking cookies are used.</p>
-
-<h2>7. Children's Privacy</h2>
-<p>LegalDost is not intended for users under 18 years of age. We do not knowingly collect data from minors.</p>
-
-<h2>8. Contact</h2>
-<p>For privacy concerns, WhatsApp us at +91 81858 43878.</p>
-
+<h2>2. Data Sharing</h2>
+<p>మేము మీ data <strong>అమ్మం</strong>. Razorpay మరియు AI providers తో మాత్రమే share అవుతుంది.</p>
+<h2>3. మీ హక్కులు</h2>
+<p>Data access లేదా deletion కోసం: +91 81858 43878 WhatsApp చేయండి.</p>
+  </div>
+  <div class="lang-section" id="sec-en">
+    <h1>Privacy Policy</h1>
+    <p class="subtitle">Last updated: March 2026. Your privacy matters to us.</p>
+<div class="highlight"><p>BKLChai collects minimal data. We never sell your data to anyone.</p></div>
+<h2>1. What We Collect</h2>
+<ul>
+<li><strong>Mobile number:</strong> For OTP login only</li>
+<li><strong>Chat messages:</strong> To improve AI accuracy</li>
+<li><strong>Payment info:</strong> Processed by Razorpay — we don't store card details</li>
+</ul>
+<h2>2. Data Sharing</h2>
+<p>We <strong>never sell</strong> your data. Shared only with Razorpay (payments) and AI providers (Groq/OpenAI).</p>
+<h2>3. Your Rights</h2>
+<p>Data access or deletion: WhatsApp +91 81858 43878.</p>
+  </div>
 </div>
+
 <footer>
-  <div style="margin-bottom:8px;">
+  <div style="margin-bottom:7px;">
     <a href="index.html">Home</a><a href="about.html">About</a><a href="contact.html">Contact</a>
     <a href="faq.html">FAQ</a><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="disclaimer.html">Disclaimer</a>
   </div>
-  © 2026 LegalDost · lawyaari.com · Not a law firm
+  © 2026 BKLChai · bklchai.com
 </footer>
+
+<script>
+function setLang(lang){
+  document.querySelectorAll('.lang-section').forEach(e=>e.classList.remove('active'));
+  document.getElementById('sec-'+lang).classList.add('active');
+  document.querySelectorAll('.lt-btn').forEach(e=>e.classList.remove('active'));
+  document.getElementById('lt-'+lang).classList.add('active');
+}
+</script>
 </body>
 </html>

@@ -2,73 +2,131 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>About Us – Bklchai</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title id="pgTitle">BKLChai के बारे में – BKLChai</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#2a2a38;--border2:#3a3a50;--accent:#f59e0b;--accent3:#10b981;--text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;}
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#2a2a38;--border2:#3a3a50;
+  --accent:#f59e0b;--accent3:#10b981;--text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;}
-nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.logo{font-size:18px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;}
-.back-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 14px;border-radius:8px;font-size:12px;text-decoration:none;transition:all .15s;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans','Noto Sans Devanagari',sans-serif;min-height:100vh;}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-size:17px;font-weight:700;color:var(--text);text-decoration:none;}
+.nav-right{display:flex;gap:8px;align-items:center;}
+.back-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
+  padding:6px 13px;border-radius:8px;font-size:12px;text-decoration:none;transition:.15s;}
 .back-btn:hover{color:var(--text);border-color:var(--accent);}
-.container{max-width:760px;margin:0 auto;padding:40px 20px 60px;}
-h1{font-size:26px;font-weight:700;margin-bottom:6px;}
-.subtitle{font-size:13px;color:var(--text3);margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border);}
-h2{font-size:17px;font-weight:600;color:var(--accent);margin:28px 0 10px;}
-h3{font-size:14px;font-weight:600;color:var(--text);margin:16px 0 6px;}
-p{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:12px;}
-ul,ol{padding-left:20px;margin-bottom:12px;}
-li{font-size:13px;color:var(--text2);line-height:1.8;}
-.highlight{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:14px 16px;margin:16px 0;}
+.lang-toggle{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden;}
+.lt-btn{background:none;border:none;color:var(--text3);padding:5px 10px;font-size:11px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:.15s;}
+.lt-btn.active{background:var(--accent);color:#000;}
+.container{max-width:760px;margin:0 auto;padding:36px 20px 60px;}
+h1{font-size:24px;font-weight:700;margin-bottom:6px;}
+.subtitle{font-size:13px;color:var(--text3);margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+h2{font-size:16px;font-weight:600;color:var(--accent);margin:26px 0 9px;}
+h3{font-size:14px;font-weight:600;color:var(--text);margin:14px 0 5px;}
+p{font-size:13px;color:var(--text2);line-height:1.85;margin-bottom:11px;}
+ul,ol{padding-left:20px;margin-bottom:11px;}
+li{font-size:13px;color:var(--text2);line-height:1.85;}
+.highlight{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:14px 16px;margin:14px 0;}
 .highlight p{margin:0;color:var(--text);}
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:20px;text-align:center;font-size:11px;color:var(--text3);}
-footer a{color:var(--text3);text-decoration:none;margin:0 8px;}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:18px;text-align:center;font-size:11px;color:var(--text3);}
+footer a{color:var(--text3);text-decoration:none;margin:0 7px;}
 footer a:hover{color:var(--accent);}
-@media(max-width:600px){.container{padding:24px 16px 40px;}h1{font-size:22px;}}
+.lang-section{display:none;}
+.lang-section.active{display:block;}
+@media(max-width:600px){.container{padding:22px 14px 40px;}h1{font-size:20px;}}
 </style>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="logo">⚖️ Bklchai</a>
-  <a href="index.html" class="back-btn">← Back to App</a>
+  <a href="index.html" class="logo">⚖️ BKLChai</a>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lt-btn active" onclick="setLang('hi')" id="lt-hi">हिं</button>
+      <button class="lt-btn" onclick="setLang('te')" id="lt-te">తె</button>
+      <button class="lt-btn" onclick="setLang('en')" id="lt-en">EN</button>
+    </div>
+    <a href="index.html" class="back-btn">← App</a>
+  </div>
 </nav>
+
 <div class="container">
-
-<h1>About Bklchai</h1>
-<p class="subtitle">आपका क़ानूनी दोस्त — Your legal friend, always available.</p>
-
-<div class="highlight"><p>Bklchai was built with one simple belief: <strong>legal knowledge should not be a privilege.</strong> In India, millions of MSMEs, workers, tenants, and common citizens face legal problems every day — but cannot afford a lawyer for basic questions.</p></div>
-
+  <div class="lang-section active" id="sec-hi">
+    <h1>BKLChai के बारे में</h1>
+    <p class="subtitle">Bharath Ki Law Chai — जो confusion मिटाकर clarity देता है, जो chai की तरह गर्म और strong रहता है।</p>
+<div class="highlight"><p>BKLChai का मतलब है <strong>Bharath Ki Law Chai</strong> — भारत की कानूनी चाय। जैसे सुबह की एक कप चाय दिमाग clear करती है, वैसे ही BKLChai आपकी कानूनी confusion को clear करता है। गर्म, strong, और आपके लिए।</p></div>
+<h2>हमारा मिशन</h2>
+<p>भारत में लाखों MSME मालिक, मजदूर, किरायेदार और आम नागरिक हर रोज़ कानूनी समस्याओं का सामना करते हैं — लेकिन lawyer fees afford नहीं कर सकते। BKLChai इसी gap को भरता है।</p>
+<h2>हम क्या करते हैं</h2>
+<ul>
+<li>Hindi, Telugu और Hinglish में free legal Q&A</li>
+<li>MSME payment recovery notices — AI-generated</li>
+<li>Consumer, police, labour complaints का draft</li>
+<li>Bank, landlord, employer के notices का legal reply</li>
+<li>Real-time legal awareness — 10 topics में</li>
+</ul>
+<h2>BKLChai क्यों?</h2>
+<p>क्योंकि कानून सिर्फ lawyers के लिए नहीं है। यह आपका हक़ है। और हम चाहते हैं कि हर भारतीय अपने हक़ को जाने — बिल्कुल उसी तरह जैसे आप सुबह की chai पीते हैं। आसान, गर्म, और ज़रूरी।</p>
+<h2>Important Notice</h2>
+<p>BKLChai एक AI-powered legal information platform है। हम law firm नहीं हैं। Legal proceedings से पहले किसी qualified lawyer से सलाह ज़रूर लें।</p>
+<h2>Contact & Feedback</h2>
+<p>WhatsApp: <strong>+91 81858 43878</strong> | <a href="index.html" style="color:var(--accent)">App में Feedback दें →</a></p>
+  </div>
+  <div class="lang-section" id="sec-te">
+    <h1>BKLChai గురించి</h1>
+    <p class="subtitle">Bharath Ki Law Chai — confusion తొలగించి clarity ఇస్తుంది, chai లాగా వేడిగా మరియు strong గా ఉంటుంది।</p>
+<div class="highlight"><p>BKLChai అంటే <strong>Bharath Ki Law Chai</strong> — భారతదేశపు న్యాయ చాయ్. ఉదయం ఒక కప్పు చాయ్ మనసును clear చేసినట్లు, BKLChai మీ న్యాయపరమైన confusion ను clear చేస్తుంది.</p></div>
+<h2>మా లక్ష్యం</h2>
+<p>భారతదేశంలో లక్షలాది MSME యజమానులు, కార్మికులు, అద్దెదారులు మరియు సామాన్య పౌరులు రోజూ న్యాయ సమస్యలను ఎదుర్కొంటారు — కానీ lawyer fees afford చేయలేరు. BKLChai ఈ gap ను పూరిస్తుంది.</p>
+<h2>మేమేం చేస్తాము</h2>
+<ul>
+<li>Hindi, Telugu మరియు Hinglish లో free legal Q&A</li>
+<li>MSME payment recovery notices — AI-generated</li>
+<li>Consumer, police, labour complaints draft</li>
+<li>Bank, landlord, employer notices కు legal reply</li>
+<li>10 topics లో real-time legal awareness</li>
+</ul>
+<h2>ముఖ్యమైన గమనిక</h2>
+<p>BKLChai ఒక AI-powered legal information platform. మేము law firm కాదు. Legal proceedings కు ముందు qualified lawyer ని సంప్రదించండి.</p>
+  </div>
+  <div class="lang-section" id="sec-en">
+    <h1>About BKLChai</h1>
+    <p class="subtitle">Bharath Ki Law Chai — clearing confusion, delivering clarity, staying warm and strong like chai.</p>
+<div class="highlight"><p>BKLChai stands for <strong>Bharath Ki Law Chai</strong> — India's Legal Tea. Just as a morning cup of chai clears your mind, BKLChai clears your legal confusion. Warm, strong, and made for you.</p></div>
 <h2>Our Mission</h2>
-<p>To make legal awareness accessible to every Indian in their own language — Hindi, Telugu, and Hinglish — at zero or minimal cost.</p>
-
+<p>Millions of Indians — MSME owners, workers, tenants, and common citizens — face legal problems every day but cannot afford legal advice. BKLChai bridges that gap.</p>
 <h2>What We Do</h2>
 <ul>
-  <li>Free legal Q&A in Hindi, Telugu, and Hinglish</li>
-  <li>AI-generated legal notices for cheque bounce, MSME payment recovery</li>
-  <li>Complaint drafts for consumer, police, medical, and labour issues</li>
-  <li>Legal reply generation for notices from banks, landlords, and employers</li>
-  <li>Priority answers for urgent legal questions</li>
+<li>Free legal Q&A in Hindi, Telugu & Hinglish</li>
+<li>AI-generated MSME payment recovery notices</li>
+<li>Consumer, police, labour complaint drafts</li>
+<li>Legal replies to bank, landlord & employer notices</li>
+<li>Legal awareness across 10 topics</li>
 </ul>
-
-<h2>Who Built This?</h2>
-<p>Bklchai is built by an independent founder from Andhra Pradesh, India — passionate about making justice accessible. This is a bootstrapped MVP built to solve a real problem faced by millions of Indians who don't know their rights.</p>
-
 <h2>Important Disclaimer</h2>
-<p>Bklchai is an AI-powered legal information service. We are <strong>not a law firm</strong> and do not provide formal legal advice. All outputs are AI-generated and should be reviewed by a qualified lawyer before use in legal proceedings.</p>
-
-<h2>Contact & Feedback</h2>
-<p>We'd love to hear from you. WhatsApp us at <strong>+91 81858 43878</strong> or use the <a href="index.html" style="color:var(--accent);">Feedback button</a> in the app.</p>
-
+<p>BKLChai is an AI-powered legal information service. We are not a law firm. Always consult a qualified lawyer before legal proceedings.</p>
+<h2>Contact</h2>
+<p>WhatsApp: <strong>+91 81858 43878</strong></p>
+  </div>
 </div>
+
 <footer>
-  <div style="margin-bottom:8px;">
+  <div style="margin-bottom:7px;">
     <a href="index.html">Home</a><a href="about.html">About</a><a href="contact.html">Contact</a>
     <a href="faq.html">FAQ</a><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="disclaimer.html">Disclaimer</a>
   </div>
-  © 2026 Bklchai · bklchai.com · Not a law firm
+  © 2026 BKLChai · bklchai.com
 </footer>
+
+<script>
+function setLang(lang){
+  document.querySelectorAll('.lang-section').forEach(e=>e.classList.remove('active'));
+  document.getElementById('sec-'+lang).classList.add('active');
+  document.querySelectorAll('.lt-btn').forEach(e=>e.classList.remove('active'));
+  document.getElementById('lt-'+lang).classList.add('active');
+}
+</script>
 </body>
 </html>
