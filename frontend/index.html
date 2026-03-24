@@ -281,6 +281,12 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .dots-item:last-child{border-bottom:none;}
 .dots-item:hover{background:var(--bg3);color:var(--text);}
 .dots-item .di{font-size:16px;width:20px;text-align:center;}
+
+/* Arrow animation */
+@keyframes bounceArrow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
 </style>
 </head>
 <body>
@@ -305,6 +311,12 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
         <div class="lang-option" onclick="setLang('hinglish')" data-lang="hinglish">💬 Hinglish</div>
       </div>
     </div>
+
+    <!-- Arrow indicator for language dropdown -->
+<div id="langArrow" style="display: none; position: absolute; top: 52px; right: 90px; font-size: 28px; pointer-events: none; z-index: 1000; animation: bounceArrow 0.5s ease 0s 3; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+  👆
+</div>
+
     <button class="auth-btn" id="authBtn" onclick="handleAuthClick()">Login</button>
     <!-- 3-dots mobile menu -->
     <button class="dots-btn" id="dotsBtn" onclick="toggleDotsMenu()">⋮</button>
@@ -1415,6 +1427,36 @@ function init(){
   updateUI();renderQuickCards();updateAuthBtn();updateUsageBar();
 }
 init();
+
+// Auto-show language dropdown hint (arrow and open dropdown for 5 seconds)
+function showLanguageHint() {
+  const arrow = document.getElementById('langArrow');
+  const langBtn = document.getElementById('langDdBtn');
+  const langMenu = document.getElementById('langDdMenu');
+  if (!arrow || !langBtn || !langMenu) return;
+
+  // Position the arrow relative to the language button
+  const btnRect = langBtn.getBoundingClientRect();
+  arrow.style.left = (btnRect.left + btnRect.width / 2 - 20) + 'px';
+  arrow.style.top = (btnRect.top + btnRect.height + 5) + 'px';
+  arrow.style.display = 'block';
+
+  // Open the dropdown
+  langMenu.classList.add('open');
+
+  // Hide arrow and close dropdown after 5 seconds
+  setTimeout(() => {
+    arrow.style.display = 'none';
+    langMenu.classList.remove('open');
+  }, 5000);
+}
+
+// Call the hint when the page is fully loaded (and after any login checks)
+window.addEventListener('load', () => {
+  // Wait a bit for the UI to stabilize (optional)
+  setTimeout(showLanguageHint, 500);
+});
+
 </script>
 <!-- FEEDBACK MODAL -->
 <div class="modal-overlay" id="feedbackModal">
