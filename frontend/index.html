@@ -902,7 +902,81 @@ async function sendMessage(){
   const text=input.value.trim();
   if(!text) return;
 
-  // Voice Input (Speech-to-Text)
+//   // Voice Input (Speech-to-Text)
+// let recognition = null;
+// function startVoiceInput() {
+//   const micBtn = document.getElementById('micBtn');
+//   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+//     toast('Your browser does not support voice input. Please use Chrome, Edge, or Safari.', 'error');
+//     return;
+//   }
+
+//   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+//   if (!recognition) {
+//     recognition = new SpeechRecognition();
+//     recognition.lang = state.lang === 'te' ? 'te-IN' : (state.lang === 'hi' ? 'hi-IN' : 'en-IN');
+//     recognition.interimResults = false;
+//     recognition.maxAlternatives = 1;
+//   }
+
+//   recognition.onstart = () => {
+//     micBtn.classList.add('active');
+//     toast('🎙️ Listening... Speak now.', 'info');
+//   };
+
+//   recognition.onresult = (event) => {
+//     const transcript = event.results[0][0].transcript;
+//     document.getElementById('chatInput').value = transcript;
+//     micBtn.classList.remove('active');
+//     toast('Voice captured!', 'success');
+//     // Optional: auto-send after voice
+//     // sendMessage();
+//   };
+
+//   recognition.onerror = (event) => {
+//     micBtn.classList.remove('active');
+//     toast('Voice recognition error: ' + event.error, 'error');
+//   };
+
+//   recognition.onend = () => {
+//     micBtn.classList.remove('active');
+//   };
+
+//   recognition.start();
+// }
+
+// // File Upload Trigger
+// function triggerFileUpload() {
+//   document.getElementById('fileUploadInput').click();
+// }
+
+// // Handle file selection
+// document.getElementById('fileUploadInput').addEventListener('change', function(e) {
+//   const file = e.target.files[0];
+//   if (!file) return;
+
+//   // If already in BKDA category, just upload
+//   if (state.category === 'bkda') {
+//     uploadBKDAFile(file);
+//   } else {
+//     // Switch to BKDA and then upload
+//     const bkdaItem = document.querySelector('.category-item[onclick*="bkda"]');
+//     if (bkdaItem) {
+//       // Simulate clicking on BKDA category
+//       bkdaItem.click();
+//       // Wait a bit for UI to switch, then upload
+//       setTimeout(() => {
+//         uploadBKDAFile(file);
+//       }, 300);
+//     } else {
+//       toast('BKDA category not found. Please select it manually.', 'error');
+//     }
+//   }
+//   // Reset file input so same file can be uploaded again
+//   document.getElementById('fileUploadInput').value = '';
+// });
+
+// Voice Input (Speech-to-Text)
 let recognition = null;
 function startVoiceInput() {
   const micBtn = document.getElementById('micBtn');
@@ -950,31 +1024,11 @@ function triggerFileUpload() {
   document.getElementById('fileUploadInput').click();
 }
 
-// Handle file selection
+// Handle file selection (BKDA removed – just show a message)
 document.getElementById('fileUploadInput').addEventListener('change', function(e) {
   const file = e.target.files[0];
-  if (!file) return;
+  if (!file) return;});
 
-  // If already in BKDA category, just upload
-  if (state.category === 'bkda') {
-    uploadBKDAFile(file);
-  } else {
-    // Switch to BKDA and then upload
-    const bkdaItem = document.querySelector('.category-item[onclick*="bkda"]');
-    if (bkdaItem) {
-      // Simulate clicking on BKDA category
-      bkdaItem.click();
-      // Wait a bit for UI to switch, then upload
-      setTimeout(() => {
-        uploadBKDAFile(file);
-      }, 300);
-    } else {
-      toast('BKDA category not found. Please select it manually.', 'error');
-    }
-  }
-  // Reset file input so same file can be uploaded again
-  document.getElementById('fileUploadInput').value = '';
-});
 
   // ── Enforce frontend limit BEFORE calling backend ──
   const adminMob=localStorage.getItem('ld_admin_mobile');
