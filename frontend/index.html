@@ -287,6 +287,33 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
+
+/* Mic and upload buttons */
+.mic-btn, .upload-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.mic-btn:hover, .upload-btn:hover {
+  background: var(--border2);
+  color: var(--text);
+  border-color: var(--accent);
+}
+.mic-btn.active {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
 </style>
 </head>
 <body>
@@ -408,15 +435,14 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       </div>
     </div>
 
-    <div class="input-area">
-      <div class="input-wrap">
-        <textarea id="chatInput" rows="1" placeholder="अपना क़ानूनी सवाल यहाँ लिखें..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="mic-btn" id="micBtn" onclick="startVoiceInput()" title="Voice input">🎙️</button>
-<button class="upload-btn" id="uploadBtn" onclick="triggerFileUpload()" title="Upload PDF/Image">+</button>
-<input type="file" id="fileUploadInput" accept="image/jpeg,image/png,application/pdf" style="display:none">
-        <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
-      </div>
-    </div>
+<div class="input-wrap" style="display: flex; align-items: center; gap: 8px;">
+  <button class="mic-btn" id="micBtn" onclick="startVoiceInput()" title="Voice input">🎙️</button>
+  <button class="upload-btn" id="uploadBtn" onclick="triggerFileUpload()" title="Upload PDF/Image">+</button>
+  <textarea id="chatInput" rows="1" placeholder="अपना क़ानूनी सवाल यहाँ लिखें..." onkeydown="handleKey(event)" oninput="autoResize(this)" style="flex: 1;"></textarea>
+  <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+  <input type="file" id="fileUploadInput" accept="image/jpeg,image/png,application/pdf" style="display:none">
+</div>
+
   </main>
 </div>
 
@@ -581,8 +607,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 <script>
 // CONFIG
-// const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
-const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
+const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
+// const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
 // Admin free access: controlled by admin mobile number in backend
 // Set to false so real users see limits; admin mobile bypasses via backend
 const ADMIN_FREE = false;
@@ -1460,8 +1486,8 @@ window.addEventListener('load', () => {
   setTimeout(showLanguageHint, 500);
 });
 
-// ========== VOICE INPUT ==========
-let recognition = null;
+
+// Voice Input (Speech-to-Text) – language follows the toggle
 function startVoiceInput() {
   const micBtn = document.getElementById('micBtn');
   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -1469,17 +1495,22 @@ function startVoiceInput() {
     return;
   }
 
+  // Map state.lang to speech recognition language codes
+  let langCode = 'en-IN'; // default for hinglish or unknown
+  if (state.lang === 'hi') langCode = 'hi-IN';
+  else if (state.lang === 'te') langCode = 'te-IN';
+  else if (state.lang === 'hinglish') langCode = 'en-IN';
+
+  // Create a new recognition instance every time to ensure language is fresh
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!recognition) {
-    recognition = new SpeechRecognition();
-    recognition.lang = state.lang === 'te' ? 'te-IN' : (state.lang === 'hi' ? 'hi-IN' : 'en-IN');
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-  }
+  const recognition = new SpeechRecognition();
+  recognition.lang = langCode;
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
 
   recognition.onstart = () => {
     micBtn.classList.add('active');
-    toast('🎙️ Listening... Speak now.', 'info');
+    toast(`🎙️ Listening... (${langCode})`, 'info');
   };
 
   recognition.onresult = (event) => {
@@ -1487,13 +1518,13 @@ function startVoiceInput() {
     document.getElementById('chatInput').value = transcript;
     micBtn.classList.remove('active');
     toast('Voice captured!', 'success');
-    // Optional: auto-send after voice (uncomment if you want)
+    // Optional: auto-send after voice (uncomment if desired)
     // sendMessage();
   };
 
   recognition.onerror = (event) => {
     micBtn.classList.remove('active');
-    toast('Voice recognition error: ' + event.error, 'error');
+    toast(`Voice error: ${event.error}`, 'error');
   };
 
   recognition.onend = () => {
