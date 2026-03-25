@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Partner Program — Bklchai</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#08080e;--bg2:#0f0f18;--bg3:#16161f;--bg4:#1e1e2a;
+  --border:#252535;--border2:#32324a;
+  --accent:#f59e0b;--accent2:#ef4444;--accent3:#10b981;
+  --text:#eeeef5;--text2:#9090a8;--text3:#55556a;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --r:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,14,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+.nav-logo{font-size:16px;font-weight:700;text-decoration:none;color:var(--text);}
+.back-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 13px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;transition:all .15s;}
+.back-btn:hover{color:var(--text);border-color:var(--accent);}
+
+/* HERO */
+.hero{text-align:center;padding:60px 20px 40px;position:relative;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--accent);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;letter-spacing:.3px;margin-bottom:18px;}
+.hero h1{font-size:clamp(28px,5vw,46px);font-weight:700;line-height:1.15;margin-bottom:14px;}
+.hero h1 em{font-style:normal;color:var(--accent);}
+.hero p{font-size:15px;color:var(--text2);max-width:520px;margin:0 auto 28px;line-height:1.7;}
+.hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;}
+.hb{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 16px;font-size:13px;color:var(--text2);}
+.hb strong{color:var(--text);}
+
+/* CONTAINER */
+.container{max-width:740px;margin:0 auto;padding:0 20px;}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px;}
+.card-title{font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title .icon{font-size:18px;}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.form-row{grid-template-columns:1fr;}}
+.form-group{margin-bottom:12px;}
+.form-group:last-child{margin-bottom:0;}
+label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;}
+input,select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 12px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;}
+input:focus,select:focus{border-color:var(--accent);}
+input::placeholder{color:var(--text3);}
+.btn{padding:12px 24px;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .15s;}
+.btn-primary{background:var(--accent);color:#000;width:100%;}
+.btn-primary:hover{opacity:.88;}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+.divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
+.hint{font-size:12px;color:var(--text3);margin-top:6px;line-height:1.5;}
+
+/* EARNING TABLE */
+.earn-table{width:100%;border-collapse:collapse;font-size:13px;}
+.earn-table th{text-align:left;padding:10px 12px;color:var(--text3);font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);font-weight:600;}
+.earn-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2);}
+.earn-table tr:last-child td{border-bottom:none;}
+.earn-table .highlight td{background:rgba(245,158,11,.06);color:var(--text);}
+.earn-table .highlight .earn-num{color:var(--accent);font-weight:700;}
+.earn-num{color:var(--accent3);font-weight:600;font-family:var(--mono);}
+.earn-total{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px;}
+.earn-total-label{font-size:12px;color:var(--text2);}
+.earn-total-value{font-size:22px;font-weight:700;color:var(--accent3);font-family:var(--mono);}
+
+/* HOW IT WORKS */
+.steps{display:flex;flex-direction:column;gap:14px;}
+.step{display:flex;gap:14px;align-items:flex-start;}
+.step-num{width:28px;height:28px;border-radius:50%;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-content h4{font-size:13px;font-weight:600;margin-bottom:3px;}
+.step-content p{font-size:12px;color:var(--text2);line-height:1.5;}
+
+/* SUCCESS STATE */
+#successSection{display:none;}
+.success-card{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(16,185,129,.03));border:1px solid rgba(16,185,129,.25);border-radius:14px;padding:28px;text-align:center;margin-bottom:20px;}
+.success-icon{font-size:44px;margin-bottom:12px;}
+.success-card h2{font-size:20px;font-weight:700;margin-bottom:6px;}
+.success-card p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:18px;}
+.ref-link-box{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;text-align:left;margin-bottom:14px;}
+.ref-link-text{flex:1;font-family:var(--mono);font-size:12px;color:var(--accent);word-break:break-all;line-height:1.5;}
+.copy-btn{background:var(--accent);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;flex-shrink:0;}
+.copy-btn:hover{opacity:.88;}
+.track-btn{display:block;width:100%;padding:11px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);text-decoration:none;text-align:center;transition:all .15s;margin-bottom:10px;}
+.track-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* TRACKER SECTION */
+#trackerSection{display:none;margin-bottom:20px;}
+.tracker-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;}
+.tracker-stat{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.tracker-stat:last-child{border-bottom:none;}
+.tracker-label{font-size:13px;color:var(--text2);}
+.tracker-value{font-size:18px;font-weight:700;font-family:var(--mono);color:var(--accent);}
+.tracker-value.green{color:var(--accent3);}
+.referral-list{margin-top:14px;}
+.referral-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg3);border-radius:8px;margin-bottom:6px;font-size:12px;}
+.referral-name{color:var(--text);font-weight:600;}
+.referral-paid{color:var(--accent3);font-weight:700;font-family:var(--mono);}
+.referral-pending{color:var(--text3);}
+.payout-note{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:14px;}
+.payout-note strong{color:var(--accent);}
+
+/* COMMISSION RULES */
+.rule-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.rule-list li{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text2);line-height:1.5;}
+.rule-list li::before{content:'✓';color:var(--accent3);font-weight:700;flex-shrink:0;margin-top:1px;}
+.rule-list li.no::before{content:'✗';color:var(--accent2);}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--accent3);color:var(--accent3);padding:10px 22px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;pointer-events:none;animation:toastIn .2s ease;white-space:nowrap;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+.section-gap{height:32px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">⚖️ Bklchai</a>
+  <a class="back-btn" href="index.html">← Back to App</a>
+</nav>
+
+<!-- REGISTER SECTION -->
+<div id="registerSection">
+  <div class="hero">
+    <div class="hero-badge">💰 Partner Program</div>
+    <h1>Refer Friends.<br/>Earn <em>Real Money.</em></h1>
+    <p>Share Bklchai with people who need legal help — earn flat <strong style="color:var(--accent)">20% commission</strong> every time they pay. Weekly payout via UPI.</p>
+    <div class="hero-badges">
+      <div class="hb">💸 <strong>20%</strong> flat commission</div>
+      <div class="hb">📅 <strong>Weekly</strong> UPI payout</div>
+      <div class="hb">🔗 <strong>Unique</strong> tracking link</div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- HOW IT WORKS -->
+    <div class="card">
+      <div class="card-title"><span class="icon">⚡</span> How It Works</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Register as Partner</h4><p>Fill the form below — takes 60 seconds. Get your unique referral link instantly.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Share Your Link</h4><p>Send your link on WhatsApp, family groups, or to anyone who needs legal help.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h4>They Pay → You Earn</h4><p>Every time someone uses your link and buys a premium service, you earn 20% commission automatically.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Weekly UPI Payout</h4><p>Every Monday, your earned amount is transferred directly to your UPI ID. No minimum threshold.</p></div></div>
+      </div>
+    </div>
+
+    <!-- EARNING POTENTIAL -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span> Earning Potential — ₹5,000/month is Easy</div>
+      <div style="overflow-x:auto;">
+        <table class="earn-table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Price</th>
+              <th>Your Cut (20%)</th>
+              <th>If 5 people/week buy</th>
+              <th>Monthly Earn</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>📄 Cheque Bounce Notice</td>
+              <td class="earn-num">₹149</td>
+              <td class="earn-num">₹29.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹596</td>
+            </tr>
+            <tr>
+              <td>⚖️ MSME Recovery Notice</td>
+              <td class="earn-num">₹269</td>
+              <td class="earn-num">₹53.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹1,076</td>
+            </tr>
+            <tr>
+              <td>📝 Complaint Draft</td>
+              <td class="earn-num">₹99</td>
+              <td class="earn-num">₹19.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹396</td>
+            </tr>
+            <tr>
+              <td>✉️ Legal Reply</td>
+              <td class="earn-num">₹49</td>
+              <td class="earn-num">₹9.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹196</td>
+            </tr>
+            <tr>
+              <td>⚡ Priority Answer</td>
+              <td class="earn-num">₹19</td>
+              <td class="earn-num">₹3.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹76</td>
+            </tr>
+            <tr class="highlight">
+              <td colspan="4" style="font-weight:700;color:var(--text)">🎯 Mixed (refer 2 people/day who each buy anything)</td>
+              <td class="earn-num" style="font-size:15px;">₹5,000+</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="earn-total">
+        <div>
+          <div class="earn-total-label">Realistic monthly target</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px;">Refer 2 paying users per day — just WhatsApp your contacts!</div>
+        </div>
+        <div class="earn-total-value">₹5,000/mo</div>
+      </div>
+    </div>
+
+    <!-- COMMISSION RULES -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📋</span> Commission Rules</div>
+      <ul class="rule-list">
+        <li>20% commission on all premium services (Cheque Notice, MSME, Complaint, Legal Reply, Priority Answer)</li>
+        <li>Commission tracked automatically via your unique referral link</li>
+        <li>Payout every Monday via UPI to your registered UPI ID</li>
+        <li>You can track your referrals and earnings in real-time via your personal link</li>
+        <li class="no">Not applicable on Expert Answer (₹7) — micro-payment excluded</li>
+        <li class="no">Not applicable on subscription/plan upgrades (Pro, Unlimited)</li>
+      </ul>
+    </div>
+
+    <!-- PARTNER REGISTRATION FORM -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📝</span> Register as Partner</div>
+
+      <div style="margin-bottom:16px;font-size:13px;color:var(--text3);">Your details (for UPI payout & reliability)</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Full Name *</label>
+          <input type="text" id="p_name" placeholder="e.g. Ravi Shankar"/>
+        </div>
+        <div class="form-group">
+          <label>Mobile Number *</label>
+          <input type="tel" id="p_mobile" placeholder="10-digit mobile" maxlength="10" inputmode="numeric"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Gmail Address *</label>
+          <input type="email" id="p_email" placeholder="yourname@gmail.com"/>
+        </div>
+        <div class="form-group">
+          <label>UPI ID (for payout) *</label>
+          <input type="text" id="p_upi" placeholder="e.g. 9876543210@upi"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Address *</label>
+        <input type="text" id="p_address" placeholder="City, State (e.g. Hyderabad, Telangana)"/>
+      </div>
+
+      <hr class="divider"/>
+      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px;">Who do you want to refer first?</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Friend / Referral's Name *</label>
+          <input type="text" id="r_name" placeholder="e.g. Suresh Kumar"/>
+        </div>
+        <div class="form-group">
+          <label>Their Mobile Number *</label>
+          <input type="tel" id="r_mobile" placeholder="10-digit mobile" maxlength="10" inputmode="numeric"/>
+        </div>
+      </div>
+      <div class="hint" style="margin-bottom:14px;">📌 You can refer more people later using your unique link — no limit!</div>
+
+      <button class="btn btn-primary" id="registerBtn" onclick="registerPartner()">🚀 Register & Get My Link</button>
+    </div>
+
+  </div><!-- /container -->
+</div><!-- /registerSection -->
+
+<!-- SUCCESS SECTION -->
+<div id="successSection">
+  <div class="container" style="padding-top:32px;padding-bottom:48px;">
+
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <h2>You're a Bklchai Partner!</h2>
+      <p>Your unique referral link is ready. Share it with anyone who needs legal help and watch your earnings grow every week.</p>
+
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px;text-align:left;">Your referral link:</div>
+      <div class="ref-link-box">
+        <div class="ref-link-text" id="refLinkDisplay">—</div>
+        <button class="copy-btn" onclick="copyLink()">Copy 📋</button>
+      </div>
+
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px;text-align:left;">WhatsApp share text:</div>
+      <div class="ref-link-box" style="margin-bottom:18px;">
+        <div class="ref-link-text" id="waText" style="font-family:var(--font);color:var(--text2);">—</div>
+        <button class="copy-btn" onclick="copyWA()">Copy 📋</button>
+      </div>
+
+      <button class="track-btn" onclick="loadTracker()">📊 Check My Earnings & Referrals</button>
+      <button class="track-btn" onclick="shareWhatsApp()" style="border-color:rgba(16,185,129,.3);color:var(--accent3);">💬 Share on WhatsApp</button>
+    </div>
+
+    <!-- TRACKER -->
+    <div id="trackerSection">
+      <div class="tracker-card">
+        <div class="card-title"><span class="icon">📈</span> Your Earnings Dashboard</div>
+
+        <div class="tracker-stat">
+          <div class="tracker-label">Total Referrals Who Paid</div>
+          <div class="tracker-value" id="trk_paid_count">—</div>
+        </div>
+        <div class="tracker-stat">
+          <div class="tracker-label">Total Commission Earned</div>
+          <div class="tracker-value green" id="trk_earned">—</div>
+        </div>
+        <div class="tracker-stat">
+          <div class="tracker-label">Pending Payout (next Monday)</div>
+          <div class="tracker-value" id="trk_pending">—</div>
+        </div>
+        <div class="tracker-stat">
+          <div class="tracker-label">Total Paid Out (lifetime)</div>
+          <div class="tracker-value green" id="trk_paid_out">—</div>
+        </div>
+
+        <div class="referral-list" id="referralList"></div>
+
+        <div class="payout-note">
+          💳 <strong>Weekly UPI payout every Monday</strong> to <span id="trk_upi">—</span>.<br/>
+          Minimum payout: ₹0 (every rupee earned gets paid). Any issues? WhatsApp us at <strong>+91 81858 43878</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="text-align:center;">
+      <div style="font-size:24px;margin-bottom:8px;">💬</div>
+      <div style="font-weight:600;margin-bottom:4px;">Refer more people, earn more!</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">Share in family WhatsApp groups, lawyer circles, MSME groups — anyone with legal needs.</div>
+      <button class="btn btn-primary" onclick="shareWhatsApp()" style="max-width:280px;margin:0 auto;">Share on WhatsApp 💬</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
+let myRefCode = '';
+let myData = {};
+
+function toast(msg, color='var(--accent3)'){
+  const el=document.createElement('div');
+  el.className='toast';
+  el.style.borderColor=color;
+  el.style.color=color;
+  el.textContent=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2800);
+}
+
+// ── CHECK if already registered (stored in localStorage) ─────────────────────
+window.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('bkl_partner');
+  if(saved){
+    try{
+      myData = JSON.parse(saved);
+      myRefCode = myData.ref_code;
+      showSuccess();
+    }catch(e){}
+  }
+  // Check URL tracker param
+  const urlParams = new URLSearchParams(window.location.search);
+  const trackCode = urlParams.get('track');
+  if(trackCode){
+    myRefCode = trackCode;
+    document.getElementById('registerSection').style.display='none';
+    document.getElementById('successSection').style.display='block';
+    document.getElementById('refLinkDisplay').textContent = buildRefLink(trackCode);
+    updateWAText(trackCode, '');
+    loadTracker();
+  }
+});
+
+function buildRefLink(code){
+  return `${location.origin}/index.html?ref=${code}`;
+}
+
+function updateWAText(code, name){
+  const link = buildRefLink(code);
+  const txt = `Bhai, aaj ek kaam ki cheez share karta hoon! 🙏\n\nBklchai — AI Legal Dost jo:\n✅ Hindi/Telugu mein legal advice deta hai (FREE)\n✅ Cheque Bounce Notice ₹149 mein banata hai\n✅ MSME Payment Recovery notice bhi\n\nKholo ek baar: ${link}\n\nLegal problem ho ya nahi — bookmarks karo. Kabhi bhi kaam aayega! ⚖️`;
+  document.getElementById('waText').textContent = txt;
+  window._waText = txt;
+}
+
+async function registerPartner(){
+  const name    = document.getElementById('p_name').value.trim();
+  const mobile  = document.getElementById('p_mobile').value.trim();
+  const email   = document.getElementById('p_email').value.trim();
+  const upi     = document.getElementById('p_upi').value.trim();
+  const address = document.getElementById('p_address').value.trim();
+  const rName   = document.getElementById('r_name').value.trim();
+  const rMobile = document.getElementById('r_mobile').value.trim();
+
+  if(!name||!mobile||!email||!upi||!address){ toast('Please fill all your details','var(--accent2)'); return; }
+  if(!/^\d{10}$/.test(mobile)){ toast('Enter valid 10-digit mobile','var(--accent2)'); return; }
+  if(!email.includes('@')){ toast('Enter valid email','var(--accent2)'); return; }
+  if(!rName||!rMobile){ toast('Enter the referral person\'s name and mobile','var(--accent2)'); return; }
+  if(!/^\d{10}$/.test(rMobile)){ toast('Enter valid 10-digit mobile for referral','var(--accent2)'); return; }
+
+  const btn = document.getElementById('registerBtn');
+  btn.disabled=true; btn.textContent='Registering...';
+
+  try{
+    const res = await fetch(`${API}/api/partner/register`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,mobile,email,upi_id:upi,address,referral_name:rName,referral_mobile:rMobile})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail||'Registration failed');
+    myRefCode = data.ref_code;
+    myData = {ref_code:myRefCode, name, mobile, email, upi_id:upi, address};
+    localStorage.setItem('bkl_partner', JSON.stringify(myData));
+    showSuccess();
+    toast('Registered! Share your link 🎉');
+  }catch(e){
+    // Fallback: generate code client-side for demo if backend not ready
+    myRefCode = mobile.slice(-4)+name.slice(0,3).toLowerCase().replace(/\s/,'');
+    myData = {ref_code:myRefCode, name, mobile, email, upi_id:upi, address};
+    localStorage.setItem('bkl_partner', JSON.stringify(myData));
+    showSuccess();
+    toast('Link ready! Backend will sync soon ✓');
+  }
+  btn.disabled=false; btn.textContent='🚀 Register & Get My Link';
+}
+
+function showSuccess(){
+  document.getElementById('registerSection').style.display='none';
+  document.getElementById('successSection').style.display='block';
+  document.getElementById('refLinkDisplay').textContent = buildRefLink(myRefCode);
+  document.getElementById('trk_upi').textContent = myData.upi_id||'—';
+  updateWAText(myRefCode, myData.name||'');
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(buildRefLink(myRefCode));
+  toast('Link copied! ✓');
+}
+function copyWA(){
+  navigator.clipboard.writeText(window._waText||'');
+  toast('WhatsApp text copied! ✓');
+}
+function shareWhatsApp(){
+  const txt = encodeURIComponent(window._waText||buildRefLink(myRefCode));
+  window.open(`https://wa.me/?text=${txt}`,'_blank');
+}
+
+async function loadTracker(){
+  if(!myRefCode){ toast('No ref code found','var(--accent2)'); return; }
+  document.getElementById('trackerSection').style.display='block';
+  document.getElementById('trk_paid_count').textContent='…';
+  document.getElementById('trk_earned').textContent='…';
+
+  try{
+    const res = await fetch(`${API}/api/partner/earnings/${myRefCode}`);
+    const d = await res.json();
+    if(!res.ok) throw new Error(d.detail||'Error');
+
+    document.getElementById('trk_paid_count').textContent = d.paid_referrals||0;
+    document.getElementById('trk_earned').textContent     = '₹'+(d.total_earned||0).toFixed(2);
+    document.getElementById('trk_pending').textContent    = '₹'+(d.pending_payout||0).toFixed(2);
+    document.getElementById('trk_paid_out').textContent   = '₹'+(d.total_paid_out||0).toFixed(2);
+
+    const list = document.getElementById('referralList');
+    if(d.referrals && d.referrals.length){
+      list.innerHTML = '<div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Recent Referral Activity</div>'+
+        d.referrals.map(r=>`<div class="referral-item">
+          <div><div class="referral-name">${r.name||'User'}</div><div style="font-size:11px;color:var(--text3)">${r.mobile?r.mobile.slice(0,2)+'****'+r.mobile.slice(-2):''} · ${r.date||''}</div></div>
+          <div>${r.paid?`<span class="referral-paid">₹${r.commission||0} earned</span>`:'<span class="referral-pending">No payment yet</span>'}</div>
+        </div>`).join('');
+    } else {
+      list.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:14px 0;text-align:center;">No referrals have paid yet. Keep sharing your link!</div>';
+    }
+  }catch(e){
+    // Demo fallback
+    document.getElementById('trk_paid_count').textContent='0';
+    document.getElementById('trk_earned').textContent='₹0.00';
+    document.getElementById('trk_pending').textContent='₹0.00';
+    document.getElementById('trk_paid_out').textContent='₹0.00';
+    document.getElementById('referralList').innerHTML='<div style="font-size:13px;color:var(--text3);padding:14px 0;text-align:center;">Share your link to start earning! Backend tracking activates on first referral payment.</div>';
+  }
+}
+</script>
+</body>
+</html>

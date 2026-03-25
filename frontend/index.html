@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -525,7 +526,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       <div class="user-sigma" id="profileEmoji">😤</div>
       <div class="user-name-big" id="profileName">User</div>
       <div id="profileBadge" class="user-plan-badge">FREE</div><br/>
-      <button class="share-earn-btn" onclick="shareAndEarn()">🔗 Sabko Jagao</button>
+      <!-- <button class="share-earn-btn" onclick="shareAndEarn()">🔗 Sabko Jagao</button> -->
+       <button class="share-earn-btn" onclick="window.location.href='partner.html'">🔗 Share & Earn</button>
     </div>
     <div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Purchase History</div>
     <div id="purchaseList"><p style="font-size:12px;color:var(--text3)">No premium purchases yet.</p></div>
@@ -1032,7 +1034,10 @@ function appendAiMsg(text,intent,askedQuestion){
     <div class="msg-actions">
       <button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button>
       <button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>
-      <button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" title="Get detailed expert answer">⚡ Expert ₹7</button>
+      <div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px">
+        <button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" title="Get detailed expert answer">⚡ Expert ₹7</button>
+        <span style="font-size:9px;color:var(--text3);font-style:italic;opacity:.7">Thala for a reason!</span>
+      </div>
     </div></div>`;
   c.appendChild(d);scrollBottom();
 }
@@ -1123,32 +1128,16 @@ async function verifyOTP(){
       setTimeout(async ()=>{
         const paymentResult = await initiatePayment(svcKey, amount);
         if(!paymentResult) return;
-        // Payment success — record and generate doc (same as submitService post-payment block)
+        // Payment success — generate first, then record purchase
         const svc = SERVICES[svcKey];
-        const purchase = {
-          service: svcKey,
-          name: svc ? svc.title : svcKey,
-          date: new Date().toLocaleDateString('en-IN'),
-          expiry: new Date(Date.now()+365*24*60*60*1000).toISOString(),
-          payment_id: paymentResult.razorpay_payment_id||'paid'
-        };
-        state.purchases.push(purchase);
-        localStorage.setItem('ld_purchases',JSON.stringify(state.purchases));
-        localStorage.setItem('ld_plan','pro');
         if(svc && vals){
           closeModal('serviceModal');
           toast('Generating your document...','info');
           document.getElementById('pdfOverlay').classList.add('show');
           try{
-            const promptText = await svc.generate(vals);
-            const res2 = await fetch('https://api.anthropic.com/v1/messages',{
-              method:'POST',headers:{'Content-Type':'application/json'},
-              body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,
-                messages:[{role:'user',content:promptText}]})
-            });
-            const d2 = await res2.json();
-            const output = (d2.content||[]).map(b=>b.text||'').join('');
+            const output = await generateServiceOutput(svcKey, svc, vals, paymentResult);
             document.getElementById('pdfOverlay').classList.remove('show');
+            recordSuccessfulPurchase(svcKey, svc, paymentResult);
             state.currentResult={title:svc.title,content:output,serviceType:svcKey};
             document.getElementById('resultModalTitle').textContent=svc.title;
             document.getElementById('resultContent').textContent=output;
@@ -1157,7 +1146,7 @@ async function verifyOTP(){
             toast('Document ready! ✓','success');
           }catch(e){
             document.getElementById('pdfOverlay').classList.remove('show');
-            toast('Generation failed. Please try again.','error');
+            toast(e.message || 'Generation failed. Please try again.','error');
           }
         }
       }, 600);
@@ -1627,6 +1616,57 @@ const SERVICES = {
   },
 };
 
+
+async function generateServiceOutput(key, svc, vals, paymentResult){
+  let endpoint = `${API}/api/chat`;
+  let payload = null;
+
+  if(key === 'priority_answer'){
+    endpoint = `${API}/api/priority-answer`;
+    payload = {
+      question: vals.sf_question,
+      priority_flag: true,
+      language: state.lang,
+      payment_id: paymentResult.razorpay_payment_id || 'paid',
+      mobile: state.userMobile || ''
+    };
+  } else {
+    const promptText = await svc.generate(vals);
+    payload = {
+      message: promptText,
+      language: state.lang,
+      session_token: state.token,
+      conversation_history: state.chatHistory.slice(-8)
+    };
+  }
+
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+  if(!res.ok){
+    throw new Error(data.detail || data.error || 'Generation failed');
+  }
+
+  return data.content || data.response || '';
+}
+
+function recordSuccessfulPurchase(key, svc, paymentResult){
+  const purchase = {
+    service: key,
+    name: svc.title,
+    date: new Date().toLocaleDateString('en-IN'),
+    expiry: new Date(Date.now() + 365*24*60*60*1000).toISOString(),
+    payment_id: paymentResult.razorpay_payment_id || 'paid'
+  };
+  state.purchases.push(purchase);
+  localStorage.setItem('ld_purchases', JSON.stringify(state.purchases));
+  localStorage.setItem('ld_plan', 'pro');
+}
+
 async function openService(key){
   const svc = SERVICES[key];
   if(!svc){ toast('Service not found','error'); return; }
@@ -1673,37 +1713,15 @@ async function submitService(key){
   const paymentResult = await initiatePayment(key, svc.price);
   if(!paymentResult) return; // cancelled or failed
 
-  // Payment successful — record purchase
-  const purchase = {
-    service: key,
-    name: svc.title,
-    date: new Date().toLocaleDateString('en-IN'),
-    expiry: new Date(Date.now() + 365*24*60*60*1000).toISOString(),
-    payment_id: paymentResult.razorpay_payment_id || 'paid'
-  };
-  state.purchases.push(purchase);
-  localStorage.setItem('ld_purchases', JSON.stringify(state.purchases));
-  localStorage.setItem('ld_plan', 'pro');
-
-  // Generate the document via AI
+  // Generate first, then record purchase
   closeModal('serviceModal');
   toast('Generating your document...', 'info');
   document.getElementById('pdfOverlay').classList.add('show');
 
   try {
-    const promptText = await svc.generate(vals);
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
-        messages: [{ role: 'user', content: promptText }]
-      })
-    });
-    const data = await res.json();
-    const output = (data.content||[]).map(b=>b.text||'').join('');
+    const output = await generateServiceOutput(key, svc, vals, paymentResult);
     document.getElementById('pdfOverlay').classList.remove('show');
+    recordSuccessfulPurchase(key, svc, paymentResult);
 
     state.currentResult = { title: svc.title, content: output, serviceType: key };
     document.getElementById('resultModalTitle').textContent = svc.title;
@@ -1713,7 +1731,7 @@ async function submitService(key){
     toast('Document ready! ✓', 'success');
   } catch(e) {
     document.getElementById('pdfOverlay').classList.remove('show');
-    toast('Generation failed. Please try again.', 'error');
+    toast(e.message || 'Generation failed. Please try again.', 'error');
   }
 }
 

@@ -1,183 +1,463 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin – LegalDost</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — Bklchai</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#2a2a38;--border2:#3a3a50;
-    --accent:#f59e0b;--accent2:#ef4444;--accent3:#10b981;
-    --text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;min-height:100vh;}
-  nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;}
-  .logo{font-size:18px;font-weight:700;}
-  .main{max-width:960px;margin:0 auto;padding:28px 20px;}
-  h1{font-size:22px;margin-bottom:4px;}
-  .sub{font-size:13px;color:var(--text3);margin-bottom:24px;}
-  .login-card{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:28px;max-width:380px;margin:60px auto;}
-  .form-group{margin-bottom:14px;}
-  label{font-size:12px;color:var(--text3);font-weight:600;display:block;margin-bottom:5px;}
-  input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;}
-  input:focus{border-color:var(--accent);}
-  .btn{width:100%;padding:12px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px;}
-  .stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
-  .stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
-  .stat-value{font-size:28px;font-weight:700;color:var(--accent);margin-top:6px;}
-  .section-title{font-size:13px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:20px 0 10px;}
-  table{width:100%;border-collapse:collapse;font-size:12px;}
-  th{text-align:left;padding:8px;color:var(--text3);border-bottom:1px solid var(--border);font-weight:600;font-size:11px;text-transform:uppercase;}
-  td{padding:9px 8px;border-bottom:1px solid var(--border);color:var(--text2);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;}
-  .b-te{background:rgba(245,158,11,.15);color:var(--accent);}
-  .b-hi{background:rgba(16,185,129,.15);color:var(--accent3);}
-  .b-hinglish{background:rgba(99,102,241,.15);color:#818cf8;}
-  .intent-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-  .intent-pill{background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 14px;font-size:12px;color:var(--text2);}
-  .intent-pill strong{color:var(--accent);}
-  .refresh{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;}
-  .refresh:hover{color:var(--text);}
-  @media(max-width:600px){.grid{grid-template-columns:1fr 1fr;}}
+:root{
+  --bg:#08080e;--bg2:#0f0f18;--bg3:#16161f;--bg4:#1e1e2a;
+  --border:#252535;--border2:#32324a;
+  --accent:#f59e0b;--red:#ef4444;--green:#10b981;--blue:#6366f1;
+  --text:#eeeef5;--text2:#9090a8;--text3:#55556a;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --r:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;font-size:14px;}
+
+/* NAV */
+nav{background:var(--bg2);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100;}
+.nav-logo{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.nav-logo span{background:rgba(245,158,11,.15);color:var(--accent);border:1px solid rgba(245,158,11,.3);padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
+.nav-actions{display:flex;gap:8px;align-items:center;}
+.btn-sm{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font);font-weight:500;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.btn-sm:hover{color:var(--text);border-color:var(--accent);}
+.btn-accent{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+.btn-accent:hover{opacity:.88;color:#000;border-color:var(--accent);}
+
+/* LOGIN */
+#loginSection{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px);}
+.login-card{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:36px;width:100%;max-width:380px;}
+.login-card h2{font-size:20px;margin-bottom:4px;}
+.login-card p{font-size:13px;color:var(--text2);margin-bottom:24px;}
+.form-group{margin-bottom:14px;}
+label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;}
+input,select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 12px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;}
+input:focus,select:focus{border-color:var(--accent);}
+select option{background:var(--bg3);}
+.btn-full{width:100%;padding:12px;background:var(--accent);color:#000;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity .15s;}
+.btn-full:hover{opacity:.88;}
+
+/* DASHBOARD */
+#dashboard{display:none;max-width:1200px;margin:0 auto;padding:24px 20px 48px;}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.page-title{font-size:22px;font-weight:700;}
+.page-sub{font-size:12px;color:var(--text3);margin-top:3px;font-family:var(--mono);}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;transition:border-color .15s;}
+.stat-card:hover{border-color:var(--border2);}
+.stat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,158,11,.04),transparent);pointer-events:none;}
+.stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:8px;}
+.stat-value{font-size:26px;font-weight:700;line-height:1;font-family:var(--mono);}
+.stat-value.accent{color:var(--accent);}
+.stat-value.green{color:var(--green);}
+.stat-value.red{color:var(--red);}
+.stat-value.blue{color:var(--blue);}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:5px;}
+.stat-delta{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:6px;}
+.delta-up{background:rgba(16,185,129,.12);color:var(--green);}
+.delta-label{font-size:10px;color:var(--text3);}
+
+/* SECTION */
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:16px;overflow:hidden;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);}
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);}
+.section-body{padding:16px 18px;}
+
+/* SEARCH BAR */
+.search-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.search-input{flex:1;min-width:200px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:9px 12px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;}
+.search-input:focus{border-color:var(--accent);}
+.search-btn{background:var(--accent);color:#000;border:none;border-radius:var(--r);padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity .15s;}
+.search-btn:hover{opacity:.88;}
+.clear-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:var(--r);padding:9px 14px;font-size:12px;cursor:pointer;font-family:var(--font);}
+.clear-btn:hover{color:var(--text);}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{text-align:left;padding:10px 12px;color:var(--text3);border-bottom:1px solid var(--border);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.015);}
+.cell-name{color:var(--text);font-weight:600;}
+.cell-mono{font-family:var(--mono);font-size:11px;}
+.cell-truncate{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
+.b-hi{background:rgba(16,185,129,.12);color:var(--green);}
+.b-te{background:rgba(245,158,11,.12);color:var(--accent);}
+.b-hinglish{background:rgba(99,102,241,.12);color:#818cf8;}
+.b-free{background:rgba(90,90,110,.15);color:var(--text3);}
+.b-pro{background:rgba(245,158,11,.15);color:var(--accent);}
+.b-unlimited{background:rgba(16,185,129,.15);color:var(--green);}
+.b-verified{background:rgba(16,185,129,.12);color:var(--green);}
+.b-pending{background:rgba(245,158,11,.12);color:var(--accent);}
+.b-intent{background:rgba(99,102,241,.1);color:#a5b4fc;font-size:10px;}
+
+/* PILLS BAR */
+.pills{display:flex;gap:8px;flex-wrap:wrap;}
+.pill{background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text2);}
+.pill strong{color:var(--accent);}
+.pill.green strong{color:var(--green);}
+.pill.blue strong{color:#818cf8;}
+
+/* TABS */
+.tabs{display:flex;gap:2px;padding:0 18px;border-bottom:1px solid var(--border);background:var(--bg2);}
+.tab{padding:12px 16px;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.tab:hover{color:var(--text2);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* TOAST */
+.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--accent);color:var(--accent);padding:10px 22px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;pointer-events:none;animation:toastIn .2s ease;white-space:nowrap;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* EXPORT */
+.export-section{margin-top:20px;}
+.export-table-wrap{overflow-x:auto;margin-top:12px;max-height:400px;overflow-y:auto;}
+
+/* LOADING */
+.loading{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:13px;padding:20px;}
+.spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:32px;color:var(--text3);font-size:13px;}
+
+/* IST time display */
+.ist-time{font-family:var(--mono);font-size:11px;color:var(--text3);}
+
+@media(max-width:640px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  nav{padding:0 14px;}
+  #dashboard{padding:16px 14px 40px;}
+}
 </style>
 </head>
 <body>
+
 <nav>
-  <div class="logo">⚖️ LegalDost Admin</div>
-  <div style="display:flex;gap:8px;align-items:center;">
-    <a href="index.html" onclick="sessionStorage.setItem('from_admin','1')" style="background:#1a1a24;border:1px solid #3a3a50;color:#a0a0b5;padding:6px 14px;border-radius:8px;font-size:12px;text-decoration:none;font-weight:600;">← Back to App</a>
-    <button class="refresh" onclick="loadStats()">↻ Refresh</button>
+  <div class="nav-logo">⚖️ Bklchai <span>ADMIN</span></div>
+  <div class="nav-actions">
+    <a href="index.html" onclick="sessionStorage.setItem('from_admin','1')" class="btn-sm">← App</a>
+    <button class="btn-sm btn-accent" onclick="loadAll()">↻ Refresh</button>
   </div>
 </nav>
 
-<div class="main">
-  <div id="loginSection" class="login-card">
-    <h2 style="margin-bottom:6px">🔒 Admin Access</h2>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:20px">Enter your admin key to access dashboard</p>
+<!-- LOGIN -->
+<div id="loginSection">
+  <div class="login-card">
+    <h2>🔒 Admin Access</h2>
+    <p>Enter your admin key to access the dashboard.</p>
     <div class="form-group">
       <label>Admin Key</label>
-      <input type="password" id="adminKey" placeholder="Enter admin key" onkeydown="if(event.key==='Enter')loadStats()" />
+      <input type="password" id="adminKey" placeholder="••••••••••••" onkeydown="if(event.key==='Enter')loadAll()"/>
     </div>
-    <button class="btn" onclick="loadStats()">Access Dashboard</button>
+    <button class="btn-full" onclick="loadAll()">Access Dashboard →</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub" id="lastUpdated">—</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn-sm btn-accent" onclick="loadAll()">↻ Refresh</button>
+    </div>
   </div>
 
-  <div id="dashboard" style="display:none">
-    <h1>Dashboard</h1>
-    <p class="sub" id="lastUpdated">Loading...</p>
+  <!-- STATS -->
+  <div class="stats-grid" id="statsGrid"></div>
 
-    <div class="grid" id="statsGrid"></div>
+  <!-- TABS -->
+  <div class="section" style="overflow:visible;">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('chats',this)">💬 Recent Chats</div>
+      <div class="tab" onclick="switchTab('users',this)">👥 Users</div>
+      <div class="tab" onclick="switchTab('payments',this)">💳 Payments</div>
+      <div class="tab" onclick="switchTab('breakdown',this)">📊 Breakdown</div>
+    </div>
 
-    <div class="section-title">Intent Breakdown</div>
-    <div class="intent-bar" id="intentBar"></div>
+    <!-- CHATS TAB -->
+    <div id="tab-chats" class="tab-content">
+      <div class="section-body">
+        <div class="search-bar">
+          <input class="search-input" id="chatSearch" placeholder="Search by mobile or message..." onkeydown="if(event.key==='Enter')filterChats()"/>
+          <button class="search-btn" onclick="filterChats()">🔍 Search</button>
+          <button class="clear-btn" onclick="clearFilter('chatSearch','chats')">Clear</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Name</th><th>Mobile</th><th>Language</th><th>Message</th><th>Intent</th><th>Time (IST)</th>
+            </tr></thead>
+            <tbody id="chatsTable"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-    <div class="section-title">Language Breakdown</div>
-    <div class="intent-bar" id="langBar"></div>
+    <!-- USERS TAB -->
+    <div id="tab-users" class="tab-content" style="display:none">
+      <div class="section-body">
+        <div class="search-bar">
+          <input class="search-input" id="userSearch" placeholder="Search by name or mobile..." onkeydown="if(event.key==='Enter')filterUsers()"/>
+          <button class="search-btn" onclick="filterUsers()">🔍 Search</button>
+          <button class="clear-btn" onclick="clearFilter('userSearch','users')">Clear</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Name</th><th>Mobile</th><th>Plan</th><th>Login Count</th><th>Joined (IST)</th><th>Last Login (IST)</th>
+            </tr></thead>
+            <tbody id="usersTable"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-    <div class="section-title">Recent Chats</div>
-    <div style="overflow-x:auto">
-      <table>
-        <thead><tr><th>Mobile</th><th>Message</th><th>Language</th><th>Intent</th><th>Time</th></tr></thead>
-        <tbody id="chatsTable"></tbody>
-      </table>
+    <!-- PAYMENTS TAB -->
+    <div id="tab-payments" class="tab-content" style="display:none">
+      <div class="section-body">
+        <div class="search-bar">
+          <input class="search-input" id="paySearch" placeholder="Search by mobile or payment ID..." onkeydown="if(event.key==='Enter')filterPayments()"/>
+          <button class="search-btn" onclick="filterPayments()">🔍 Search</button>
+          <button class="clear-btn" onclick="clearFilter('paySearch','payments')">Clear</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Mobile</th><th>Service</th><th>Amount</th><th>Status</th><th>Payment ID</th><th>Verified At (IST)</th>
+            </tr></thead>
+            <tbody id="paymentsTable"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- BREAKDOWN TAB -->
+    <div id="tab-breakdown" class="tab-content" style="display:none">
+      <div class="section-body">
+        <div style="margin-bottom:18px;">
+          <div class="section-title" style="margin-bottom:10px;">🌐 Language Breakdown</div>
+          <div class="pills" id="langBar"></div>
+        </div>
+        <div style="margin-bottom:18px;">
+          <div class="section-title" style="margin-bottom:10px;">🎯 Intent Breakdown</div>
+          <div class="pills" id="intentBar"></div>
+        </div>
+        <div>
+          <div class="section-title" style="margin-bottom:10px;">💎 Plan Breakdown</div>
+          <div class="pills" id="planBar"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-<button onclick="fetchExportData()">📥 Export User Data</button>
-<div id="exportResult" style="margin-top: 20px;"></div>
 
 <script>
-async function fetchExportData() {
-    const adminKey = prompt("Enter admin key:"); // or hardcode if you prefer
-    if (!adminKey) return;
-    const res = await fetch('/api/admin/export-data', {
-        headers: { 'x-admin-key': adminKey }
-    });
-    const data = await res.json();
-    if (!res.ok) {
-        alert(data.detail || "Error");
-        return;
-    }
-
-    // Display in a table
-    let html = '<table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">';
-    html += '<tr><th>Name</th><th>Mobile</th><th>Payments (amount, service, date)</th></tr>';
-    for (const user of data.users) {
-        const paymentsList = user.payments.map(p => `${p.service} ₹${p.amount} (${p.date?.slice(0,10)})`).join('<br>') || 'None';
-        html += `<tr><td>${user.name || 'N/A'}</td><td>${user.mobile}</td><td>${paymentsList}</td></tr>`;
-    }
-    html += '</table>';
-    document.getElementById('exportResult').innerHTML = html;
-
-    // Also create a CSV download link
-    const csvRows = [['Name', 'Mobile', 'Payment Amount', 'Service', 'Date']];
-    for (const user of data.users) {
-        if (user.payments.length === 0) {
-            csvRows.push([user.name, user.mobile, '', '', '']);
-        } else {
-            for (const p of user.payments) {
-                csvRows.push([user.name, user.mobile, p.amount, p.service, p.date?.slice(0,10)]);
-            }
-        }
-    }
-    const csvContent = csvRows.map(row => row.map(cell => `"${cell || ''}"`).join(',')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'user_payments_export.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-}
-</script>
-
-<script>
-// const API = window.BACKEND_URL || 'http://localhost:8000';
 const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
+// const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
 let adminKey = '';
+let allChats = [], allUsers = [], allPayments = [];
 
-async function loadStats() {
+// ── HELPERS ─────────────────────────────────────────────────────────────────
+function toIST(utcStr){
+  if(!utcStr) return '—';
+  const d = new Date(utcStr.endsWith('Z')?utcStr:utcStr+'Z');
+  return d.toLocaleString('en-IN',{timeZone:'Asia/Kolkata',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true});
+}
+function toast(msg){
+  const el=document.createElement('div');el.className='toast';el.textContent=msg;
+  document.body.appendChild(el);setTimeout(()=>el.remove(),2800);
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function planBadge(p){return `<span class="badge b-${p||'free'}">${(p||'free').toUpperCase()}</span>`;}
+function statusBadge(s){return `<span class="badge b-${s==='verified'?'verified':'pending'}">${s||'—'}</span>`;}
+function langBadge(l){return `<span class="badge b-${l||'hi'}">${l||'hi'}</span>`;}
+function maskMobile(m){if(!m)return 'Guest';return String(m).slice(0,2)+'****'+String(m).slice(-2);}
+
+// ── TABS ────────────────────────────────────────────────────────────────────
+function switchTab(tab, el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).style.display='block';
+  el.classList.add('active');
+}
+
+// ── SEARCH / FILTER ─────────────────────────────────────────────────────────
+function filterChats(){
+  const q = document.getElementById('chatSearch').value.trim().toLowerCase();
+  const filtered = q ? allChats.filter(c =>
+    (c.mobile||'').includes(q) || (c.message||'').toLowerCase().includes(q) || (c.name||'').toLowerCase().includes(q)
+  ) : allChats;
+  renderChats(filtered);
+}
+function filterUsers(){
+  const q = document.getElementById('userSearch').value.trim().toLowerCase();
+  const filtered = q ? allUsers.filter(u =>
+    (u.mobile||'').includes(q) || (u.name||'').toLowerCase().includes(q)
+  ) : allUsers;
+  renderUsers(filtered);
+}
+function filterPayments(){
+  const q = document.getElementById('paySearch').value.trim().toLowerCase();
+  const filtered = q ? allPayments.filter(p =>
+    (p.mobile||'').includes(q) || (p.payment_id||'').toLowerCase().includes(q)
+  ) : allPayments;
+  renderPayments(filtered);
+}
+function clearFilter(inputId, tab){
+  document.getElementById(inputId).value='';
+  if(tab==='chats') renderChats(allChats);
+  if(tab==='users') renderUsers(allUsers);
+  if(tab==='payments') renderPayments(allPayments);
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function renderChats(items){
+  const tb = document.getElementById('chatsTable');
+  if(!items.length){ tb.innerHTML='<tr><td colspan="6" class="empty">No chats found</td></tr>'; return; }
+  tb.innerHTML = items.map(c=>`<tr>
+    <td class="cell-name">${esc(c.name||'—')}</td>
+    <td class="cell-mono">${maskMobile(c.mobile)}</td>
+    <td>${langBadge(c.language)}</td>
+    <td class="cell-truncate" title="${esc(c.message)}">${esc((c.message||'').slice(0,60))}${(c.message||'').length>60?'…':''}</td>
+    <td>${c.intent?`<span class="badge b-intent">${esc(c.intent)}</span>`:'<span style="color:var(--text3)">—</span>'}</td>
+    <td class="ist-time">${toIST(c.timestamp)}</td>
+  </tr>`).join('');
+}
+function renderUsers(items){
+  const tb = document.getElementById('usersTable');
+  if(!items.length){ tb.innerHTML='<tr><td colspan="6" class="empty">No users found</td></tr>'; return; }
+  tb.innerHTML = items.map(u=>`<tr>
+    <td class="cell-name">${esc(u.name||'—')}</td>
+    <td class="cell-mono">${maskMobile(u.mobile)}</td>
+    <td>${planBadge(u.plan)}</td>
+    <td class="cell-mono">${u.login_count||0}</td>
+    <td class="ist-time">${toIST(u.created_at)}</td>
+    <td class="ist-time">${toIST(u.last_login_at)}</td>
+  </tr>`).join('');
+}
+function renderPayments(items){
+  const tb = document.getElementById('paymentsTable');
+  if(!items.length){ tb.innerHTML='<tr><td colspan="6" class="empty">No payments found</td></tr>'; return; }
+  tb.innerHTML = items.map(p=>`<tr>
+    <td class="cell-mono">${maskMobile(p.mobile)}</td>
+    <td>${esc(p.service||'—')}</td>
+    <td style="color:var(--accent);font-weight:700;font-family:var(--mono)">₹${p.amount||0}</td>
+    <td>${statusBadge(p.status)}</td>
+    <td class="cell-mono cell-truncate" title="${esc(p.payment_id)}">${esc((p.payment_id||'—').slice(0,18))}…</td>
+    <td class="ist-time">${toIST(p.verified_at||p.created_at)}</td>
+  </tr>`).join('');
+}
+
+// ── LOAD ALL ─────────────────────────────────────────────────────────────────
+async function loadAll(){
   adminKey = document.getElementById('adminKey')?.value?.trim() || adminKey;
-  if (!adminKey) return alert('Enter admin key');
+  if(!adminKey){ alert('Enter admin key'); return; }
+
+  const headers = {'x-admin-key': adminKey};
 
   try {
-    const res = await fetch(`${API}/api/admin/stats`, {
-      headers: { 'x-admin-key': adminKey }
-    });
-    if (!res.ok) { alert('Invalid admin key'); return; }
-    const d = await res.json();
+    // Stats
+    const sr = await fetch(`${API}/api/admin/stats`, {headers});
+    if(!sr.ok){ alert('Invalid admin key'); return; }
+    const sd = await sr.json();
 
-    document.getElementById('loginSection').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleTimeString('en-IN');
+    document.getElementById('loginSection').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    document.getElementById('lastUpdated').textContent = 'Updated: '+new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
+
+    const ov = sd.overview || sd; // support both shapes
+    const totalUsers     = ov.total_users     ?? sd.total_users     ?? 0;
+    const totalChats     = ov.total_chats     ?? sd.total_chats     ?? 0;
+    const verifiedPay    = ov.verified_payments ?? sd.paid_services ?? sd.verified_payments ?? 0;
+    const totalRev       = ov.total_revenue   ?? sd.total_revenue   ?? 0;
+    const todayUsers     = ov.today_users     ?? 0;
+    const todayChats     = ov.today_chats     ?? 0;
+    const rev7d          = ov.revenue_last_7_days ?? 0;
+    const convRate       = ov.conversion_rate ?? sd.conversion_rate ?? '—';
+    const users7d        = ov.users_last_7_days ?? 0;
 
     document.getElementById('statsGrid').innerHTML = `
-      <div class="stat"><div class="stat-label">Total Users</div><div class="stat-value">${d.total_users}</div></div>
-      <div class="stat"><div class="stat-label">Total Chats</div><div class="stat-value">${d.total_chats}</div></div>
-      <div class="stat"><div class="stat-label">Paid Services</div><div class="stat-value">${d.paid_services}</div></div>
-      <div class="stat"><div class="stat-label">Revenue</div><div class="stat-value">₹${d.total_revenue}</div></div>
-      <div class="stat"><div class="stat-label">Conversion Rate</div><div class="stat-value" style="font-size:22px;color:var(--accent3)">${d.conversion_rate}</div></div>`;
+      <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value accent">${totalUsers}</div><div class="stat-sub">+${todayUsers} today · +${users7d} this week</div></div>
+      <div class="stat-card"><div class="stat-label">Total Chats</div><div class="stat-value blue">${totalChats}</div><div class="stat-sub">+${todayChats} today</div></div>
+      <div class="stat-card"><div class="stat-label">Paid Services</div><div class="stat-value green">${verifiedPay}</div><div class="stat-sub">Verified payments</div></div>
+      <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-value accent">₹${totalRev}</div><div class="stat-sub">₹${rev7d} this week</div></div>
+      <div class="stat-card"><div class="stat-label">Conversion Rate</div><div class="stat-value" style="font-size:22px;color:var(--green)">${convRate}%</div><div class="stat-sub">Free → Paid</div></div>
+    `;
 
-    document.getElementById('intentBar').innerHTML = d.intent_breakdown.length
-      ? d.intent_breakdown.map(i => `<div class="intent-pill">${i._id} <strong>${i.count}</strong></div>`).join('')
-      : '<div style="font-size:13px;color:var(--text3)">No intent data yet</div>';
+    // Language breakdown
+    const langs = sd.language_breakdown || [];
+    document.getElementById('langBar').innerHTML = langs.length
+      ? langs.map(l=>`<div class="pill"><span class="badge b-${l._id}">${l._id||'?'}</span> <strong>${l.count}</strong> chats</div>`).join('')
+      : '<div style="color:var(--text3);font-size:13px">No data yet</div>';
 
-    document.getElementById('langBar').innerHTML = d.language_breakdown.length
-      ? d.language_breakdown.map(l => `<div class="intent-pill badge b-${l._id}">${l._id} <strong>${l.count}</strong></div>`).join('')
-      : '<div style="font-size:13px;color:var(--text3)">No language data yet</div>';
+    // Intent breakdown
+    const intents = sd.intent_breakdown || [];
+    document.getElementById('intentBar').innerHTML = intents.length
+      ? intents.map(i=>`<div class="pill">${esc(i._id||'?')} <strong>${i.count}</strong></div>`).join('')
+      : '<div style="color:var(--text3);font-size:13px">No data yet</div>';
 
-    document.getElementById('chatsTable').innerHTML = d.recent_chats.map(c => `
-      <tr>
-        <td>${c.mobile ? c.mobile.slice(0,6)+'****' : 'Guest'}</td>
-        <td title="${c.message}">${(c.message||'').slice(0,50)}${(c.message||'').length > 50 ? '...' : ''}</td>
-        <td><span class="badge b-${c.language}">${c.language}</span></td>
-        <td>${c.intent ? `<span style="color:var(--accent);font-size:11px">${c.intent}</span>` : '<span style="color:var(--text3)">—</span>'}</td>
-        <td style="font-size:11px;color:var(--text3)">${c.timestamp ? new Date(c.timestamp).toLocaleString('en-IN') : '—'}</td>
-      </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:20px">No chats yet</td></tr>';
+    // Plan breakdown
+    const plans = sd.plan_breakdown || [];
+    document.getElementById('planBar').innerHTML = plans.length
+      ? plans.map(p=>`<div class="pill">${planBadge(p._id)} <strong>${p.count}</strong> users</div>`).join('')
+      : '<div style="color:var(--text3);font-size:13px">No data yet</div>';
 
-  } catch(e) { alert('Error: ' + e.message); }
+    // Load tables in parallel
+    await Promise.all([loadChats(headers), loadUsers(headers), loadPayments(headers)]);
+    toast('Dashboard refreshed ✓');
+
+  } catch(e){ alert('Error: '+e.message); }
+}
+
+async function loadChats(headers){
+  try{
+    const r = await fetch(`${API}/api/admin/recent-chats?limit=100`, {headers});
+    const d = await r.json();
+    allChats = d.items || [];
+    renderChats(allChats);
+  }catch(e){ document.getElementById('chatsTable').innerHTML='<tr><td colspan="6" class="empty">Failed to load</td></tr>'; }
+}
+async function loadUsers(headers){
+  try{
+    const r = await fetch(`${API}/api/admin/users?limit=200`, {headers});
+    const d = await r.json();
+    allUsers = d.items || [];
+    renderUsers(allUsers);
+  }catch(e){ document.getElementById('usersTable').innerHTML='<tr><td colspan="6" class="empty">Failed to load</td></tr>'; }
+}
+async function loadPayments(headers){
+  try{
+    const r = await fetch(`${API}/api/admin/payments?limit=200`, {headers});
+    const d = await r.json();
+    allPayments = d.items || [];
+    renderPayments(allPayments);
+  }catch(e){ document.getElementById('paymentsTable').innerHTML='<tr><td colspan="6" class="empty">Failed to load</td></tr>'; }
+}
+
+// ── CSV EXPORT ───────────────────────────────────────────────────────────────
+function exportCSV(){
+  const rows = [['Name','Mobile','Plan','Chats','Joined (IST)','Last Login (IST)']];
+  allUsers.forEach(u=>{
+    rows.push([u.name||'',maskMobile(u.mobile),u.plan||'free',u.login_count||0,toIST(u.created_at),toIST(u.last_login_at)]);
+  });
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `bklchai_users_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV exported ✓');
 }
 </script>
 </body>
