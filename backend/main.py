@@ -1288,6 +1288,53 @@ async def admin_stats(x_admin_key: Optional[str] = Header(None)):
         "recent_chats": recent_chats
     }
 
+@app.get("/api/admin/export-data")
+async def export_user_payments(x_admin_key: Optional[str] = Header(None)):
+    if x_admin_key != os.getenv("ADMIN_KEY", "bklchai-admin-2024"):
+        raise HTTPException(403, "Forbidden")
+
+    # Aggregate users with their payments
+    pipeline = [
+        {
+            "$lookup": {
+                "from": "payments",
+                "localField": "mobile",
+                "foreignField": "mobile",
+                "as": "payments"
+            }
+        },
+        {
+            "$project": {
+                "_id": 0,
+                "name": 1,
+                "mobile": 1,
+                "payments": {
+                    "$filter": {
+                        "input": "$payments",
+                        "as": "p",
+                        "cond": {"$eq": ["$$p.status", "verified"]}
+                    }
+                }
+            }
+        },
+        {"$sort": {"name": 1}}
+    ]
+    results = list(users_col.aggregate(pipeline))
+
+    # Format payments to only include relevant fields
+    for user in results:
+        user["payments"] = [
+            {
+                "amount": p.get("amount"),
+                "service": p.get("service"),
+                "date": p.get("verified_at", p.get("created_at")).isoformat() if p.get("verified_at") else None,
+                "status": p.get("status")
+            }
+            for p in user.get("payments", [])
+        ]
+
+    return {"users": results}
+
 @app.get("/health")
 async def health():
     return {"status": "ok", "version": "2.0.0", "service": "bklchai"}

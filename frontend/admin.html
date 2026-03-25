@@ -85,9 +85,57 @@
     </div>
   </div>
 </div>
+<button onclick="fetchExportData()">📥 Export User Data</button>
+<div id="exportResult" style="margin-top: 20px;"></div>
 
 <script>
-const API = window.BACKEND_URL || 'http://localhost:8000';
+async function fetchExportData() {
+    const adminKey = prompt("Enter admin key:"); // or hardcode if you prefer
+    if (!adminKey) return;
+    const res = await fetch('/api/admin/export-data', {
+        headers: { 'x-admin-key': adminKey }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        alert(data.detail || "Error");
+        return;
+    }
+
+    // Display in a table
+    let html = '<table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">';
+    html += '<tr><th>Name</th><th>Mobile</th><th>Payments (amount, service, date)</th></tr>';
+    for (const user of data.users) {
+        const paymentsList = user.payments.map(p => `${p.service} ₹${p.amount} (${p.date?.slice(0,10)})`).join('<br>') || 'None';
+        html += `<tr><td>${user.name || 'N/A'}</td><td>${user.mobile}</td><td>${paymentsList}</td></tr>`;
+    }
+    html += '</table>';
+    document.getElementById('exportResult').innerHTML = html;
+
+    // Also create a CSV download link
+    const csvRows = [['Name', 'Mobile', 'Payment Amount', 'Service', 'Date']];
+    for (const user of data.users) {
+        if (user.payments.length === 0) {
+            csvRows.push([user.name, user.mobile, '', '', '']);
+        } else {
+            for (const p of user.payments) {
+                csvRows.push([user.name, user.mobile, p.amount, p.service, p.date?.slice(0,10)]);
+            }
+        }
+    }
+    const csvContent = csvRows.map(row => row.map(cell => `"${cell || ''}"`).join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'user_payments_export.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+
+<script>
+// const API = window.BACKEND_URL || 'http://localhost:8000';
+const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
 let adminKey = '';
 
 async function loadStats() {
