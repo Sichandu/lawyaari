@@ -390,13 +390,13 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
       <div class="sidebar-section">⭐ Premium Services</div>
       <!-- 3 default premium -->
-      <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">📝 Cheque Bounce</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
-      <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">📦 MSME Recovery</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
-      <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">📣 Complaint Draft</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+      <div class="service-item" onclick="openService('cheque_notice')"><span class="sname">📝 Cheque Bounce</span><span class="sprice">₹149</span></div>
+      <div class="service-item" onclick="openService('msme_notice')"><span class="sname">📦 MSME Recovery</span><span class="sprice">₹299</span></div>
+      <div class="service-item" onclick="openService('complaint_draft')"><span class="sname">📣 Complaint Draft</span><span class="sprice">₹69</span></div>
       <!-- Hidden premium — shown on expand -->
       <div id="extraServices" style="display:none">
-        <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">💬 Legal Reply</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
-        <div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">⚡ Priority Answer</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+        <div class="service-item" onclick="openService('legal_reply')"><span class="sname">💬 Legal Reply</span><span class="sprice">₹199</span></div>
+        <div class="service-item" onclick="openService('priority_answer')"><span class="sname">⚡ Priority Answer</span><span class="sprice">₹49</span></div>
       </div>
       <div style="padding:6px 10px;">
         <button onclick="toggleExtraServices(this)" id="viewAllServicesBtn"
@@ -537,14 +537,17 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 <div class="modal-overlay" id="paywallModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('paywallModal')">✕</button>
-    <h2>🔒 Coming Very Soon!</h2>
-    <p class="modal-sub">Premium plans are being set up. Wait 24 hours for free reset, or share feedback below!</p>
+    <h2>⚡ Daily Limit Reached</h2>
+    <p class="modal-sub">Upgrade for more chats, or wait for your free quota to reset at midnight IST.</p>
     <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px;text-align:center;">
-      <div style="font-size:28px;margin-bottom:8px;">🔒</div>
-      <div style="font-weight:700;color:var(--text);margin-bottom:6px;">Unlock Very Soon!</div>
-      <div style="font-size:12px;color:var(--text2);">Payment system is being set up.<br/>Free services fully working meanwhile!</div>
+      <div style="font-size:28px;margin-bottom:8px;">🚀</div>
+      <div style="font-weight:700;color:var(--text);margin-bottom:6px;">Unlock More Chats!</div>
+      <div style="font-size:12px;color:var(--text2);">Choose a plan below to keep going.</div>
     </div>
-    <div class="plan-cards" id="paywallPlans" style="display:none"></div>
+    <div class="plan-cards" style="margin-top:14px;">
+      <div class="plan-card featured" onclick="buyPlan('pro',49)"><div class="plan-name">Pro</div><div class="plan-price">₹49<span>/mo</span></div><div class="plan-chats">10 chats/day</div></div>
+      <div class="plan-card" onclick="buyPlan('unlimited',99)"><div class="plan-name">Unlimited</div><div class="plan-price">₹99<span>/mo</span></div><div class="plan-chats">Unlimited chats</div></div>
+    </div>
   </div>
 </div>
 
@@ -699,10 +702,10 @@ const NEXT_STEPS = {
 };
 
 const INTENT_MAP = {
-  cheque_bounce:{kw:['cheque bounce','cheque bounced','dishonour','138','cheque wapas','చెక్ బౌన్స్'],service:'cheque_notice',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:149},
-  msme_payment:{kw:['payment nahi','payment not received','invoice due','outstanding','చెల్లించలేదు'],service:'msme_notice',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:249},
-  complaint:{kw:['complaint','shikayat','police complaint','fraud','धोखा','ఫిర్యాదు'],service:'complaint_draft',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:69},
-  legal_reply:{kw:['notice mila','notice received','reply karna','jawab dena','threat message','నోటీస్ వచ్చింది'],service:'legal_reply',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:19},
+  cheque_bounce:{kw:['cheque bounce','cheque bounced','dishonour','138','cheque wapas','చెక్ బౌన్స్'],service:'cheque_notice',cta:{hi:'📄 Cheque Bounce Notice banayen — ₹149',te:'📄 Cheque Bounce Notice తయారు చేయండి — ₹149',hinglish:'📄 Generate Cheque Bounce Notice — ₹149'},price:149},
+  msme_payment:{kw:['payment nahi','payment not received','invoice due','outstanding','చెల్లించలేదు'],service:'msme_notice',cta:{hi:'⚖️ MSME Payment Recovery Notice — ₹299',te:'⚖️ MSME Payment Recovery Notice — ₹299',hinglish:'⚖️ MSME Payment Recovery Notice — ₹299'},price:299},
+  complaint:{kw:['complaint','shikayat','police complaint','fraud','धोखा','ఫిర్యాదు'],service:'complaint_draft',cta:{hi:'📝 Complaint Letter Draft karein — ₹69',te:'📝 Complaint Letter తయారు చేయండి — ₹69',hinglish:'📝 Draft Complaint Letter — ₹69'},price:69},
+  legal_reply:{kw:['notice mila','notice received','reply karna','jawab dena','threat message','నోటీస్ వచ్చింది'],service:'legal_reply',cta:{hi:'✉️ Legal Notice ka Reply — ₹199',te:'✉️ Legal Notice Reply తయారు చేయండి — ₹199',hinglish:'✉️ Draft Legal Notice Reply — ₹199'},price:199},
 };
 
 function detectIntent(text){
@@ -995,7 +998,8 @@ function appendAiMsg(text,intent,askedQuestion){
   let intentHtml='';
   if(intent){
     const cta=intent.cta||'';
-    intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="showComingSoon()" style="opacity:.7">🔒 Unlock Soon</button></div>`;
+    const svcKey=intent.service||'priority_answer';
+    intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="openService('${svcKey}')">⚡ Generate Now</button></div>`;
   }
 
   // Build next questions — remaining from current topic
@@ -1028,10 +1032,7 @@ function appendAiMsg(text,intent,askedQuestion){
     <div class="msg-actions">
       <button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button>
       <button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>
-      <div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px">
-        <button class="msg-action-btn" onclick="showComingSoon()" style="font-size:11px;opacity:.55;cursor:not-allowed" title="Coming very soon!">🔒 Expert</button>
-        <span style="font-size:9px;color:var(--text3);font-style:italic;opacity:.5">Unlock soon</span>
-      </div>
+      <button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" title="Get detailed expert answer">⚡ Expert ₹49</button>
     </div></div>`;
   c.appendChild(d);scrollBottom();
 }
@@ -1049,7 +1050,7 @@ function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
 
 function showPaywallInChat(data){
   const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='paywall-msg';
-  const plans=(data.plans||[]).map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats} <span style='font-size:9px;color:var(--text3)'>🔒 Soon</span></div></div>`).join('');
+  const plans=(data.plans||[]).map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="buyPlan('${p.plan_id}',${p.price})"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats}</div></div>`).join('');
   const gender=localStorage.getItem('ld_gender')||'other';
   const salutation=gender==='female'?"Ma'am":'Sir';
   // Display text — emoji ok for screen
@@ -1162,19 +1163,57 @@ function shareAndEarn(){
 
 // PAYWALL
 function openPaywall(){
-  // PAYMENTS DISABLED
-  showComingSoon();
+  openModal('paywallModal');
 }
 
 // PAYMENT
-async function initiatePayment(service,amount){
-  // PAYMENTS DISABLED — Razorpay setup in progress
-  showComingSoon();
-  return null;
+async function initiatePayment(service, amount){
+  if(!state.token){
+    toast('Please login first to make a payment.','warn');
+    openAuth();
+    return null;
+  }
+  return new Promise((resolve, reject) => {
+    const options = {
+      key: window.RAZORPAY_KEY || 'rzp_live_SV0RG40J4kMOLW', // replace with your live key
+      amount: amount * 100, // in paise
+      currency: 'INR',
+      name: 'Bklchai',
+      description: service,
+      image: '', // optional logo URL
+      handler: function(response){
+        toast('Payment successful! ✓','success');
+        resolve(response);
+      },
+      prefill: {
+        contact: state.mobile || '',
+      },
+      theme: { color: '#f59e0b' },
+      modal: {
+        ondismiss: function(){
+          toast('Payment cancelled.','warn');
+          resolve(null);
+        }
+      }
+    };
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(response){
+      toast('Payment failed: ' + (response.error.description || 'Unknown error'), 'error');
+      resolve(null);
+    });
+    rzp.open();
+  });
 }
 
 
-// SHARE CARD — draws branded canvas card (like reference image)
+async function buyPlan(planId, amount){
+  const paymentResult = await initiatePayment('plan_'+planId, amount);
+  if(!paymentResult) return;
+  localStorage.setItem('ld_plan', planId);
+  toast('Plan activated! Enjoy your upgraded access 🎉','success');
+  closeModal('paywallModal');
+  updateUsageBar();
+} 
 function wrapText(ctx, text, x, y, maxW, lineH, maxY){
   const words=text.replace(/[#*_`]/g,'').split(' ');
   let line='';
@@ -1426,9 +1465,186 @@ function showComingSoon(){
   openModal('comingSoonModal');
 }
 
-function openService(key){
-  // Payments disabled — show coming soon
-  showComingSoon();
+// ── SERVICES ──────────────────────────────────────────────────
+const SERVICES = {
+  cheque_notice: {
+    title: '📄 Cheque Bounce Notice',
+    desc: 'Legal notice under Section 138 NI Act — ready in 60 seconds.',
+    price: 149,
+    fields: [
+      {id:'cn_drawer',label:'Drawer Name (who gave cheque)',placeholder:'e.g. Ramesh Kumar'},
+      {id:'cn_drawer_addr',label:'Drawer Address',placeholder:'Full address'},
+      {id:'cn_amount',label:'Cheque Amount (₹)',placeholder:'e.g. 50000'},
+      {id:'cn_cheque_no',label:'Cheque Number',placeholder:'e.g. 001234'},
+      {id:'cn_bank',label:'Bank Name',placeholder:'e.g. HDFC Bank, Malviya Nagar'},
+      {id:'cn_bounce_date',label:'Bounce Date',placeholder:'e.g. 12 March 2025'},
+      {id:'cn_reason',label:'Bounce Reason (as per memo)',placeholder:'e.g. Insufficient Funds'},
+      {id:'cn_payee',label:'Your Name (Payee)',placeholder:'e.g. Suresh Traders'},
+    ],
+    btnLabel: 'Generate Notice (₹149)',
+    generate: async (vals) => {
+      const prompt = `Generate a formal legal notice under Section 138 of the Negotiable Instruments Act, 1881 for cheque dishonour. Use these details:\n- Drawer: ${vals.cn_drawer}\n- Drawer Address: ${vals.cn_drawer_addr}\n- Cheque Amount: ₹${vals.cn_amount}\n- Cheque No: ${vals.cn_cheque_no}\n- Bank: ${vals.cn_bank}\n- Bounce Date: ${vals.cn_bounce_date}\n- Reason: ${vals.cn_reason}\n- Payee (sender of notice): ${vals.cn_payee}\n\nWrite a complete, professional legal notice in English. Include demand for payment within 15 days as required under the Act. Format it like a formal lawyer's notice.`;
+      return prompt;
+    }
+  },
+  msme_notice: {
+    title: '⚖️ MSME Payment Recovery Notice',
+    desc: 'Formal payment recovery notice under MSMED Act 2006. Includes interest clause.',
+    price: 299,
+    fields: [
+      {id:'mn_buyer',label:'Buyer / Debtor Name',placeholder:'e.g. ABC Pvt Ltd'},
+      {id:'mn_buyer_addr',label:'Buyer Address',placeholder:'Full address'},
+      {id:'mn_amount',label:'Outstanding Amount (₹)',placeholder:'e.g. 1,50,000'},
+      {id:'mn_invoice_nos',label:'Invoice Numbers',placeholder:'e.g. INV-001, INV-002'},
+      {id:'mn_due_date',label:'Payment Due Since',placeholder:'e.g. 1 January 2025'},
+      {id:'mn_supplier',label:'Your Business Name (MSME)',placeholder:'e.g. XYZ Enterprises'},
+      {id:'mn_udyam',label:'Udyam Registration No.',placeholder:'e.g. UDYAM-TS-00-0012345'},
+    ],
+    btnLabel: 'Generate Notice (₹299)',
+    generate: async (vals) => {
+      const prompt = `Generate a formal payment recovery notice under the Micro, Small and Medium Enterprises Development (MSMED) Act, 2006. Use these details:\n- Buyer/Debtor: ${vals.mn_buyer}\n- Buyer Address: ${vals.mn_buyer_addr}\n- Outstanding Amount: ₹${vals.mn_amount}\n- Invoice Nos: ${vals.mn_invoice_nos}\n- Due Since: ${vals.mn_due_date}\n- MSME Supplier: ${vals.mn_supplier}\n- Udyam No.: ${vals.mn_udyam}\n\nWrite a complete, professional legal notice demanding payment within 15 days, mentioning applicable interest under the MSMED Act, and warning of reference to the MSME Facilitation Council. Format like a formal legal notice.`;
+      return prompt;
+    }
+  },
+  complaint_draft: {
+    title: '📝 Complaint Letter Draft',
+    desc: 'AI-drafted formal complaint for police, consumer forum, or any authority.',
+    price: 69,
+    fields: [
+      {id:'cd_to',label:'To (Authority)',placeholder:'e.g. SHO, Banjara Hills Police Station'},
+      {id:'cd_from',label:'Your Name',placeholder:'e.g. Priya Sharma'},
+      {id:'cd_subject',label:'Subject / Type of Complaint',placeholder:'e.g. Online fraud of ₹20,000'},
+      {id:'cd_details',label:'Describe the incident in detail',placeholder:'What happened, when, who was involved, amount/loss...'},
+      {id:'cd_relief',label:'Relief / Action requested',placeholder:'e.g. File FIR, refund of amount, arrest of accused'},
+    ],
+    btnLabel: 'Generate Complaint (₹69)',
+    generate: async (vals) => {
+      const prompt = `Write a formal complaint letter in English with these details:\n- Addressed To: ${vals.cd_to}\n- From: ${vals.cd_from}\n- Subject: ${vals.cd_subject}\n- Incident Details: ${vals.cd_details}\n- Relief Sought: ${vals.cd_relief}\n\nFormat it as a professional formal complaint letter with date, proper salutation, numbered paragraphs, and a closing prayer/request section.`;
+      return prompt;
+    }
+  },
+  legal_reply: {
+    title: '✉️ Legal Notice Reply',
+    desc: 'Professional reply to any legal notice you have received.',
+    price: 199,
+    fields: [
+      {id:'lr_notice_from',label:'Notice Sender (Opponent)',placeholder:'e.g. ABC Bank / Advocate Ravi Kumar'},
+      {id:'lr_notice_date',label:'Date of Notice Received',placeholder:'e.g. 15 March 2025'},
+      {id:'lr_subject',label:'Subject of Notice',placeholder:'e.g. Loan recovery / Property dispute / Cheque bounce'},
+      {id:'lr_your_name',label:'Your Name',placeholder:'e.g. Mukesh Agarwal'},
+      {id:'lr_your_response',label:'Your version / response (in brief)',placeholder:'e.g. Payment was already made on 10 Feb, here is the reference...'},
+    ],
+    btnLabel: 'Generate Reply (₹199)',
+    generate: async (vals) => {
+      const prompt = `Draft a formal legal reply to a notice with these details:\n- Notice From: ${vals.lr_notice_from}\n- Date of Notice: ${vals.lr_notice_date}\n- Subject: ${vals.lr_subject}\n- Reply By: ${vals.lr_your_name}\n- Our Response: ${vals.lr_your_response}\n\nWrite a professional, legally worded reply denying or clarifying the claims, reserving all legal rights, and asking for withdrawal of false/baseless claims if applicable. Format as a formal legal letter.`;
+      return prompt;
+    }
+  },
+  priority_answer: {
+    title: '⚡ Priority Legal Answer',
+    desc: 'Detailed, step-by-step answer to your specific legal question. Includes relevant law sections.',
+    price: 49,
+    fields: [
+      {id:'sf_question',label:'Your Legal Question (be specific)',placeholder:'Describe your situation in detail...'},
+      {id:'sf_state',label:'Your State (optional)',placeholder:'e.g. Telangana, Maharashtra'},
+    ],
+    btnLabel: 'Get Priority Answer (₹49)',
+    generate: async (vals) => {
+      const lang = state.lang==='hi'?'Hindi':(state.lang==='te'?'Telugu':'Hinglish (Hindi-English mix)');
+      const prompt = `You are an expert Indian legal advisor. Answer this question in ${lang} with full detail:\n\nQuestion: ${vals.sf_question}\nState: ${vals.sf_state||'Not specified'}\n\nProvide:\n1. Direct answer to the question\n2. Relevant laws/sections that apply\n3. Step-by-step action plan\n4. Government portals/authorities to contact\n5. Important deadlines/timelines\n6. A disclaimer that this is informational and not formal legal advice\n\nBe thorough, specific, and practical. Use simple language.`;
+      return prompt;
+    }
+  },
+};
+
+async function openService(key){
+  const svc = SERVICES[key];
+  if(!svc){ toast('Service not found','error'); return; }
+
+  const title = document.getElementById('serviceModalTitle');
+  const desc  = document.getElementById('serviceModalDesc');
+  const body  = document.getElementById('serviceModalBody');
+
+  title.textContent = svc.title;
+  desc.textContent  = svc.desc;
+
+  const priceDisplay = `<div class="priority-price-display">₹${svc.price} — One-time payment</div>`;
+  const fields = svc.fields.map(f =>
+    `<div class="form-group">
+      <label>${f.label}</label>
+      <input type="text" id="${f.id}" placeholder="${f.placeholder}"/>
+    </div>`
+  ).join('');
+
+  body.innerHTML = priceDisplay + fields +
+    `<button class="modal-btn" onclick="submitService('${key}')">💳 ${svc.btnLabel}</button>`;
+
+  openModal('serviceModal');
+}
+
+async function submitService(key){
+  const svc = SERVICES[key];
+  if(!svc) return;
+
+  // Collect field values
+  const vals = {};
+  let missing = false;
+  svc.fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    vals[f.id] = el ? el.value.trim() : '';
+    if(!vals[f.id] && !f.optional) missing = true;
+  });
+  if(missing){ toast('Please fill all required fields','error'); return; }
+
+  // Initiate payment
+  state.pendingPaymentService = key;
+  state.pendingServiceData = vals;
+
+  const paymentResult = await initiatePayment(key, svc.price);
+  if(!paymentResult) return; // cancelled or failed
+
+  // Payment successful — record purchase
+  const purchase = {
+    service: key,
+    name: svc.title,
+    date: new Date().toLocaleDateString('en-IN'),
+    expiry: new Date(Date.now() + 365*24*60*60*1000).toISOString(),
+    payment_id: paymentResult.razorpay_payment_id || 'paid'
+  };
+  state.purchases.push(purchase);
+  localStorage.setItem('ld_purchases', JSON.stringify(state.purchases));
+  localStorage.setItem('ld_plan', 'pro');
+
+  // Generate the document via AI
+  closeModal('serviceModal');
+  toast('Generating your document...', 'info');
+  document.getElementById('pdfOverlay').classList.add('show');
+
+  try {
+    const promptText = await svc.generate(vals);
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        messages: [{ role: 'user', content: promptText }]
+      })
+    });
+    const data = await res.json();
+    const output = (data.content||[]).map(b=>b.text||'').join('');
+    document.getElementById('pdfOverlay').classList.remove('show');
+
+    state.currentResult = { title: svc.title, content: output, serviceType: key };
+    document.getElementById('resultModalTitle').textContent = svc.title;
+    document.getElementById('resultContent').textContent = output;
+    document.getElementById('shareCardWrap').style.display = 'none';
+    openModal('resultModal');
+    toast('Document ready! ✓', 'success');
+  } catch(e) {
+    document.getElementById('pdfOverlay').classList.remove('show');
+    toast('Generation failed. Please try again.', 'error');
+  }
 }
 
 // INIT
