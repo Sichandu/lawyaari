@@ -391,12 +391,12 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       <div class="sidebar-section">⭐ Premium Services</div>
       <!-- 3 default premium -->
       <div class="service-item" onclick="openService('cheque_notice')"><span class="sname">📝 Cheque Bounce</span><span class="sprice">₹149</span></div>
-      <div class="service-item" onclick="openService('msme_notice')"><span class="sname">📦 MSME Recovery</span><span class="sprice">₹299</span></div>
-      <div class="service-item" onclick="openService('complaint_draft')"><span class="sname">📣 Complaint Draft</span><span class="sprice">₹69</span></div>
+      <div class="service-item" onclick="openService('msme_notice')"><span class="sname">📦 MSME Recovery</span><span class="sprice">₹269</span></div>
+      <div class="service-item" onclick="openService('complaint_draft')"><span class="sname">📣 Complaint Draft</span><span class="sprice">₹99</span></div>
       <!-- Hidden premium — shown on expand -->
       <div id="extraServices" style="display:none">
-        <div class="service-item" onclick="openService('legal_reply')"><span class="sname">💬 Legal Reply</span><span class="sprice">₹199</span></div>
-        <div class="service-item" onclick="openService('priority_answer')"><span class="sname">⚡ Priority Answer</span><span class="sprice">₹49</span></div>
+        <div class="service-item" onclick="openService('legal_reply')"><span class="sname">💬 Legal Reply</span><span class="sprice">₹49</span></div>
+        <div class="service-item" onclick="openService('priority_answer')"><span class="sname">⚡ Priority Answer</span><span class="sprice">₹19</span></div>
       </div>
       <div style="padding:6px 10px;">
         <button onclick="toggleExtraServices(this)" id="viewAllServicesBtn"
@@ -440,7 +440,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
   <button class="upload-btn" id="uploadBtn" onclick="triggerFileUpload()" title="Upload PDF/Image">+</button>
   <textarea id="chatInput" rows="1" placeholder="अपना क़ानूनी सवाल यहाँ लिखें..." onkeydown="handleKey(event)" oninput="autoResize(this)" style="flex: 1;"></textarea>
   <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
-  <input type="file" id="fileUploadInput" accept="image/jpeg,image/png,application/pdf" style="display:none">
+  <input type="file" id="fileUploadInput" accept="image/jpeg,image/png,image/webp,application/pdf" style="display:none">
 </div>
 
   </main>
@@ -610,8 +610,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 <script>
 // CONFIG
-// const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
-const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
+const API = window.BACKEND_URL || 'http://127.0.0.1:8000';
+// const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
 // Admin free access: controlled by admin mobile number in backend
 // Set to false so real users see limits; admin mobile bypasses via backend
 const ADMIN_FREE = false;
@@ -703,9 +703,9 @@ const NEXT_STEPS = {
 
 const INTENT_MAP = {
   cheque_bounce:{kw:['cheque bounce','cheque bounced','dishonour','138','cheque wapas','చెక్ బౌన్స్'],service:'cheque_notice',cta:{hi:'📄 Cheque Bounce Notice banayen — ₹149',te:'📄 Cheque Bounce Notice తయారు చేయండి — ₹149',hinglish:'📄 Generate Cheque Bounce Notice — ₹149'},price:149},
-  msme_payment:{kw:['payment nahi','payment not received','invoice due','outstanding','చెల్లించలేదు'],service:'msme_notice',cta:{hi:'⚖️ MSME Payment Recovery Notice — ₹299',te:'⚖️ MSME Payment Recovery Notice — ₹299',hinglish:'⚖️ MSME Payment Recovery Notice — ₹299'},price:299},
-  complaint:{kw:['complaint','shikayat','police complaint','fraud','धोखा','ఫిర్యాదు'],service:'complaint_draft',cta:{hi:'📝 Complaint Letter Draft karein — ₹69',te:'📝 Complaint Letter తయారు చేయండి — ₹69',hinglish:'📝 Draft Complaint Letter — ₹69'},price:69},
-  legal_reply:{kw:['notice mila','notice received','reply karna','jawab dena','threat message','నోటీస్ వచ్చింది'],service:'legal_reply',cta:{hi:'✉️ Legal Notice ka Reply — ₹199',te:'✉️ Legal Notice Reply తయారు చేయండి — ₹199',hinglish:'✉️ Draft Legal Notice Reply — ₹199'},price:199},
+  msme_payment:{kw:['payment nahi','payment not received','invoice due','outstanding','చెల్లించలేదు'],service:'msme_notice',cta:{hi:'⚖️ MSME Payment Recovery Notice — ₹269',te:'⚖️ MSME Payment Recovery Notice — ₹269',hinglish:'⚖️ MSME Payment Recovery Notice — ₹269'},price:269},
+  complaint:{kw:['complaint','shikayat','police complaint','fraud','धोखा','ఫిర్యాదు'],service:'complaint_draft',cta:{hi:'📝 Complaint Letter Draft karein — ₹99',te:'📝 Complaint Letter తయారు చేయండి — ₹99',hinglish:'📝 Draft Complaint Letter — ₹99'},price:99},
+  legal_reply:{kw:['notice mila','notice received','reply karna','jawab dena','threat message','నోటీస్ వచ్చింది'],service:'legal_reply',cta:{hi:'✉️ Legal Notice ka Reply — ₹49',te:'✉️ Legal Notice Reply తయారు చేయండి — ₹49',hinglish:'✉️ Draft Legal Notice Reply — ₹49'},price:49},
 };
 
 function detectIntent(text){
@@ -1032,7 +1032,7 @@ function appendAiMsg(text,intent,askedQuestion){
     <div class="msg-actions">
       <button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button>
       <button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>
-      <button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" title="Get detailed expert answer">⚡ Expert ₹49</button>
+      <button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" title="Get detailed expert answer">⚡ Expert ₹7</button>
     </div></div>`;
   c.appendChild(d);scrollBottom();
 }
@@ -1110,6 +1110,60 @@ async function verifyOTP(){
     toast('Welcome '+state.userName+'! 🎉','success');
     const g=localStorage.getItem('ld_gender')||'other';
     playCommand(g==='female'?'welcome-maam':'welcome-sir');
+
+    // ── Resume pending payment if login was triggered by a payment attempt ──
+    if(state.pendingPaymentService && state.pendingPaymentAmount){
+      const svcKey = state.pendingPaymentService;
+      const amount  = state.pendingPaymentAmount;
+      const vals    = state.pendingServiceData;
+      // Clear pending flags before resuming so they don't re-fire
+      state.pendingPaymentService = null;
+      state.pendingPaymentAmount  = null;
+      // Give Razorpay a moment to be ready after modal close
+      setTimeout(async ()=>{
+        const paymentResult = await initiatePayment(svcKey, amount);
+        if(!paymentResult) return;
+        // Payment success — record and generate doc (same as submitService post-payment block)
+        const svc = SERVICES[svcKey];
+        const purchase = {
+          service: svcKey,
+          name: svc ? svc.title : svcKey,
+          date: new Date().toLocaleDateString('en-IN'),
+          expiry: new Date(Date.now()+365*24*60*60*1000).toISOString(),
+          payment_id: paymentResult.razorpay_payment_id||'paid'
+        };
+        state.purchases.push(purchase);
+        localStorage.setItem('ld_purchases',JSON.stringify(state.purchases));
+        localStorage.setItem('ld_plan','pro');
+        if(svc && vals){
+          closeModal('serviceModal');
+          toast('Generating your document...','info');
+          document.getElementById('pdfOverlay').classList.add('show');
+          try{
+            const promptText = await svc.generate(vals);
+            const res2 = await fetch('https://api.anthropic.com/v1/messages',{
+              method:'POST',headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,
+                messages:[{role:'user',content:promptText}]})
+            });
+            const d2 = await res2.json();
+            const output = (d2.content||[]).map(b=>b.text||'').join('');
+            document.getElementById('pdfOverlay').classList.remove('show');
+            state.currentResult={title:svc.title,content:output,serviceType:svcKey};
+            document.getElementById('resultModalTitle').textContent=svc.title;
+            document.getElementById('resultContent').textContent=output;
+            document.getElementById('shareCardWrap').style.display='none';
+            openModal('resultModal');
+            toast('Document ready! ✓','success');
+          }catch(e){
+            document.getElementById('pdfOverlay').classList.remove('show');
+            toast('Generation failed. Please try again.','error');
+          }
+        }
+      }, 600);
+      return; // skip the Telugu message resume below
+    }
+
     // Resume Telugu pending message if login was triggered by 3rd question gate
     if(state.pendingTeluguMsg){
       const msg=state.pendingTeluguMsg;
@@ -1166,28 +1220,44 @@ function openPaywall(){
   openModal('paywallModal');
 }
 
-// PAYMENT
+// PAYMENT — key fetched from backend /api/config which reads your .env RAZORPAY_KEY_ID
+async function getRazorpayKey(){
+  if(window._rzpKey) return window._rzpKey;
+  try{
+    const res = await fetch(`${API}/api/config`);
+    const data = await res.json();
+    window._rzpKey = data.razorpay_key_id;
+    return window._rzpKey;
+  }catch(e){
+    toast('Could not load payment config. Check server.','error');
+    return null;
+  }
+}
+
 async function initiatePayment(service, amount){
   if(!state.token){
-    toast('Please login first to make a payment.','warn');
+    // Store everything so we can resume automatically after login
+    state.pendingPaymentService = service;
+    state.pendingPaymentAmount  = amount;
+    // pendingServiceData is already set by submitService before calling here
+    toast('Login karein — payment turant khulega! 🔐','warn');
     openAuth();
     return null;
   }
-  return new Promise((resolve, reject) => {
+  const rzpKey = await getRazorpayKey();
+  if(!rzpKey) return null;
+  return new Promise((resolve) => {
     const options = {
-      key: window.RAZORPAY_KEY || 'rzp_live_SV0RG40J4kMOLW', // replace with your live key
-      amount: amount * 100, // in paise
+      key: rzpKey,
+      amount: amount * 100,
       currency: 'INR',
       name: 'Bklchai',
       description: service,
-      image: '', // optional logo URL
       handler: function(response){
         toast('Payment successful! ✓','success');
         resolve(response);
       },
-      prefill: {
-        contact: state.mobile || '',
-      },
+      prefill: { contact: state.mobile || '' },
       theme: { color: '#f59e0b' },
       modal: {
         ondismiss: function(){
@@ -1198,7 +1268,7 @@ async function initiatePayment(service, amount){
     };
     const rzp = new Razorpay(options);
     rzp.on('payment.failed', function(response){
-      toast('Payment failed: ' + (response.error.description || 'Unknown error'), 'error');
+      toast('Payment failed: '+(response.error.description||'Unknown error'),'error');
       resolve(null);
     });
     rzp.open();
@@ -1409,14 +1479,11 @@ async function expertAnswerForThis(btn){
       break;
     }
   }
-  if(!question){toast('Could not find the question. Please use the Priority Answer service.','error');return;}
-  // Pre-fill and open priority answer with this question
+  if(!question){toast('Could not find the question.','error');return;}
   state.pendingExpertQuestion=question;
-  // Open service modal but pre-filled
-  openService('priority_answer');
-  // After modal opens, auto-fill the question field
+  openService('expert_answer');
   setTimeout(()=>{
-    const qField=document.getElementById('sf_question');
+    const qField=document.getElementById('ea_question');
     if(qField){
       qField.value=question;
       qField.setAttribute('readonly','true');
@@ -1450,19 +1517,9 @@ function playCommand(cmd){
   if(frame&&frame.contentWindow) frame.contentWindow.postMessage(cmd,'*');
 }
 
-// ── PAYMENTS TEMPORARILY DISABLED ─────────────────────────────
-// To re-enable: remove showComingSoon, rename openService_ORIG → openService
-// and restore all onclick handlers above
+// showComingSoon kept as fallback for any truly future features
 function showComingSoon(){
-  // Show a friendly coming-soon toast + modal
-  const msg = {
-    hi:       '⚡ Bahut jaldi aa raha hai! Payment system update ho raha hai.',
-    te:       '⚡ చాలా త్వరలో వస్తుంది! Payment system నవీకరించబడుతోంది.',
-    hinglish: '⚡ Coming soon! Payment system update ho raha hai.'
-  }[state.lang] || '⚡ Coming soon!';
-  toast(msg, 'warn');
-  // Show the coming-soon modal
-  openModal('comingSoonModal');
+  toast('🚀 Coming soon — stay tuned!', 'warn');
 }
 
 // ── SERVICES ──────────────────────────────────────────────────
@@ -1481,7 +1538,7 @@ const SERVICES = {
       {id:'cn_reason',label:'Bounce Reason (as per memo)',placeholder:'e.g. Insufficient Funds'},
       {id:'cn_payee',label:'Your Name (Payee)',placeholder:'e.g. Suresh Traders'},
     ],
-    btnLabel: 'Generate Notice (₹149)',
+    btnLabel: 'Generate Notice — ₹149',
     generate: async (vals) => {
       const prompt = `Generate a formal legal notice under Section 138 of the Negotiable Instruments Act, 1881 for cheque dishonour. Use these details:\n- Drawer: ${vals.cn_drawer}\n- Drawer Address: ${vals.cn_drawer_addr}\n- Cheque Amount: ₹${vals.cn_amount}\n- Cheque No: ${vals.cn_cheque_no}\n- Bank: ${vals.cn_bank}\n- Bounce Date: ${vals.cn_bounce_date}\n- Reason: ${vals.cn_reason}\n- Payee (sender of notice): ${vals.cn_payee}\n\nWrite a complete, professional legal notice in English. Include demand for payment within 15 days as required under the Act. Format it like a formal lawyer's notice.`;
       return prompt;
@@ -1490,7 +1547,7 @@ const SERVICES = {
   msme_notice: {
     title: '⚖️ MSME Payment Recovery Notice',
     desc: 'Formal payment recovery notice under MSMED Act 2006. Includes interest clause.',
-    price: 299,
+    price: 269,
     fields: [
       {id:'mn_buyer',label:'Buyer / Debtor Name',placeholder:'e.g. ABC Pvt Ltd'},
       {id:'mn_buyer_addr',label:'Buyer Address',placeholder:'Full address'},
@@ -1500,7 +1557,7 @@ const SERVICES = {
       {id:'mn_supplier',label:'Your Business Name (MSME)',placeholder:'e.g. XYZ Enterprises'},
       {id:'mn_udyam',label:'Udyam Registration No.',placeholder:'e.g. UDYAM-TS-00-0012345'},
     ],
-    btnLabel: 'Generate Notice (₹299)',
+    btnLabel: 'Generate Notice — ₹269',
     generate: async (vals) => {
       const prompt = `Generate a formal payment recovery notice under the Micro, Small and Medium Enterprises Development (MSMED) Act, 2006. Use these details:\n- Buyer/Debtor: ${vals.mn_buyer}\n- Buyer Address: ${vals.mn_buyer_addr}\n- Outstanding Amount: ₹${vals.mn_amount}\n- Invoice Nos: ${vals.mn_invoice_nos}\n- Due Since: ${vals.mn_due_date}\n- MSME Supplier: ${vals.mn_supplier}\n- Udyam No.: ${vals.mn_udyam}\n\nWrite a complete, professional legal notice demanding payment within 15 days, mentioning applicable interest under the MSMED Act, and warning of reference to the MSME Facilitation Council. Format like a formal legal notice.`;
       return prompt;
@@ -1509,7 +1566,7 @@ const SERVICES = {
   complaint_draft: {
     title: '📝 Complaint Letter Draft',
     desc: 'AI-drafted formal complaint for police, consumer forum, or any authority.',
-    price: 69,
+    price: 99,
     fields: [
       {id:'cd_to',label:'To (Authority)',placeholder:'e.g. SHO, Banjara Hills Police Station'},
       {id:'cd_from',label:'Your Name',placeholder:'e.g. Priya Sharma'},
@@ -1517,7 +1574,7 @@ const SERVICES = {
       {id:'cd_details',label:'Describe the incident in detail',placeholder:'What happened, when, who was involved, amount/loss...'},
       {id:'cd_relief',label:'Relief / Action requested',placeholder:'e.g. File FIR, refund of amount, arrest of accused'},
     ],
-    btnLabel: 'Generate Complaint (₹69)',
+    btnLabel: 'Generate Complaint — ₹99',
     generate: async (vals) => {
       const prompt = `Write a formal complaint letter in English with these details:\n- Addressed To: ${vals.cd_to}\n- From: ${vals.cd_from}\n- Subject: ${vals.cd_subject}\n- Incident Details: ${vals.cd_details}\n- Relief Sought: ${vals.cd_relief}\n\nFormat it as a professional formal complaint letter with date, proper salutation, numbered paragraphs, and a closing prayer/request section.`;
       return prompt;
@@ -1526,7 +1583,7 @@ const SERVICES = {
   legal_reply: {
     title: '✉️ Legal Notice Reply',
     desc: 'Professional reply to any legal notice you have received.',
-    price: 199,
+    price: 49,
     fields: [
       {id:'lr_notice_from',label:'Notice Sender (Opponent)',placeholder:'e.g. ABC Bank / Advocate Ravi Kumar'},
       {id:'lr_notice_date',label:'Date of Notice Received',placeholder:'e.g. 15 March 2025'},
@@ -1534,7 +1591,7 @@ const SERVICES = {
       {id:'lr_your_name',label:'Your Name',placeholder:'e.g. Mukesh Agarwal'},
       {id:'lr_your_response',label:'Your version / response (in brief)',placeholder:'e.g. Payment was already made on 10 Feb, here is the reference...'},
     ],
-    btnLabel: 'Generate Reply (₹199)',
+    btnLabel: 'Generate Reply — ₹49',
     generate: async (vals) => {
       const prompt = `Draft a formal legal reply to a notice with these details:\n- Notice From: ${vals.lr_notice_from}\n- Date of Notice: ${vals.lr_notice_date}\n- Subject: ${vals.lr_subject}\n- Reply By: ${vals.lr_your_name}\n- Our Response: ${vals.lr_your_response}\n\nWrite a professional, legally worded reply denying or clarifying the claims, reserving all legal rights, and asking for withdrawal of false/baseless claims if applicable. Format as a formal legal letter.`;
       return prompt;
@@ -1543,16 +1600,29 @@ const SERVICES = {
   priority_answer: {
     title: '⚡ Priority Legal Answer',
     desc: 'Detailed, step-by-step answer to your specific legal question. Includes relevant law sections.',
-    price: 49,
+    price: 19,
     fields: [
       {id:'sf_question',label:'Your Legal Question (be specific)',placeholder:'Describe your situation in detail...'},
       {id:'sf_state',label:'Your State (optional)',placeholder:'e.g. Telangana, Maharashtra'},
     ],
-    btnLabel: 'Get Priority Answer (₹49)',
+    btnLabel: 'Get Priority Answer — ₹19',
     generate: async (vals) => {
       const lang = state.lang==='hi'?'Hindi':(state.lang==='te'?'Telugu':'Hinglish (Hindi-English mix)');
       const prompt = `You are an expert Indian legal advisor. Answer this question in ${lang} with full detail:\n\nQuestion: ${vals.sf_question}\nState: ${vals.sf_state||'Not specified'}\n\nProvide:\n1. Direct answer to the question\n2. Relevant laws/sections that apply\n3. Step-by-step action plan\n4. Government portals/authorities to contact\n5. Important deadlines/timelines\n6. A disclaimer that this is informational and not formal legal advice\n\nBe thorough, specific, and practical. Use simple language.`;
       return prompt;
+    }
+  },
+  expert_answer: {
+    title: '⚡ Expert Answer',
+    desc: 'Quick expert-level answer with relevant law sections and action steps.',
+    price: 7,
+    fields: [
+      {id:'ea_question',label:'Your Legal Question',placeholder:'Your specific question...'},
+    ],
+    btnLabel: 'Get Expert Answer — ₹7',
+    generate: async (vals) => {
+      const lang = state.lang==='hi'?'Hindi':(state.lang==='te'?'Telugu':'Hinglish (Hindi-English mix)');
+      return `You are an expert Indian legal advisor. Answer this in ${lang} with full practical detail:\n\nQuestion: ${vals.ea_question}\n\nProvide: direct answer, relevant Indian laws/sections, step-by-step action plan, key deadlines, and a brief disclaimer.`;
     }
   },
 };
@@ -1756,11 +1826,81 @@ function triggerFileUpload() {
 }
 
 // Inside init() function, before the closing brace
-document.getElementById('fileUploadInput').addEventListener('change', function(e) {
+document.getElementById('fileUploadInput').addEventListener('change', async function(e) {
   const file = e.target.files[0];
   if (!file) return;
-  toast('File upload is currently disabled. Document analysis will return soon.', 'warn');
   document.getElementById('fileUploadInput').value = '';
+
+  const MAX_MB = 5;
+  if (file.size > MAX_MB * 1024 * 1024) {
+    toast(`File too large (max ${MAX_MB}MB)`, 'error');
+    return;
+  }
+
+  const allowed = ['image/jpeg','image/png','image/webp','application/pdf'];
+  if (!allowed.includes(file.type)) {
+    toast('Only JPG, PNG, WebP or PDF files are supported', 'error');
+    return;
+  }
+
+  // Read file as base64
+  const base64 = await new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = () => rej(new Error('Read failed'));
+    r.readAsDataURL(file);
+  });
+
+  const isPDF = file.type === 'application/pdf';
+  const mediaType = file.type;
+  const label = file.name;
+
+  // Show user message with file name
+  hideEmpty();
+  appendRaw(`<span style="font-size:18px">📎</span> <strong>${label}</strong><br/><span style="font-size:12px;color:var(--text3)">Analyzing document...</span>`);
+
+  const tid = appendTyping();
+  document.getElementById('sendBtn').disabled = true;
+
+  try {
+    const langLabel = state.lang === 'hi' ? 'Hindi' : state.lang === 'te' ? 'Telugu' : 'Hinglish (Hindi-English mix)';
+    const prompt = `You are an expert Indian legal advisor. The user has uploaded a document: "${label}". Analyze it and:\n1. Summarize what this document is (type, parties involved, key terms)\n2. Identify any legal issues, risks, or important clauses\n3. Suggest what action the user should take\n4. Answer in ${langLabel}\n\nBe specific, practical, and mention relevant Indian laws where applicable.`;
+
+    const contentBlock = isPDF
+      ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } }
+      : { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } };
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [contentBlock, { type: 'text', text: prompt }]
+        }]
+      })
+    });
+
+    const data = await res.json();
+    removeTyping(tid);
+    const output = (data.content || []).map(b => b.text || '').join('');
+    if (output) {
+      state.chatHistory.push({ role: 'user', content: `[Document: ${label}]` });
+      state.chatHistory.push({ role: 'assistant', content: output });
+      appendAiMsg(output, null, label);
+      incrementUsage();
+    } else {
+      appendMsg('ai', '⚠️ Could not analyze this document. Please try a clearer image or text-based PDF.');
+    }
+  } catch (err) {
+    removeTyping(tid);
+    appendMsg('ai', '⚠️ Document analysis failed. Please try again.');
+  }
+
+  document.getElementById('sendBtn').disabled = false;
+  scrollBottom();
 });
 
 </script>
@@ -1805,29 +1945,29 @@ document.getElementById('fileUploadInput').addEventListener('change', function(e
   <div class="pdf-overlay-text">PDF generate ho rahi hai...</div>
   <div class="pdf-overlay-sub">Kripya prateeksha karein 🙏</div>
 </div>
-<!-- COMING SOON MODAL -->
+<!-- FEATURE INFO MODAL (repurposed from Coming Soon) -->
 <div class="modal-overlay" id="comingSoonModal">
   <div class="modal" style="max-width:380px;text-align:center;">
     <button class="modal-close" onclick="closeModal('comingSoonModal')">✕</button>
     <div style="font-size:48px;margin-bottom:12px;">⚡</div>
-    <h2 style="margin-bottom:8px;">Bahut Jaldi!</h2>
+    <h2 style="margin-bottom:8px;">Naya Feature!</h2>
     <p class="modal-sub" style="font-size:14px;line-height:1.7;margin-bottom:16px;">
-      Premium services are being set up.<br/>
-      We'll notify you the moment payments go live.<br/>
-      <strong style="color:var(--accent);">Free services are fully working!</strong>
+      Yeh feature abhi development mein hai.<br/>
+      <strong style="color:var(--accent);">Premium services ab live hain!</strong>
     </p>
-    <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px;margin-bottom:16px;">
-      <div style="font-size:12px;color:var(--text3);margin-bottom:6px;">Meanwhile, use for free:</div>
+    <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:6px;">Ab available hai:</div>
       <div style="font-size:13px;color:var(--text);line-height:1.8;">
-        ✅ Hindi legal Q&A — 5/day<br/>
-        ✅ Telugu legal Q&A — 3/day<br/>
-        ✅ Hinglish Q&A — 5/day<br/>
-        ✅ Quick questions on all 10 topics
+        💳 Cheque Bounce Notice — ₹149<br/>
+        ⚖️ MSME Recovery Notice — ₹269<br/>
+        📝 Complaint Draft — ₹99<br/>
+        ✉️ Legal Reply — ₹49<br/>
+        ⚡ Priority Answer — ₹19
       </div>
     </div>
-    <button onclick="openFeedback();closeModal('comingSoonModal')" 
+    <button onclick="closeModal('comingSoonModal')"
       style="width:100%;padding:11px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);">
-      📝 Notify Me When Live
+      ✓ Got it
     </button>
     <div style="font-size:11px;color:var(--text3);margin-top:10px;">bklchai.com</div>
   </div>

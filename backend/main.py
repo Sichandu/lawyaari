@@ -1240,6 +1240,52 @@ async def verify_payment(req: VerifyPaymentRequest):
     log_analytics("payment_verified", {"service": req.service, "payment_id": req.razorpay_payment_id})
     return {"success": True, "payment_id": req.razorpay_payment_id}
 
+@app.get("/api/config")
+async def get_config():
+    """
+    Serves the Razorpay publishable key to the frontend.
+    NEVER expose RAZORPAY_KEY_SECRET here — only the key_id is safe to send.
+    """
+    return {
+        "razorpay_key_id": RAZORPAY_KEY_ID
+    }
+ 
+ 
+# ─────────────────────────────────────────────────────────────────
+# 5. OPTIONAL — Razorpay payment verification endpoint
+#    Call this from frontend after payment to verify on server side
+# ─────────────────────────────────────────────────────────────────
+ 
+import razorpay
+import hmac, hashlib
+from fastapi import HTTPException
+from pydantic import BaseModel
+ 
+razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_SECRET))
+ 
+class PaymentVerifyRequest(BaseModel):
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
+ 
+@app.post("/api/payment/verify")
+async def verify_payment(req: PaymentVerifyRequest):
+    """
+    Verifies Razorpay payment signature server-side.
+    Call this after Razorpay handler fires on the frontend.
+    """
+    body = f"{req.razorpay_order_id}|{req.razorpay_payment_id}"
+    expected_signature = hmac.new(
+        RAZORPAY_SECRET.encode(),
+        body.encode(),
+        hashlib.sha256
+    ).hexdigest()
+ 
+    if expected_signature != req.razorpay_signature:
+        raise HTTPException(status_code=400, detail="Payment verification failed")
+ 
+    return {"status": "verified", "payment_id": req.razorpay_payment_id}
+
 # ─── ADMIN ────────────────────────────────────────────────────────────────────
 # @app.get("/api/admin/stats")
 # async def admin_stats(x_admin_key: Optional[str] = Header(None)):
