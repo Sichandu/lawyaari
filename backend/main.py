@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime, timedelta
@@ -43,6 +44,9 @@ chats_col       = db["chats"]
 payments_col    = db["payments"]
 analytics_col   = db["analytics"]
 triggers_col    = db["triggers"]
+partners_col    = db["partners"]       # ✅ fixed
+referrals_col   = db["referrals"]      # ✅ fixed
+payouts_col     = db["payouts"]        # ✅ fixed
 
 # ─── API KEYS ─────────────────────────────────────────────────────────────────
 GROQ_API_KEY     = os.getenv("GROQ_API_KEY", "")
@@ -51,17 +55,15 @@ RAZORPAY_KEY_ID  = os.getenv("RAZORPAY_KEY_ID", "")
 RAZORPAY_SECRET  = os.getenv("RAZORPAY_SECRET", "")
 
 GROQ_MODEL   = "llama-3.3-70b-versatile"
-OPENAI_MODEL = "gpt-4o"  # swap to gpt-5 when available
+OPENAI_MODEL = "gpt-4o"
 
 # ─── ADMIN FREE ACCESS ────────────────────────────────────────────────────────
-# Set ADMIN_MOBILE=9876543210 in .env (comma-separate multiple numbers)
 ADMIN_MOBILES = set(filter(None, os.getenv("ADMIN_MOBILE", "").split(",")))
 
 def is_admin_mobile(mobile):
     return bool(mobile and mobile in ADMIN_MOBILES)
 
 def check_payment(payment_id, service, mobile=None):
-    """Pass if admin mobile OR verified payment exists."""
     if is_admin_mobile(mobile):
         return True
     rec = payments_col.find_one({"payment_id": payment_id, "service": service, "status": "verified"})
@@ -109,14 +111,8 @@ def detect_intent(text: str) -> Optional[dict]:
     return None
 
 def route_model(task: str, language: str) -> str:
-    """Smart model routing:
-    - Groq (llama-3.3-70b): Hindi, Hinglish free chat
-    - OpenAI (gpt-4o): Telugu (all), legal documents, premium, high accuracy
-    Telugu routing to OpenAI because Groq's llama model has weak Telugu support.
-    If OpenAI key not set, bidirectional fallback to Groq handles it.
-    """
     if language == "te":
-        return "openai"  # Telugu always → OpenAI (better multilingual support)
+        return "openai"
     if task in ("legal_document", "high_accuracy", "premium"):
         return "openai"
     return "groq"
@@ -153,25 +149,19 @@ async def call_openai(messages: list, system: str = "") -> str:
 
 async def call_ai(messages: list, system: str, task: str = "normal_chat", language: str = "hi") -> str:
     model = route_model(task, language)
-    
-    # Try primary model first
     try:
         if model == "openai":
             return await call_openai(messages, system)
         else:
             return await call_groq(messages, system)
     except Exception as primary_err:
-        pass
-    
-    # Always fallback to Groq if OpenAI fails (no key / 401 / quota)
-    # Always fallback to OpenAI if Groq fails
-    try:
-        if model == "openai":
-            return await call_groq(messages, system)
-        else:
-            return await call_openai(messages, system)
-    except Exception as fallback_err:
-        return f"⚠️ Both AI services unavailable. Check your API keys in .env file. (Groq: GROQ_API_KEY, OpenAI: OPENAI_API_KEY)"
+        try:
+            if model == "openai":
+                return await call_groq(messages, system)
+            else:
+                return await call_openai(messages, system)
+        except Exception as fallback_err:
+            return f"⚠️ Both AI services unavailable. Check your API keys in .env file. (Groq: GROQ_API_KEY, OpenAI: OPENAI_API_KEY)"
 
 def get_token(authorization: Optional[str] = Header(None)) -> Optional[str]:
     if authorization and authorization.startswith("Bearer "):
@@ -194,8 +184,6 @@ def generate_token(length=32):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 def get_system_prompt(language: str, category: str = "general") -> str:
-    # Legal documents MUST be in formal English regardless of UI language
-    # Hinglish/casual language in a legal notice is unprofessional and can be rejected
     if category == "legal":
         return """You are Bklchai, a professional legal document drafting assistant for Indian law.
 
@@ -330,6 +318,20 @@ class GeneratePDFRequest(BaseModel):
     title: str
     service_type: str
 
+class PartnerRegisterRequest(BaseModel):
+    name: str
+    mobile: str
+    email: str
+    upi_id: str
+    address: str
+    referral_name: str
+    referral_mobile: str
+
+class MarkPayoutRequest(BaseModel):
+    ref_code: str
+    amount: float
+    utr: Optional[str] = ""
+
 # ─── AUTH ─────────────────────────────────────────────────────────────────────
 @app.post("/api/auth/send-otp")
 async def send_otp(req: SendOTPRequest, request: Request):
@@ -337,7 +339,6 @@ async def send_otp(req: SendOTPRequest, request: Request):
     if not re.match(r"^\d{10}$", mobile):
         raise HTTPException(400, "Invalid mobile number")
 
-    # Rate limit: max 3 OTPs per 10 min
     ten_min_ago = datetime.utcnow() - timedelta(minutes=10)
     recent = otps_col.count_documents({"mobile": mobile, "created_at": {"$gt": ten_min_ago}})
     if recent >= 3:
@@ -373,7 +374,7 @@ async def verify_otp(req: VerifyOTPRequest, request: Request):
     if not user:
         users_col.insert_one({
             "mobile": req.mobile,
-            "name": req.name or "User",  # store name
+            "name": req.name or "User",
             "created_at": datetime.utcnow(),
             "last_login_at": datetime.utcnow(),
             "login_count": 1,
@@ -424,12 +425,10 @@ async def chat(req: ChatRequest, request: Request):
         if user:
             mobile = user["mobile"]
 
-    # Usage limits
     today = datetime.utcnow().date().isoformat()
     limit = {"hi": 5, "hinglish": 5, "te": 3}.get(language, 5)
 
     if mobile:
-        # Admin mobile gets unlimited chats
         if is_admin_mobile(mobile):
             limit = 9999
         user_doc = users_col.find_one({"mobile": mobile})
@@ -439,7 +438,6 @@ async def chat(req: ChatRequest, request: Request):
         elif plan == "unlimited":
             limit = 999
 
-        # Check daily count
         last_date = user_doc.get("last_chat_date") if user_doc else None
         daily_count = user_doc.get("daily_chats", 0) if user_doc else 0
         if last_date != today:
@@ -453,23 +451,17 @@ async def chat(req: ChatRequest, request: Request):
                 "plans": [
                     {"name": "Pro", "price": 49, "chats": 10 if language == "te" else "10/day", "plan_id": "pro"},
                     {"name": "Unlimited", "price": 99, "chats": "Unlimited", "plan_id": "unlimited"}
-                ] if language == "te" else [
-                    {"name": "Pro", "price": 49, "chats": "10/day", "plan_id": "pro"},
-                    {"name": "Unlimited", "price": 99, "chats": "Unlimited", "plan_id": "unlimited"}
                 ]
             }
     
-    # Detect intent for smart CTAs
     intent = detect_intent(req.message)
 
-    # Build conversation
     history = req.conversation_history or []
     messages = history + [{"role": "user", "content": req.message}]
 
     system = get_system_prompt(language)
     response_text = await call_ai(messages, system, task="normal_chat", language=language)
 
-    # Track usage
     if mobile:
         users_col.update_one({"mobile": mobile}, {"$inc": {"daily_chats": 1}, "$set": {"last_chat_date": today}})
         daily_count += 1
@@ -484,7 +476,6 @@ async def chat(req: ChatRequest, request: Request):
     })
     log_analytics("chat", {"mobile": mobile, "language": language, "intent": intent["intent"] if intent else None})
 
-    # Get remaining chats
     remaining = max(0, limit - (daily_count if mobile else 0))
 
     result = {
@@ -508,7 +499,6 @@ async def chat(req: ChatRequest, request: Request):
 # ─── PREMIUM: CHEQUE BOUNCE ───────────────────────────────────────────────────
 @app.post("/api/cheque-notice")
 async def cheque_notice(req: ChequeNoticeRequest):
-    # Verify payment (admin mobile bypasses)
     mobile = getattr(req, "mobile", None)
     if not check_payment(req.payment_id, "cheque_notice", mobile):
         raise HTTPException(402, "Payment required or not verified")
@@ -567,7 +557,6 @@ async def msme_notice(req: MSMENoticeRequest):
     if not check_payment(req.payment_id, "msme_notice", mobile):
         raise HTTPException(402, "Payment required or not verified")
 
-    # ── Validate critical fields ────────────────────────────────────────────────
     if not req.outstanding_amount or req.outstanding_amount.strip() in ['', '0']:
         return {"content": "Error: Outstanding amount is required. Please enter the invoice amount.", "service": "msme_notice"}
     if not req.business_name or not req.business_name.strip():
@@ -575,12 +564,10 @@ async def msme_notice(req: MSMENoticeRequest):
     if not req.buyer_name or not req.buyer_name.strip():
         return {"content": "Error: Buyer name is required.", "service": "msme_notice"}
 
-    # ── Date & Interest Computation ─────────────────────────────────────────────
     from datetime import date as _date, datetime as _dt
     today      = datetime.utcnow().strftime('%d %B %Y')
     today_date = _date.today()
 
-    # Parse due_date (accepts DD/MM/YYYY or YYYY-MM-DD or YYYY/MM/DD)
     def parse_date(s):
         s = s.strip().replace('-', '/')
         parts = s.split('/')
@@ -597,20 +584,17 @@ async def msme_notice(req: MSMENoticeRequest):
     due_dt  = parse_date(req.due_date)
     inv_dt  = parse_date(req.invoice_date)
 
-    # Days overdue since due_date
     if due_dt:
         days_overdue = max(0, (today_date - due_dt).days)
         days_since_invoice = max(0, (today_date - inv_dt).days) if inv_dt else None
     else:
-        days_overdue = 90  # conservative fallback
+        days_overdue = 90
         days_since_invoice = None
 
     overdue_str = f"{days_overdue} days" if days_overdue > 0 else "as of notice date"
 
-    # Interest under Section 16 MSMED Act: 3x RBI Bank Rate
-    # RBI Bank Rate as of 2025 = 6.50%; MSME rate = 19.5% p.a.
     RBI_BANK_RATE  = 6.50
-    MSME_INT_RATE  = round(RBI_BANK_RATE * 3, 2)   # 19.5%
+    MSME_INT_RATE  = round(RBI_BANK_RATE * 3, 2)
 
     try:
         principal = float(
@@ -634,7 +618,6 @@ async def msme_notice(req: MSMENoticeRequest):
 
     udyam = req.udyam_number.strip() if req.udyam_number and req.udyam_number.strip() else "Not registered / to be verified"
 
-    # ── Build pre-filled document blocks ────────────────────────────────────────
     eligibility_block = (
         f"Supplier {req.business_name} holds Udyam Registration No. {udyam}, confirming its status "
         f"as a Micro, Small or Medium Enterprise under the MSMED Act, 2006. "
@@ -696,7 +679,6 @@ async def msme_notice(req: MSMENoticeRequest):
         f"7. Purchase order / work order from {req.buyer_name} (if available)"
     )
 
-    # ── System & Final Prompt ───────────────────────────────────────────────────
     system = get_system_prompt(req.language, "legal")
     prompt = f"""You are drafting a production-grade MSME payment recovery notice for a real business.
 Use ONLY the data provided. Zero placeholders. Zero soft language. Every word must be print-ready.
@@ -769,7 +751,6 @@ async def legal_reply(req: LegalReplyRequest):
     if not check_payment(req.payment_id, "legal_reply", getattr(req, "mobile", None)):
         raise HTTPException(402, "Payment required or not verified")
 
-    # GTM Fix: validate this is actually a legal notice, not a random message
     legal_keywords = ["notice", "demand", "legal", "court", "dues", "payment",
                       "landlord", "recovery", "loan", "emi", "eviction", "cheque",
                       "police", "fir", "arrest", "complaint", "advocate", "lawyer",
@@ -835,7 +816,6 @@ async def complaint_draft(req: ComplaintDraftRequest):
     if not check_payment(req.payment_id, "complaint_draft", getattr(req, "mobile", None)):
         raise HTTPException(402, "Payment required or not verified")
 
-    # Auto-select authority and IPC sections based on issue type
     ISSUE_MAP = {
         "police": {
             "authority": "The Superintendent of Police",
@@ -929,7 +909,6 @@ Write numbered annexures based on evidence mentioned in the facts
 @app.post("/api/priority-answer")
 async def priority_answer(req: PriorityAnswerRequest):
     if req.priority_flag:
-        # Admin mobile bypasses payment check
         admin_ok = is_admin_mobile(getattr(req, "mobile", None))
         if not admin_ok:
             if not req.payment_id:
@@ -976,15 +955,8 @@ Important Note:
     return {"content": response, "priority": req.priority_flag, "service": "priority_answer"}
 
 # ─── FONT SETUP ──────────────────────────────────────────────────────────────
-# FreeSerif: supports Devanagari (Hindi), Telugu, Latin, ₹ symbol
-# Available on all Debian/Ubuntu servers (freefont-ttf package)
-# Fallback: Helvetica (Latin only — no Hindi, but won't crash)
 import os as _os, logging as _logging
 
-# FreeSans from GNU FreeFont package — has full Devanagari + Latin + Telugu coverage
-# DejaVu does NOT have Devanagari. FreeSans DOES.
-# On Render deployment, add to build command:
-#   apt-get install -y fonts-freefont-ttf && pip install -r requirements.txt
 _FREESANS_PATH      = '/usr/share/fonts/truetype/freefont/FreeSans.ttf'
 _FREESANS_BOLD_PATH = '/usr/share/fonts/truetype/freefont/FreeSansBold.ttf'
 
@@ -1005,8 +977,6 @@ _FONTS_OK = _register_fonts()
 _FN      = 'LD-Regular' if _FONTS_OK else 'Helvetica'
 _FN_BOLD = 'LD-Bold'    if _FONTS_OK else 'Helvetica-Bold'
 
-# Emoji-to-label map: replace emoji + following label text (avoids duplication)
-# Pattern: emoji followed by optional space + the label text = just keep label
 _EMOJI_FULL_PATTERNS = [
     ("🔍 Situation:",        "Situation:"),
     ("🔍Situation:",         "Situation:"),
@@ -1020,7 +990,6 @@ _EMOJI_FULL_PATTERNS = [
     ("⚠️ Important Note:",   "Important Note:"),
     ("⚠️Important Note:",    "Important Note:"),
 ]
-# Fallback: strip lone emoji with no label
 _EMOJI_LABELS = {
     "🔍": "", "⚖️": "", "✅": "", "💬": "", "⚠️": "",
     "📝": "", "📦": "", "📣": "", "💡": "", "⭐": "",
@@ -1031,46 +1000,33 @@ _EMOJI_LABELS = {
 }
 
 def _strip_emoji(text: str) -> str:
-    """Replace emoji+label combos first, then strip remaining emoji."""
     import re as _r
-    # Step 1: Replace full emoji+label patterns (prevents double labels)
     for pattern, replacement in _EMOJI_FULL_PATTERNS:
         text = text.replace(pattern, replacement)
-    # Step 2: Strip any remaining lone emoji
     for emoji, label in _EMOJI_LABELS.items():
         text = text.replace(emoji, label)
-    # Strip all remaining emoji using unicode ranges
-    text = _r.sub(r"[𐀀-􏿿]", "", text)   # Supplementary planes (emoji)
-    text = _r.sub(r"[☀-➿]", "", text)            # Misc symbols
-    text = _r.sub(r"[⌀-⏿]", "", text)            # Technical symbols
-    text = _r.sub(r"[︀-﻿]", "", text)            # Variation selectors
-    # Clean up multiple spaces/colons left after stripping
+    text = _r.sub(r"[𐀀-􏿿]", "", text)
+    text = _r.sub(r"[☀-➿]", "", text)
+    text = _r.sub(r"[⌀-⏿]", "", text)
+    text = _r.sub(r"[︀-﻿]", "", text)
     text = _r.sub(r"  +", " ", text)
     return text.strip()
 
 def _clean(text: str) -> str:
-    """Strip emoji, convert markdown to ReportLab XML, escape special chars."""
     import re as _r
-    # Step 1: Strip emoji FIRST (before any other processing)
     text = _strip_emoji(text)
-    # Step 2: Bold / italic markdown
     text = _r.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', text)
     text = _r.sub(r'\*(.+?)\*',   r'<i>\1</i>', text)
-    # Step 3: Strip # headers (keep text)
     text = _r.sub(r'^#+\s*', '', text, flags=_r.MULTILINE)
     text = text.replace('`', '')
-    # Step 4: Protect injected tags during XML escaping
     text = text.replace('<b>', '\x00B\x00').replace('</b>', '\x00/B\x00')
     text = text.replace('<i>', '\x00I\x00').replace('</i>', '\x00/I\x00')
-    # Step 5: Escape XML special chars
     text = text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-    # Step 6: Restore tags
     text = text.replace('\x00B\x00', '<b>').replace('\x00/B\x00', '</b>')
     text = text.replace('\x00I\x00', '<i>').replace('\x00/I\x00', '</i>')
     return text
 
 def _para(text: str, style) -> Paragraph:
-    """Safe paragraph with fallback."""
     try:
         return Paragraph(_clean(text), style)
     except Exception:
@@ -1092,7 +1048,6 @@ async def generate_pdf(req: GeneratePDFRequest):
             topMargin=0.9*inch,   bottomMargin=0.9*inch
         )
 
-        # Styles — use module-level font names
         s_header  = ParagraphStyle("s_hdr",  fontName=_FN_BOLD, fontSize=11,
                         textColor=colors.HexColor("#f59e0b"), spaceAfter=1)
         s_sub     = ParagraphStyle("s_sub",  fontName=_FN, fontSize=8,
@@ -1111,7 +1066,6 @@ async def generate_pdf(req: GeneratePDFRequest):
 
         els = []
 
-        # ── Letterhead ──
         els.append(_para("Bklchai  |  bklchai.com", s_header))
         els.append(_para("Your legal rights, explained.", s_sub))
         els.append(HRFlowable(width="100%", thickness=1.5,
@@ -1121,7 +1075,6 @@ async def generate_pdf(req: GeneratePDFRequest):
             color=colors.HexColor("#dddddd"), spaceAfter=8))
         els.append(Spacer(1, 0.08*inch))
 
-        # ── Smart content parsing ──
         for raw_line in req.content.split("\n"):
             line = raw_line.strip()
             if not line:
@@ -1153,7 +1106,6 @@ async def generate_pdf(req: GeneratePDFRequest):
             else:
                 els.append(_para(line, s_body))
 
-        # ── Footer ──
         els.append(Spacer(1, 0.25*inch))
         els.append(HRFlowable(width="100%", thickness=0.5,
             color=colors.HexColor("#dddddd"), spaceAfter=6))
@@ -1182,7 +1134,6 @@ async def generate_pdf(req: GeneratePDFRequest):
 @app.post("/api/create-order")
 async def create_order(req: CreateOrderRequest):
     if not RAZORPAY_KEY_ID or not RAZORPAY_SECRET:
-        # Demo mode
         demo_order_id = f"order_demo_{generate_token(16)}"
         payments_col.insert_one({
             "order_id": demo_order_id,
@@ -1213,7 +1164,6 @@ async def create_order(req: CreateOrderRequest):
 @app.post("/api/verify-payment")
 async def verify_payment(req: VerifyPaymentRequest):
     if not RAZORPAY_SECRET:
-        # Demo mode: auto-verify
         payment_id = f"pay_demo_{generate_token(16)}"
         payments_col.update_one(
             {"order_id": req.razorpay_order_id},
@@ -1222,7 +1172,6 @@ async def verify_payment(req: VerifyPaymentRequest):
         log_analytics("payment_verified_demo", {"service": req.service, "order_id": req.razorpay_order_id})
         return {"success": True, "payment_id": payment_id}
 
-    # Real verification
     body = f"{req.razorpay_order_id}|{req.razorpay_payment_id}"
     expected = hmac.new(RAZORPAY_SECRET.encode(), body.encode(), hashlib.sha256).hexdigest()
     if not hmac.compare_digest(expected, req.razorpay_signature):
@@ -1233,7 +1182,6 @@ async def verify_payment(req: VerifyPaymentRequest):
         {"$set": {"status": "verified", "payment_id": req.razorpay_payment_id, "verified_at": datetime.utcnow()}}
     )
 
-    # Upgrade plan if subscription
     if req.service in ("pro", "unlimited") and req.mobile:
         users_col.update_one({"mobile": req.mobile}, {"$set": {"plan": req.service}})
 
@@ -1242,97 +1190,35 @@ async def verify_payment(req: VerifyPaymentRequest):
 
 @app.get("/api/config")
 async def get_config():
-    """
-    Serves the Razorpay publishable key to the frontend.
-    NEVER expose RAZORPAY_KEY_SECRET here — only the key_id is safe to send.
-    """
     return {
         "razorpay_key_id": RAZORPAY_KEY_ID
     }
- 
- 
-# ─────────────────────────────────────────────────────────────────
-# 5. OPTIONAL — Razorpay payment verification endpoint
-#    Call this from frontend after payment to verify on server side
-# ─────────────────────────────────────────────────────────────────
- 
+
 import razorpay
 import hmac, hashlib
 from fastapi import HTTPException
 from pydantic import BaseModel
- 
+
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_SECRET))
- 
+
 class PaymentVerifyRequest(BaseModel):
     razorpay_order_id: str
     razorpay_payment_id: str
     razorpay_signature: str
- 
+
 @app.post("/api/payment/verify")
-async def verify_payment(req: PaymentVerifyRequest):
-    """
-    Verifies Razorpay payment signature server-side.
-    Call this after Razorpay handler fires on the frontend.
-    """
+async def verify_payment_route(req: PaymentVerifyRequest):
     body = f"{req.razorpay_order_id}|{req.razorpay_payment_id}"
     expected_signature = hmac.new(
         RAZORPAY_SECRET.encode(),
         body.encode(),
         hashlib.sha256
     ).hexdigest()
- 
+
     if expected_signature != req.razorpay_signature:
         raise HTTPException(status_code=400, detail="Payment verification failed")
- 
+
     return {"status": "verified", "payment_id": req.razorpay_payment_id}
-
-# ─── ADMIN ────────────────────────────────────────────────────────────────────
-# @app.get("/api/admin/stats")
-# async def admin_stats(x_admin_key: Optional[str] = Header(None)):
-#     if x_admin_key != os.getenv("ADMIN_KEY", "bklchai-admin-2024"):
-#         raise HTTPException(403, "Forbidden")
-
-#     total_users = users_col.count_documents({})
-#     total_chats = chats_col.count_documents({})
-#     paid_services = payments_col.count_documents({"status": "verified"})
-#     total_revenue = sum(p.get("amount", 0) for p in payments_col.find({"status": "verified"}))
-
-#     # Intent breakdown
-#     intent_pipeline = [
-#         {"$match": {"intent": {"$ne": None}}},
-#         {"$group": {"_id": "$intent", "count": {"$sum": 1}}},
-#         {"$sort": {"count": -1}}
-#     ]
-#     intents = list(chats_col.aggregate(intent_pipeline))
-
-#     # Language breakdown
-#     lang_pipeline = [
-#         {"$group": {"_id": "$language", "count": {"$sum": 1}}},
-#         {"$sort": {"count": -1}}
-#     ]
-#     languages = list(chats_col.aggregate(lang_pipeline))
-
-#     # Recent chats
-#     recent_chats = list(chats_col.find({}, {"_id": 0, "mobile": 1, "message": 1, "intent": 1, "language": 1, "timestamp": 1})
-#                         .sort("timestamp", -1).limit(20))
-#     for c in recent_chats:
-#         if "timestamp" in c:
-#             c["timestamp"] = c["timestamp"].isoformat()
-
-#     # Conversion rate
-#     users_who_paid = payments_col.distinct("mobile", {"status": "verified"})
-#     conversion_rate = round(len(users_who_paid) / max(total_users, 1) * 100, 1)
-
-#     return {
-#         "total_users": total_users,
-#         "total_chats": total_chats,
-#         "paid_services": paid_services,
-#         "total_revenue": total_revenue,
-#         "conversion_rate": f"{conversion_rate}%",
-#         "intent_breakdown": intents,
-#         "language_breakdown": languages,
-#         "recent_chats": recent_chats
-#     }
 
 # ─── ADMIN ────────────────────────────────────────────────────────────────────
 
@@ -1543,6 +1429,190 @@ async def admin_health(x_admin_key: Optional[str] = Header(None)):
     check_admin_key(x_admin_key)
     return {"ok": True, "service": "bklchai-admin"}
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# PARTNER PROGRAM ROUTES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+COMMISSION_RATE = 0.20
+EXCLUDED_SERVICES = {"expert_answer", "plan_pro", "plan_unlimited"}
+
+def generate_ref_code(name: str, mobile: str) -> str:
+    base = re.sub(r'[^a-z]', '', name.lower())[:4]
+    suffix = mobile[-4:]
+    code = base + suffix
+    while partners_col.find_one({"ref_code": code}):
+        code = base + str(random.randint(1000, 9999))
+    return code
+
+@app.post("/api/partner/register")
+async def register_partner(req: PartnerRegisterRequest):
+    mobile = req.mobile.strip()
+    if not re.match(r"^\d{10}$", mobile):
+        raise HTTPException(400, "Invalid mobile number")
+
+    existing = partners_col.find_one({"mobile": mobile})
+    if existing:
+        return {
+            "ref_code": existing["ref_code"],
+            "message": "Already registered",
+            "partner_name": existing["name"]
+        }
+
+    ref_code = generate_ref_code(req.name, mobile)
+
+    partners_col.insert_one({
+        "name": req.name.strip(),
+        "mobile": mobile,
+        "email": req.email.strip().lower(),
+        "upi_id": req.upi_id.strip(),
+        "address": req.address.strip(),
+        "ref_code": ref_code,
+        "created_at": datetime.utcnow(),
+        "total_earned": 0.0,
+        "total_paid_out": 0.0,
+        "status": "active"
+    })
+
+    referrals_col.insert_one({
+        "partner_mobile": mobile,
+        "partner_ref_code": ref_code,
+        "referred_name": req.referral_name.strip(),
+        "referred_mobile": req.referral_mobile.strip(),
+        "status": "pending",
+        "created_at": datetime.utcnow(),
+        "paid": False,
+        "commission": 0.0
+    })
+
+    log_analytics("partner_registered", {"mobile": mobile, "ref_code": ref_code})
+    return {
+        "ref_code": ref_code,
+        "message": "Partner registered successfully",
+        "partner_name": req.name
+    }
+
+@app.get("/api/partner/earnings/{ref_code}")
+async def get_partner_earnings(ref_code: str):
+    partner = partners_col.find_one({"ref_code": ref_code}, {"_id": 0})
+    if not partner:
+        raise HTTPException(404, "Partner not found. Please register first.")
+
+    refs = list(referrals_col.find(
+        {"partner_ref_code": ref_code},
+        {"_id": 0, "referred_name": 1, "referred_mobile": 1, "paid": 1,
+         "commission": 1, "created_at": 1, "paid_at": 1}
+    ).sort("created_at", -1).limit(50))
+
+    paid_refs = [r for r in refs if r.get("paid")]
+    total_earned = sum(r.get("commission", 0) for r in paid_refs)
+
+    paid_out = sum(
+        p.get("amount", 0)
+        for p in payouts_col.find({"partner_ref_code": ref_code, "status": "completed"})
+    )
+    pending_payout = max(0, total_earned - paid_out)
+
+    referrals_out = []
+    for r in refs:
+        referrals_out.append({
+            "name": r.get("referred_name", "User"),
+            "mobile": r.get("referred_mobile", ""),
+            "paid": r.get("paid", False),
+            "commission": round(r.get("commission", 0), 2),
+            "date": r["created_at"].strftime("%d %b %Y") if isinstance(r.get("created_at"), datetime) else ""
+        })
+
+    return {
+        "partner_name": partner["name"],
+        "upi_id": partner["upi_id"],
+        "ref_code": ref_code,
+        "paid_referrals": len(paid_refs),
+        "total_referrals": len(refs),
+        "total_earned": round(total_earned, 2),
+        "pending_payout": round(pending_payout, 2),
+        "total_paid_out": round(paid_out, 2),
+        "referrals": referrals_out
+    }
+
+async def credit_partner_commission(buyer_mobile: str, service: str, amount: float):
+    if service in EXCLUDED_SERVICES:
+        return
+
+    referral = referrals_col.find_one({
+        "referred_mobile": buyer_mobile,
+        "paid": False
+    })
+    if not referral:
+        return
+
+    commission = round(amount * COMMISSION_RATE, 2)
+    ref_code = referral["partner_ref_code"]
+
+    referrals_col.update_one(
+        {"_id": referral["_id"]},
+        {"$set": {"paid": True, "commission": commission, "paid_at": datetime.utcnow(),
+                  "service_paid": service, "payment_amount": amount}}
+    )
+
+    partners_col.update_one(
+        {"ref_code": ref_code},
+        {"$inc": {"total_earned": commission}}
+    )
+
+    log_analytics("partner_commission_credited", {
+        "ref_code": ref_code,
+        "buyer_mobile": buyer_mobile,
+        "service": service,
+        "amount": amount,
+        "commission": commission
+    })
+
+@app.get("/api/admin/partners")
+async def admin_partners(x_admin_key: Optional[str] = Header(None)):
+    check_admin_key(x_admin_key)
+    docs = list(partners_col.find({}, {"_id": 0}).sort("created_at", -1).limit(200))
+    for d in docs:
+        d["created_at"] = safe_iso(d.get("created_at"))
+    return {"items": docs}
+
+@app.get("/api/admin/partner-payouts")
+async def admin_partner_payouts(x_admin_key: Optional[str] = Header(None)):
+    check_admin_key(x_admin_key)
+    partners_list = list(partners_col.find({"status": "active"}, {"_id": 0}))
+    payouts_due = []
+    for p in partners_list:
+        paid_out = sum(
+            py.get("amount", 0)
+            for py in payouts_col.find({"partner_ref_code": p["ref_code"], "status": "completed"})
+        )
+        pending = round(p.get("total_earned", 0) - paid_out, 2)
+        if pending > 0:
+            payouts_due.append({
+                "name": p["name"],
+                "mobile": p["mobile"],
+                "upi_id": p["upi_id"],
+                "ref_code": p["ref_code"],
+                "pending_payout": pending
+            })
+    payouts_due.sort(key=lambda x: x["pending_payout"], reverse=True)
+    return {"payouts_due": payouts_due, "total": sum(p["pending_payout"] for p in payouts_due)}
+
+@app.post("/api/admin/mark-payout")
+async def mark_payout(req: MarkPayoutRequest, x_admin_key: Optional[str] = Header(None)):
+    check_admin_key(x_admin_key)
+    payouts_col.insert_one({
+        "partner_ref_code": req.ref_code,
+        "amount": req.amount,
+        "utr": req.utr,
+        "status": "completed",
+        "paid_at": datetime.utcnow()
+    })
+    return {"success": True, "message": f"Payout of ₹{req.amount} marked for {req.ref_code}"}
+
 @app.get("/health")
 async def health():
     return {"status": "ok", "version": "2.0.0", "service": "bklchai"}
+
+# ─── STATIC FILES (serve HTML) ───────────────────────────────────────────────
+# This MUST be the last route so it doesn't override API endpoints
+app.mount("/", StaticFiles(directory=".", html=True), name="static")
