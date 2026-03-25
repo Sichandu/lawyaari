@@ -1241,99 +1241,261 @@ async def verify_payment(req: VerifyPaymentRequest):
     return {"success": True, "payment_id": req.razorpay_payment_id}
 
 # ─── ADMIN ────────────────────────────────────────────────────────────────────
-@app.get("/api/admin/stats")
-async def admin_stats(x_admin_key: Optional[str] = Header(None)):
+# @app.get("/api/admin/stats")
+# async def admin_stats(x_admin_key: Optional[str] = Header(None)):
+#     if x_admin_key != os.getenv("ADMIN_KEY", "bklchai-admin-2024"):
+#         raise HTTPException(403, "Forbidden")
+
+#     total_users = users_col.count_documents({})
+#     total_chats = chats_col.count_documents({})
+#     paid_services = payments_col.count_documents({"status": "verified"})
+#     total_revenue = sum(p.get("amount", 0) for p in payments_col.find({"status": "verified"}))
+
+#     # Intent breakdown
+#     intent_pipeline = [
+#         {"$match": {"intent": {"$ne": None}}},
+#         {"$group": {"_id": "$intent", "count": {"$sum": 1}}},
+#         {"$sort": {"count": -1}}
+#     ]
+#     intents = list(chats_col.aggregate(intent_pipeline))
+
+#     # Language breakdown
+#     lang_pipeline = [
+#         {"$group": {"_id": "$language", "count": {"$sum": 1}}},
+#         {"$sort": {"count": -1}}
+#     ]
+#     languages = list(chats_col.aggregate(lang_pipeline))
+
+#     # Recent chats
+#     recent_chats = list(chats_col.find({}, {"_id": 0, "mobile": 1, "message": 1, "intent": 1, "language": 1, "timestamp": 1})
+#                         .sort("timestamp", -1).limit(20))
+#     for c in recent_chats:
+#         if "timestamp" in c:
+#             c["timestamp"] = c["timestamp"].isoformat()
+
+#     # Conversion rate
+#     users_who_paid = payments_col.distinct("mobile", {"status": "verified"})
+#     conversion_rate = round(len(users_who_paid) / max(total_users, 1) * 100, 1)
+
+#     return {
+#         "total_users": total_users,
+#         "total_chats": total_chats,
+#         "paid_services": paid_services,
+#         "total_revenue": total_revenue,
+#         "conversion_rate": f"{conversion_rate}%",
+#         "intent_breakdown": intents,
+#         "language_breakdown": languages,
+#         "recent_chats": recent_chats
+#     }
+
+# ─── ADMIN ────────────────────────────────────────────────────────────────────
+
+def check_admin_key(x_admin_key: Optional[str]):
     if x_admin_key != os.getenv("ADMIN_KEY", "bklchai-admin-2024"):
         raise HTTPException(403, "Forbidden")
+
+def safe_iso(dt):
+    return dt.isoformat() if isinstance(dt, datetime) else dt
+
+@app.get("/api/admin/stats")
+async def admin_stats(x_admin_key: Optional[str] = Header(None)):
+    check_admin_key(x_admin_key)
 
     total_users = users_col.count_documents({})
     total_chats = chats_col.count_documents({})
-    paid_services = payments_col.count_documents({"status": "verified"})
+    total_payments = payments_col.count_documents({})
+    verified_payments = payments_col.count_documents({"status": "verified"})
     total_revenue = sum(p.get("amount", 0) for p in payments_col.find({"status": "verified"}))
 
-    # Intent breakdown
-    intent_pipeline = [
-        {"$match": {"intent": {"$ne": None}}},
-        {"$group": {"_id": "$intent", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}}
+    today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    week_start = datetime.utcnow() - timedelta(days=7)
+
+    today_users = users_col.count_documents({"created_at": {"$gte": today_start}})
+    today_chats = chats_col.count_documents({"timestamp": {"$gte": today_start}})
+    today_verified_payments = payments_col.count_documents({
+        "status": "verified",
+        "verified_at": {"$gte": today_start}
+    })
+
+    users_last_7_days = users_col.count_documents({"created_at": {"$gte": week_start}})
+    chats_last_7_days = chats_col.count_documents({"timestamp": {"$gte": week_start}})
+    revenue_last_7_days = sum(
+        p.get("amount", 0)
+        for p in payments_col.find({
+            "status": "verified",
+            "verified_at": {"$gte": week_start}
+        })
+    )
+
+    users_who_paid = payments_col.distinct("mobile", {"status": "verified", "mobile": {"$ne": None}})
+    conversion_rate = round((len(users_who_paid) / max(total_users, 1)) * 100, 1)
+
+    plan_breakdown = [
+        {"_id": doc["_id"], "count": doc["count"]}
+        for doc in users_col.aggregate([
+            {"$group": {"_id": {"$ifNull": ["$plan", "free"]}, "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ])
     ]
-    intents = list(chats_col.aggregate(intent_pipeline))
 
-    # Language breakdown
-    lang_pipeline = [
-        {"$group": {"_id": "$language", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}}
+    language_breakdown = [
+        {"_id": doc["_id"] or "unknown", "count": doc["count"]}
+        for doc in chats_col.aggregate([
+            {"$group": {"_id": "$language", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ])
     ]
-    languages = list(chats_col.aggregate(lang_pipeline))
 
-    # Recent chats
-    recent_chats = list(chats_col.find({}, {"_id": 0, "mobile": 1, "message": 1, "intent": 1, "language": 1, "timestamp": 1})
-                        .sort("timestamp", -1).limit(20))
-    for c in recent_chats:
-        if "timestamp" in c:
-            c["timestamp"] = c["timestamp"].isoformat()
-
-    # Conversion rate
-    users_who_paid = payments_col.distinct("mobile", {"status": "verified"})
-    conversion_rate = round(len(users_who_paid) / max(total_users, 1) * 100, 1)
+    intent_breakdown = [
+        {"_id": doc["_id"] or "unknown", "count": doc["count"]}
+        for doc in chats_col.aggregate([
+            {"$match": {"intent": {"$ne": None}}},
+            {"$group": {"_id": "$intent", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ])
+    ]
 
     return {
-        "total_users": total_users,
-        "total_chats": total_chats,
-        "paid_services": paid_services,
-        "total_revenue": total_revenue,
-        "conversion_rate": f"{conversion_rate}%",
-        "intent_breakdown": intents,
-        "language_breakdown": languages,
-        "recent_chats": recent_chats
+        "overview": {
+            "total_users": total_users,
+            "today_users": today_users,
+            "total_chats": total_chats,
+            "today_chats": today_chats,
+            "total_payments": total_payments,
+            "verified_payments": verified_payments,
+            "today_verified_payments": today_verified_payments,
+            "total_revenue": total_revenue,
+            "revenue_last_7_days": revenue_last_7_days,
+            "users_last_7_days": users_last_7_days,
+            "chats_last_7_days": chats_last_7_days,
+            "conversion_rate": conversion_rate
+        },
+        "plan_breakdown": plan_breakdown,
+        "language_breakdown": language_breakdown,
+        "intent_breakdown": intent_breakdown
     }
 
-@app.get("/api/admin/export-data")
-async def export_user_payments(x_admin_key: Optional[str] = Header(None)):
-    if x_admin_key != os.getenv("ADMIN_KEY", "bklchai-admin-2024"):
-        raise HTTPException(403, "Forbidden")
+@app.get("/api/admin/users")
+async def admin_users(
+    x_admin_key: Optional[str] = Header(None),
+    limit: int = 50
+):
+    check_admin_key(x_admin_key)
 
-    # Aggregate users with their payments
-    pipeline = [
-        {
-            "$lookup": {
-                "from": "payments",
-                "localField": "mobile",
-                "foreignField": "mobile",
-                "as": "payments"
-            }
-        },
-        {
-            "$project": {
-                "_id": 0,
-                "name": 1,
-                "mobile": 1,
-                "payments": {
-                    "$filter": {
-                        "input": "$payments",
-                        "as": "p",
-                        "cond": {"$eq": ["$$p.status", "verified"]}
-                    }
-                }
-            }
-        },
-        {"$sort": {"name": 1}}
-    ]
-    results = list(users_col.aggregate(pipeline))
-
-    # Format payments to only include relevant fields
-    for user in results:
-        user["payments"] = [
+    docs = list(
+        users_col.find(
+            {},
             {
-                "amount": p.get("amount"),
-                "service": p.get("service"),
-                "date": p.get("verified_at", p.get("created_at")).isoformat() if p.get("verified_at") else None,
-                "status": p.get("status")
+                "_id": 0,
+                "mobile": 1,
+                "plan": 1,
+                "created_at": 1,
+                "last_login_at": 1,
+                "login_count": 1,
+                "daily_chats": 1,
+                "last_chat_date": 1
             }
-            for p in user.get("payments", [])
-        ]
+        ).sort("created_at", -1).limit(min(limit, 200))
+    )
 
-    return {"users": results}
+    for d in docs:
+        d["created_at"] = safe_iso(d.get("created_at"))
+        d["last_login_at"] = safe_iso(d.get("last_login_at"))
+
+    return {"items": docs}
+
+@app.get("/api/admin/mobiles")
+async def admin_mobiles(
+    x_admin_key: Optional[str] = Header(None),
+    limit: int = 100
+):
+    check_admin_key(x_admin_key)
+
+    docs = list(
+        users_col.find(
+            {"mobile": {"$exists": True, "$ne": None}},
+            {"_id": 0, "mobile": 1, "plan": 1, "created_at": 1}
+        ).sort("created_at", -1).limit(min(limit, 300))
+    )
+
+    seen = set()
+    cleaned = []
+    for d in docs:
+        mobile = str(d.get("mobile", "")).strip()
+        if not mobile or mobile in seen:
+            continue
+        seen.add(mobile)
+        cleaned.append({
+            "mobile": mobile,
+            "plan": d.get("plan", "free"),
+            "created_at": safe_iso(d.get("created_at"))
+        })
+
+    return {"items": cleaned}
+
+@app.get("/api/admin/payments")
+async def admin_payments(
+    x_admin_key: Optional[str] = Header(None),
+    limit: int = 50
+):
+    check_admin_key(x_admin_key)
+
+    docs = list(
+        payments_col.find(
+            {},
+            {
+                "_id": 0,
+                "order_id": 1,
+                "payment_id": 1,
+                "mobile": 1,
+                "service": 1,
+                "amount": 1,
+                "status": 1,
+                "created_at": 1,
+                "verified_at": 1
+            }
+        ).sort("created_at", -1).limit(min(limit, 200))
+    )
+
+    for d in docs:
+        d["created_at"] = safe_iso(d.get("created_at"))
+        d["verified_at"] = safe_iso(d.get("verified_at"))
+
+    return {"items": docs}
+
+@app.get("/api/admin/recent-chats")
+async def admin_recent_chats(
+    x_admin_key: Optional[str] = Header(None),
+    limit: int = 20
+):
+    check_admin_key(x_admin_key)
+
+    docs = list(
+        chats_col.find(
+            {},
+            {
+                "_id": 0,
+                "mobile": 1,
+                "message": 1,
+                "response": 1,
+                "language": 1,
+                "intent": 1,
+                "timestamp": 1
+            }
+        ).sort("timestamp", -1).limit(min(limit, 100))
+    )
+
+    for d in docs:
+        d["timestamp"] = safe_iso(d.get("timestamp"))
+        if d.get("response"):
+            d["response"] = str(d["response"])[:180]
+
+    return {"items": docs}
+
+@app.get("/api/admin/health")
+async def admin_health(x_admin_key: Optional[str] = Header(None)):
+    check_admin_key(x_admin_key)
+    return {"ok": True, "service": "bklchai-admin"}
 
 @app.get("/health")
 async def health():
