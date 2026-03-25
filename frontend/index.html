@@ -1093,7 +1093,7 @@ async function verifyOTP(){
   const otp=document.getElementById('otpInput').value.trim();
   const gender=document.getElementById('genderInput')?document.getElementById('genderInput').value:'other';
   try{
-    const res=await fetch(`${API}/api/auth/verify-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,otp})});
+    const res=await fetch(`${API}/api/auth/verify-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,otp,name: state.pendingName})});
     const data=await res.json();
     if(!res.ok) return toast(data.detail||'Invalid OTP','error');
     state.token=data.token;state.mobile=data.mobile;

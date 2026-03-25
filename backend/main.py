@@ -250,6 +250,7 @@ class SendOTPRequest(BaseModel):
 class VerifyOTPRequest(BaseModel):
     mobile: str
     otp: str
+    name: Optional[str] = None
 
 class ChatRequest(BaseModel):
     message: str
@@ -372,6 +373,7 @@ async def verify_otp(req: VerifyOTPRequest, request: Request):
     if not user:
         users_col.insert_one({
             "mobile": req.mobile,
+            "name": req.name or "User",  # store name
             "created_at": datetime.utcnow(),
             "last_login_at": datetime.utcnow(),
             "login_count": 1,
