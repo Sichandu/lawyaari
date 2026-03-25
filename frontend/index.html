@@ -1888,37 +1888,73 @@ document.getElementById('fileUploadInput').addEventListener('change', async func
       ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } }
       : { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } };
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: [contentBlock, { type: 'text', text: prompt }]
-        }]
-      })
-    });
+//     const res = await fetch('https://api.anthropic.com/v1/messages', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({
+//         model: 'claude-sonnet-4-20250514',
+//         max_tokens: 1000,
+//         messages: [{
+//           role: 'user',
+//           content: [contentBlock, { type: 'text', text: prompt }]
+//         }]
+//       })
+//     });
 
-    const data = await res.json();
-    removeTyping(tid);
-    const output = (data.content || []).map(b => b.text || '').join('');
-    if (output) {
-      state.chatHistory.push({ role: 'user', content: `[Document: ${label}]` });
-      state.chatHistory.push({ role: 'assistant', content: output });
-      appendAiMsg(output, null, label);
-      incrementUsage();
-    } else {
-      appendMsg('ai', '⚠️ Could not analyze this document. Please try a clearer image or text-based PDF.');
-    }
-  } catch (err) {
-    removeTyping(tid);
-    appendMsg('ai', '⚠️ Document analysis failed. Please try again.');
-  }
+//     const data = await res.json();
+//     removeTyping(tid);
+//     const output = (data.content || []).map(b => b.text || '').join('');
+//     if (output) {
+//       state.chatHistory.push({ role: 'user', content: `[Document: ${label}]` });
+//       state.chatHistory.push({ role: 'assistant', content: output });
+//       appendAiMsg(output, null, label);
+//       incrementUsage();
+//     } else {
+//       appendMsg('ai', '⚠️ Could not analyze this document. Please try a clearer image or text-based PDF.');
+//     }
+//   } catch (err) {
+//     removeTyping(tid);
+//     appendMsg('ai', '⚠️ Document analysis failed. Please try again.');
+//   }
 
-  document.getElementById('sendBtn').disabled = false;
-  scrollBottom();
+//   document.getElementById('sendBtn').disabled = false;
+//   scrollBottom();
+// });
+const res = await fetch(`${API}/api/chat`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message: prompt,
+    language: state.lang,
+    session_token: state.token,
+    conversation_history: state.chatHistory.slice(-8)
+  })
+});
+
+const data = await res.json();
+removeTyping(tid);
+
+if (!res.ok) {
+  throw new Error(data.detail || 'Generation failed');
+}
+
+const output = data.response || data.content || '';
+
+if (output) {
+  state.chatHistory.push({ role: 'user', content: `[Document: ${label}]` });
+  state.chatHistory.push({ role: 'assistant', content: output });
+  appendAiMsg(output, null, label);
+  incrementUsage();
+} else {
+  appendMsg('ai', '⚠️ Could not analyze this document. Please try again.');
+}
+} catch (err) {
+  removeTyping(tid);
+  appendMsg('ai', '⚠️ Document analysis failed. Please try again.');
+}
+
+document.getElementById('sendBtn').disabled = false;
+scrollBottom();
 });
 
 </script>
