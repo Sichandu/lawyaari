@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -1706,7 +1705,31 @@ async function submitService(key){
   });
   if(missing){ toast('Please fill all required fields','error'); return; }
 
-  // Initiate payment
+  // Admin bypass – skip payment
+  const adminMob = localStorage.getItem('ld_admin_mobile');
+  const isAdminUser = state.mobile && adminMob && state.mobile === adminMob;
+  if (isAdminUser) {
+    closeModal('serviceModal');
+    toast('Admin mode: generating document (no payment)', 'info');
+    document.getElementById('pdfOverlay').classList.add('show');
+    try {
+      const output = await generateServiceOutput(key, svc, vals, { razorpay_payment_id: 'admin_free' });
+      document.getElementById('pdfOverlay').classList.remove('show');
+      recordSuccessfulPurchase(key, svc, { razorpay_payment_id: 'admin_free' });
+      state.currentResult = { title: svc.title, content: output, serviceType: key };
+      document.getElementById('resultModalTitle').textContent = svc.title;
+      document.getElementById('resultContent').textContent = output;
+      document.getElementById('shareCardWrap').style.display = 'none';
+      openModal('resultModal');
+      toast('Document ready! ✓', 'success');
+    } catch(e) {
+      document.getElementById('pdfOverlay').classList.remove('show');
+      toast(e.message || 'Generation failed', 'error');
+    }
+    return;
+  }
+
+  // Normal flow: initiate payment
   state.pendingPaymentService = key;
   state.pendingServiceData = vals;
 
@@ -1732,6 +1755,53 @@ async function submitService(key){
   } catch(e) {
     document.getElementById('pdfOverlay').classList.remove('show');
     toast(e.message || 'Generation failed. Please try again.', 'error');
+  }
+}
+
+// ─── RESULT MODAL ACTIONS ──────────────────────────────────────────────────
+function copyResult() {
+  const content = document.getElementById('resultContent').innerText;
+  if (!content) {
+    toast('No content to copy', 'error');
+    return;
+  }
+  navigator.clipboard.writeText(content)
+    .then(() => toast('Copied to clipboard ✓', 'success'))
+    .catch(() => toast('Failed to copy', 'error'));
+}
+
+async function downloadPDF() {
+  const result = state.currentResult;
+  if (!result || !result.content) {
+    toast('No content to download', 'error');
+    return;
+  }
+  document.getElementById('pdfOverlay').classList.add('show');
+  try {
+    const res = await fetch(`${API}/api/generate-pdf`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: result.content,
+        title: result.title,
+        service_type: result.serviceType || 'document'
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || 'PDF generation failed');
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bklchai_${result.serviceType || 'document'}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    document.getElementById('pdfOverlay').classList.remove('show');
   }
 }
 
