@@ -1,3 +1,4 @@
+index.html
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -9,13 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;
-  --border:#2a2a38;--border2:#3a3a50;
-  --accent:#f59e0b;--accent2:#ef4444;--accent3:#10b981;
-  --text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;
-  --card:#15151e;--radius:12px;--shadow:0 4px 24px rgba(0,0,0,.5);
-  --font:'Noto Sans','Noto Sans Devanagari',sans-serif;
-  --mono:'JetBrains Mono',monospace;
+--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;
+--border:#2a2a38;--border2:#3a3a50;
+--accent:#f59e0b;--accent2:#ef4444;--accent3:#10b981;
+--text:#f0f0f5;--text2:#a0a0b5;--text3:#6a6a80;
+--card:#15151e;--radius:12px;--shadow:0 4px 24px rgba(0,0,0,.5);
+--font:'Noto Sans','Noto Sans Devanagari',sans-serif;
+--mono:'JetBrains Mono',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -223,11 +224,11 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 /* TOAST */
 .toast{
-  position:fixed;top:64px;left:50%;transform:translateX(-50%);
-  background:var(--bg2);border:1px solid var(--border2);color:var(--text);
-  padding:10px 22px;border-radius:10px;font-size:13px;font-weight:500;
-  z-index:9999;animation:toastIn .25s ease;pointer-events:none;
-  white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5);}
+position:fixed;top:64px;left:50%;transform:translateX(-50%);
+background:var(--bg2);border:1px solid var(--border2);color:var(--text);
+padding:10px 22px;border-radius:10px;font-size:13px;font-weight:500;
+z-index:9999;animation:toastIn .25s ease;pointer-events:none;
+white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5);}
 .toast.success{border-color:var(--accent3);color:var(--accent3);background:rgba(16,185,129,.1);}
 .toast.error{border-color:var(--accent2);color:var(--accent2);background:rgba(239,68,68,.1);}
 .toast.warn{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.1);}
@@ -237,46 +238,46 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .sidebar-overlay{display:none;position:fixed;inset:0;top:52px;background:rgba(0,0,0,.55);z-index:140;}
 .sidebar-overlay.open{display:block;}
 @media(max-width:680px){
-  html,body{height:100dvh;overflow:hidden;}
-  .app-container{height:calc(100dvh - 52px);overflow:hidden;}
-  .sidebar{position:fixed;left:0;top:52px;bottom:0;z-index:150;transform:translateX(-100%);width:78vw;max-width:270px;box-shadow:var(--shadow);}
-  .sidebar.open{transform:translateX(0);}
-  .menu-toggle{display:block;}
-  .chat-main{display:flex;flex-direction:column;height:100%;overflow:hidden;}
-  .chat-messages{flex:1;overflow-y:auto;padding:10px;min-height:0;}
-  .input-area{padding:7px 10px 10px;flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);}
-  .usage-bar{flex-shrink:0;padding:5px 10px 2px;}
-  .quick-cards-area{padding:6px 10px 8px;}
-  .msg-bubble{max-width:90%;font-size:14px;line-height:1.6;}
-  nav{padding:0 10px;}
-  .modal{padding:18px;}
-  .logo-badge{display:none;}
-  .logo-icon{display:none;}
-  /* 1A: Hide auth btn and footer on mobile — replaced by 3-dots */
-  .auth-btn{display:none;}
-  footer{display:none;}
-  /* 3-dots menu */
-  .dots-btn{display:flex !important;}
+html,body{height:100dvh;overflow:hidden;}
+.app-container{height:calc(100dvh - 52px);overflow:hidden;}
+.sidebar{position:fixed;left:0;top:52px;bottom:0;z-index:150;transform:translateX(-100%);width:78vw;max-width:270px;box-shadow:var(--shadow);}
+.sidebar.open{transform:translateX(0);}
+.menu-toggle{display:block;}
+.chat-main{display:flex;flex-direction:column;height:100%;overflow:hidden;}
+.chat-messages{flex:1;overflow-y:auto;padding:10px;min-height:0;}
+.input-area{padding:7px 10px 10px;flex-shrink:0;background:var(--bg);border-top:1px solid var(--border);}
+.usage-bar{flex-shrink:0;padding:5px 10px 2px;}
+.quick-cards-area{padding:6px 10px 8px;}
+.msg-bubble{max-width:90%;font-size:14px;line-height:1.6;}
+nav{padding:0 10px;}
+.modal{padding:18px;}
+.logo-badge{display:none;}
+.logo-icon{display:none;}
+/* 1A: Hide auth btn and footer on mobile — replaced by 3-dots */
+.auth-btn{display:none;}
+footer{display:none;}
+/* 3-dots menu */
+.dots-btn{display:flex !important;}
 }
 /* 3-dots button — hidden on desktop, shown on mobile */
 .dots-btn{
-  display:none;background:none;border:none;color:var(--text);
-  font-size:20px;cursor:pointer;padding:4px 6px;line-height:1;
-  border-radius:8px;transition:background .15s;
+display:none;background:none;border:none;color:var(--text);
+font-size:20px;cursor:pointer;padding:4px 6px;line-height:1;
+border-radius:8px;transition:background .15s;
 }
 .dots-btn:hover{background:var(--bg3);}
 .dots-menu{
-  display:none;position:fixed;top:52px;right:0;
-  background:var(--bg2);border:1px solid var(--border2);
-  border-radius:0 0 0 12px;z-index:300;min-width:200px;
-  box-shadow:var(--shadow);
+display:none;position:fixed;top:52px;right:0;
+background:var(--bg2);border:1px solid var(--border2);
+border-radius:0 0 0 12px;z-index:300;min-width:200px;
+box-shadow:var(--shadow);
 }
 .dots-menu.open{display:block;}
 .dots-item{
-  display:flex;align-items:center;gap:10px;
-  padding:12px 16px;font-size:13px;color:var(--text2);
-  cursor:pointer;border-bottom:1px solid var(--border);
-  transition:all .12s;text-decoration:none;
+display:flex;align-items:center;gap:10px;
+padding:12px 16px;font-size:13px;color:var(--text2);
+cursor:pointer;border-bottom:1px solid var(--border);
+transition:all .12s;text-decoration:none;
 }
 .dots-item:last-child{border-bottom:none;}
 .dots-item:hover{background:var(--bg3);color:var(--text);}
@@ -284,35 +285,35 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 /* Arrow animation */
 @keyframes bounceArrow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-8px); }
 }
 
 /* Mic and upload buttons */
 .mic-btn, .upload-btn {
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  color: var(--text2);
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
-  flex-shrink: 0;
+background: var(--bg3);
+border: 1px solid var(--border2);
+color: var(--text2);
+width: 34px;
+height: 34px;
+border-radius: 8px;
+cursor: pointer;
+font-size: 18px;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.15s;
+flex-shrink: 0;
 }
 .mic-btn:hover, .upload-btn:hover {
-  background: var(--border2);
-  color: var(--text);
-  border-color: var(--accent);
+background: var(--border2);
+color: var(--text);
+border-color: var(--accent);
 }
 .mic-btn.active {
-  background: var(--accent);
-  color: #000;
-  border-color: var(--accent);
+background: var(--accent);
+color: #000;
+border-color: var(--accent);
 }
 </style>
 </head>
@@ -325,288 +326,284 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 <!-- NAV -->
 <nav>
-  <div style="display:flex;align-items:center;gap:8px;min-width:0;">
-    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-    <a href="#" class="logo"><span class="logo-icon">⚖️ </span>Bklchai <span class="logo-badge">BETA</span></a>
-  </div>
-  <div class="nav-right">
-    <div class="lang-dropdown">
-      <button class="lang-dd-btn" onclick="toggleLangMenu()" id="langDdBtn">🌐 हिंदी ▾</button>
-      <div class="lang-dd-menu" id="langDdMenu">
-        <div class="lang-option active" onclick="setLang('hi')" data-lang="hi">🇮🇳 हिंदी</div>
-        <div class="lang-option" onclick="setLang('te')" data-lang="te">🇮🇳 తెలుగు</div>
-        <div class="lang-option" onclick="setLang('hinglish')" data-lang="hinglish">💬 Hinglish</div>
-      </div>
-    </div>
-
-    <!-- Arrow indicator for language dropdown -->
-<div id="langArrow" style="display: none; position: absolute; top: 52px; right: 90px; font-size: 28px; pointer-events: none; z-index: 1000; animation: bounceArrow 0.5s ease 0s 3; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
-  👆
+<div style="display:flex;align-items:center;gap:8px;min-width:0;">
+<button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+<a href="#" class="logo"><span class="logo-icon">⚖️ </span>Bklchai <span class="logo-badge">BETA</span></a>
+</div>
+<div class="nav-right">
+<div class="lang-dropdown">
+<button class="lang-dd-btn" onclick="toggleLangMenu()" id="langDdBtn">🌐 हिंदी ▾</button>
+<div class="lang-dd-menu" id="langDdMenu">
+<div class="lang-option active" onclick="setLang('hi')" data-lang="hi">🇮🇳 हिंदी</div>
+<div class="lang-option" onclick="setLang('te')" data-lang="te">🇮🇳 తెలుగు</div>
+<div class="lang-option" onclick="setLang('hinglish')" data-lang="hinglish">💬 Hinglish</div>
+</div>
 </div>
 
-    <button class="auth-btn" id="authBtn" onclick="handleAuthClick()">Login</button>
-    <!-- 3-dots mobile menu -->
-    <button class="dots-btn" id="dotsBtn" onclick="toggleDotsMenu()">⋮</button>
-  </div>
-  <!-- 3-dots dropdown menu -->
-  <div class="dots-menu" id="dotsMenu">
-    <div class="dots-item" onclick="handleAuthClick();closeDotsMenu()"><span class="di">👤</span><span id="dotAuthLabel">Login / Register</span></div>
-    <a class="dots-item" href="timepass.html"><span class="di">⚡</span>Timepass Zone</a>
-    <div class="dots-item" onclick="openFeedback();closeDotsMenu()"><span class="di">📝</span>Feedback</div>
-    <a class="dots-item" href="about.html"><span class="di">ℹ️</span>About Us</a>
-    <a class="dots-item" href="contact.html"><span class="di">📞</span>Contact</a>
-    <a class="dots-item" href="faq.html"><span class="di">❓</span>FAQ</a>
-    <a class="dots-item" href="terms.html"><span class="di">📄</span>Terms</a>
-    <a class="dots-item" href="privacy.html"><span class="di">🔒</span>Privacy</a>
-    <a class="dots-item" href="disclaimer.html"><span class="di">⚠️</span>Disclaimer</a>
-  </div>
+<!-- Arrow indicator for language dropdown -->
+<div id="langArrow" style="display: none; position: absolute; top: 52px; right: 90px; font-size: 28px; pointer-events: none; z-index: 1000; animation: bounceArrow 0.5s ease 0s 3; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+👆
+</div>
+
+<button class="auth-btn" id="authBtn" onclick="handleAuthClick()">Login</button>
+<!-- 3-dots mobile menu -->
+<button class="dots-btn" id="dotsBtn" onclick="toggleDotsMenu()">⋮</button>
+</div>
+<!-- 3-dots dropdown menu -->
+<div class="dots-menu" id="dotsMenu">
+<div class="dots-item" onclick="handleAuthClick();closeDotsMenu()"><span class="di">👤</span><span id="dotAuthLabel">Login / Register</span></div>
+<a class="dots-item" href="timepass.html"><span class="di">⚡</span>Timepass Zone</a>
+<div class="dots-item" onclick="openFeedback();closeDotsMenu()"><span class="di">📝</span>Feedback</div>
+<a class="dots-item" href="about.html"><span class="di">ℹ️</span>About Us</a>
+<a class="dots-item" href="contact.html"><span class="di">📞</span>Contact</a>
+<a class="dots-item" href="faq.html"><span class="di">❓</span>FAQ</a>
+<a class="dots-item" href="terms.html"><span class="di">📄</span>Terms</a>
+<a class="dots-item" href="privacy.html"><span class="di">🔒</span>Privacy</a>
+<a class="dots-item" href="disclaimer.html"><span class="di">⚠️</span>Disclaimer</a>
+</div>
 </nav>
 
 <div class="app-container">
-  <!-- SIDEBAR (#4 fix — no admin icon here) -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">📂 Topics</div>
-    <div class="sidebar-scroll">
-      <!-- 3 default topics -->
-      <div class="category-item active" onclick="selectCategory('msme',this)"><span class="icon">🏭</span><span class="label" data-key="cat_msme">MSME Rights</span></div>
-      <div class="category-item" onclick="selectCategory('banking',this)"><span class="icon">🏦</span><span class="label" data-key="cat_banking">Banking Rights</span></div>
-      <div class="category-item" onclick="selectCategory('police',this)"><span class="icon">🚔</span><span class="label" data-key="cat_police">Police Rights</span></div>
-      <!-- Hidden topics — shown on "View All" -->
-      <div id="extraTopics" style="display:none">
-        <div class="category-item" onclick="selectCategory('cyber',this)"><span class="icon">💻</span><span class="label" data-key="cat_cyber">Cyber Crime</span></div>
-        <div class="category-item" onclick="selectCategory('medical',this)"><span class="icon">🏥</span><span class="label" data-key="cat_medical">Medical Rights</span></div>
-        <div class="category-item" onclick="selectCategory('consumer',this)"><span class="icon">🛒</span><span class="label" data-key="cat_consumer">Consumer Rights</span></div>
-        <div class="category-item" onclick="selectCategory('labour',this)"><span class="icon">👷</span><span class="label" data-key="cat_labour">Labour Law</span></div>
-        <div class="category-item" onclick="selectCategory('property',this)"><span class="icon">🏠</span><span class="label" data-key="cat_property">Property & Tenant</span></div>
-        <div class="category-item" onclick="selectCategory('women',this)"><span class="icon">👩‍⚖️</span><span class="label" data-key="cat_women">Women Rights</span></div>
-        <div class="category-item" onclick="selectCategory('tax',this)"><span class="icon">📋</span><span class="label" data-key="cat_tax">Tax & GST</span></div>
-      </div>
-      <div style="padding:6px 10px;">
-        <button onclick="toggleExtraTopics(this)" id="viewAllTopicsBtn"
-          style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;font-family:var(--font);font-weight:600;padding:2px 0;">
-          + View all 10 topics
-        </button>
-      </div>
-
-      <div class="sidebar-section">⭐ Premium Services</div>
-      <!-- 3 default premium -->
-      <div class="service-item" onclick="openService('cheque_notice')"><span class="sname">📝 Cheque Bounce</span><span class="sprice">₹149</span></div>
-      <div class="service-item" onclick="openService('msme_notice')"><span class="sname">📦 MSME Recovery</span><span class="sprice">₹269</span></div>
-      <div class="service-item" onclick="openService('complaint_draft')"><span class="sname">📣 Complaint Draft</span><span class="sprice">₹99</span></div>
-      <!-- Hidden premium — shown on expand -->
-      <div id="extraServices" style="display:none">
-        <div class="service-item" onclick="openService('legal_reply')"><span class="sname">💬 Legal Reply</span><span class="sprice">₹49</span></div>
-        <div class="service-item" onclick="openService('priority_answer')"><span class="sname">⚡ Priority Answer</span><span class="sprice">₹19</span></div>
-      </div>
-      <div style="padding:6px 10px;">
-        <button onclick="toggleExtraServices(this)" id="viewAllServicesBtn"
-          style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;font-family:var(--font);font-weight:600;padding:2px 0;">
-          + View all 5 services
-        </button>
-      </div>
-
-      <div class="sidebar-section">💬 Support</div>
-      <div class="service-item" onclick="window.location.href='timepass.html'"><span class="sname">⚡ Timepass Zone</span><span class="sprice" style="background:rgba(245,158,11,.1);color:var(--accent)">Free</span></div>
-      <div class="service-item" onclick="openFeedback()"><span class="sname">📝 Give Feedback</span><span class="sprice" style="background:rgba(16,185,129,.1);color:var(--accent3)">Help</span></div>
-      <a href="timepass.html" class="service-item" style="text-decoration:none;display:flex;align-items:center;justify-content:space-between;"><span class="sname">🎮 Timepass</span><span class="sprice" style="background:rgba(16,185,129,.1);color:var(--accent3)">Free</span></a>
-    </div>
-  </aside>
-
-  <!-- CHAT MAIN -->
-  <main class="chat-main">
-    <div class="chat-messages" id="chatMessages">
-      <div class="quick-cards-area" id="quickCardsArea">
-        <div class="quick-cards-title" id="quickTitle">Quick Questions</div>
-        <div class="quick-cards" id="quickCards"></div>
-      </div>
-      <div class="empty-state" id="emptyState">
-        <div class="icon">⚖️</div>
-        <h2 id="emptyTitle">आपका क़ानूनी दोस्त</h2>
-        <p id="emptyDesc">कोई भी क़ानूनी सवाल पूछें — MSME, बैंकिंग, साइबर क्राइम, पुलिस राइट्स और बहुत कुछ।</p>
-      </div>
-    </div>
-
-    <!-- Usage bar above input, centered (#6 fix) -->
-    <div class="usage-bar" id="usageBarWrap">
-      <div class="usage-inner" id="usageInner">
-        <span class="usage-count" id="usageCount">5/5</span>
-        <span id="usageCta" style="color:var(--text2)">Free mein poochho — jaldi jaldi! 🚀</span>
-        <button class="upgrade-pro-btn" onclick="openPaywall()">PRO →</button>
-      </div>
-    </div>
-
-<div class="input-wrap" style="display: flex; align-items: center; gap: 8px;">
-  <button class="mic-btn" id="micBtn" onclick="startVoiceInput()" title="Voice input">🎙️</button>
-  <button class="upload-btn" id="uploadBtn" onclick="triggerFileUpload()" title="Upload PDF/Image">+</button>
-  <textarea id="chatInput" rows="1" placeholder="अपना क़ानूनी सवाल यहाँ लिखें..." onkeydown="handleKey(event)" oninput="autoResize(this)" style="flex: 1;"></textarea>
-  <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
-  <input type="file" id="fileUploadInput" accept="image/jpeg,image/png,image/webp,application/pdf" style="display:none">
+<!-- SIDEBAR (#4 fix — no admin icon here) -->
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">📂 Topics</div>
+<div class="sidebar-scroll">
+<!-- 3 default topics -->
+<div class="category-item active" onclick="selectCategory('msme',this)"><span class="icon">🏭</span><span class="label" data-key="cat_msme">MSME Rights</span></div>
+<div class="category-item" onclick="selectCategory('banking',this)"><span class="icon">🏦</span><span class="label" data-key="cat_banking">Banking Rights</span></div>
+<div class="category-item" onclick="selectCategory('police',this)"><span class="icon">🚔</span><span class="label" data-key="cat_police">Police Rights</span></div>
+<!-- Hidden topics — shown on "View All" -->
+<div id="extraTopics" style="display:none">
+<div class="category-item" onclick="selectCategory('cyber',this)"><span class="icon">💻</span><span class="label" data-key="cat_cyber">Cyber Crime</span></div>
+<div class="category-item" onclick="selectCategory('medical',this)"><span class="icon">🏥</span><span class="label" data-key="cat_medical">Medical Rights</span></div>
+<div class="category-item" onclick="selectCategory('consumer',this)"><span class="icon">🛒</span><span class="label" data-key="cat_consumer">Consumer Rights</span></div>
+<div class="category-item" onclick="selectCategory('labour',this)"><span class="icon">👷</span><span class="label" data-key="cat_labour">Labour Law</span></div>
+<div class="category-item" onclick="selectCategory('property',this)"><span class="icon">🏠</span><span class="label" data-key="cat_property">Property & Tenant</span></div>
+<div class="category-item" onclick="selectCategory('women',this)"><span class="icon">👩‍⚖️</span><span class="label" data-key="cat_women">Women Rights</span></div>
+<div class="category-item" onclick="selectCategory('tax',this)"><span class="icon">📋</span><span class="label" data-key="cat_tax">Tax & GST</span></div>
+</div>
+<div style="padding:6px 10px;">
+<button onclick="toggleExtraTopics(this)" id="viewAllTopicsBtn"
+style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;font-family:var(--font);font-weight:600;padding:2px 0;">
+#ERROR!
+</button>
 </div>
 
-  </main>
+<div class="sidebar-section">⭐ Premium Services</div>
+<!-- 3 default premium -->
+<div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">📝 Cheque Bounce</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+<div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">📦 MSME Recovery</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+<div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">📣 Complaint Draft</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+<!-- Hidden premium — shown on expand -->
+<div id="extraServices" style="display:none">
+<div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">💬 Legal Reply</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+<div class="service-item" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><span class="sname">⚡ Priority Answer</span><span class="sprice" style="background:rgba(100,100,120,.2);color:var(--text3)">🔒 Soon</span></div>
+</div>
+<div style="padding:6px 10px;">
+<button onclick="toggleExtraServices(this)" id="viewAllServicesBtn"
+style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;font-family:var(--font);font-weight:600;padding:2px 0;">
+#ERROR!
+</button>
+</div>
+
+<div class="sidebar-section">💬 Support</div>
+<div class="service-item" onclick="window.location.href='timepass.html'"><span class="sname">⚡ Timepass Zone</span><span class="sprice" style="background:rgba(245,158,11,.1);color:var(--accent)">Free</span></div>
+<div class="service-item" onclick="openFeedback()"><span class="sname">📝 Give Feedback</span><span class="sprice" style="background:rgba(16,185,129,.1);color:var(--accent3)">Help</span></div>
+<a href="timepass.html" class="service-item" style="text-decoration:none;display:flex;align-items:center;justify-content:space-between;"><span class="sname">🎮 Timepass</span><span class="sprice" style="background:rgba(16,185,129,.1);color:var(--accent3)">Free</span></a>
+</div>
+</aside>
+
+<!-- CHAT MAIN -->
+<main class="chat-main">
+<div class="chat-messages" id="chatMessages">
+<div class="quick-cards-area" id="quickCardsArea">
+<div class="quick-cards-title" id="quickTitle">Quick Questions</div>
+<div class="quick-cards" id="quickCards"></div>
+</div>
+<div class="empty-state" id="emptyState">
+<div class="icon">⚖️</div>
+<h2 id="emptyTitle">आपका क़ानूनी दोस्त</h2>
+<p id="emptyDesc">कोई भी क़ानूनी सवाल पूछें — MSME, बैंकिंग, साइबर क्राइम, पुलिस राइट्स और बहुत कुछ।</p>
+</div>
+</div>
+
+<!-- Usage bar above input, centered (#6 fix) -->
+<div class="usage-bar" id="usageBarWrap">
+<div class="usage-inner" id="usageInner">
+<span class="usage-count" id="usageCount">5/5</span>
+<span id="usageCta" style="color:var(--text2)">Free mein poochho — jaldi jaldi! 🚀</span>
+<button class="upgrade-pro-btn" onclick="openPaywall()">PRO →</button>
+</div>
+</div>
+
+<div class="input-wrap" style="display: flex; align-items: center; gap: 8px;">
+<button class="mic-btn" id="micBtn" onclick="startVoiceInput()" title="Voice input">🎙️</button>
+<button class="upload-btn" id="uploadBtn" onclick="triggerFileUpload()" title="Upload PDF/Image">+</button>
+<textarea id="chatInput" rows="1" placeholder="अपना क़ानूनी सवाल यहाँ लिखें..." onkeydown="handleKey(event)" oninput="autoResize(this)" style="flex: 1;"></textarea>
+<button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+<input type="file" id="fileUploadInput" accept="image/jpeg,image/png,application/pdf" style="display:none">
+</div>
+
+</main>
 </div>
 
 <!-- FOOTER -->
 <footer style="background:var(--bg2);border-top:1px solid var(--border);padding:12px 20px;text-align:center;font-size:11px;color:var(--text3);flex-shrink:0;">
-  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:4px;">
-    <a href="about.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">About Us</a>
-    <a href="contact.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Contact</a>
-    <a href="faq.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">FAQ</a>
-    <a href="terms.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Terms</a>
-    <a href="privacy.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Privacy</a>
-    <a href="disclaimer.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Disclaimer</a>
-    <a href="timepass.html" style="color:var(--accent);text-decoration:none;">⚡ Timepass</a>
-    <a href="#" onclick="openFeedback();return false;" style="color:var(--accent3);text-decoration:none;">Feedback</a>
-  </div>
-  <div>© 2026 Bklchai · bklchai.com · Not a legal firm</div>
+<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:4px;">
+<a href="about.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">About Us</a>
+<a href="contact.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Contact</a>
+<a href="faq.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">FAQ</a>
+<a href="terms.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Terms</a>
+<a href="privacy.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Privacy</a>
+<a href="disclaimer.html" style="color:var(--text3);text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">Disclaimer</a>
+<a href="timepass.html" style="color:var(--accent);text-decoration:none;">⚡ Timepass</a>
+<a href="#" onclick="openFeedback();return false;" style="color:var(--accent3);text-decoration:none;">Feedback</a>
+</div>
+<div>© 2026 Bklchai · bklchai.com · Not a legal firm</div>
 </footer>
 
 <!-- AUTH MODAL -->
 <div class="modal-overlay" id="authModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
-    <h2>🔐 Login / Register</h2>
-    <p class="modal-sub">🇮🇳 Made in India. Made for India.</p>
-    <div id="authStep1">
-      <div class="form-group">
-        <label>Your Name</label>
-        <input type="text" id="nameInput" placeholder="What should we call you?" maxlength="40"/>
-      </div>
-      <div class="form-group">
-        <label>Mobile Number</label>
-        <input type="tel" id="mobileInput" placeholder="10-digit mobile" maxlength="10" inputmode="numeric"/>
-      </div>
-      <div class="form-group">
-        <label>Gender</label>
-        <select id="genderInput" style="width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 11px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;">
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other / Prefer not to say</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Pick Your Social Vibe </label>
-        <div class="sigma-picker" id="sigmaPicker">
-          <span class="sigma-opt selected" data-emoji="😤" onclick="pickSigma(this)">😤</span>
-          <span class="sigma-opt" data-emoji="🗿" onclick="pickSigma(this)">🗿</span>
-          <span class="sigma-opt" data-emoji="💀" onclick="pickSigma(this)">💀</span>
-          <span class="sigma-opt" data-emoji="🤌" onclick="pickSigma(this)">🤌</span>
-          <span class="sigma-opt" data-emoji="😎" onclick="pickSigma(this)">😎</span>
-          <span class="sigma-opt" data-emoji="🥷" onclick="pickSigma(this)">🥷</span>
-          <span class="sigma-opt" data-emoji="👑" onclick="pickSigma(this)">👑</span>
-          <span class="sigma-opt" data-emoji="🔥" onclick="pickSigma(this)">🔥</span>
-          <span class="sigma-opt" data-emoji="🚀" onclick="pickSigma(this)">🚀</span>
-          <span class="sigma-opt" data-emoji="💎" onclick="pickSigma(this)">💎</span>
-          <span class="sigma-opt" data-emoji="📈" onclick="pickSigma(this)">📈</span>
-          <span class="sigma-opt" data-emoji="💰" onclick="pickSigma(this)">💰</span>
-          <span class="sigma-opt" data-emoji="⚡" onclick="pickSigma(this)">⚡</span>
-        </div>
-      </div>
-      <button class="modal-btn" onclick="sendOTP()">Send OTP →</button>
-    </div>
-    <div id="authStep2" style="display:none">
-      <p style="font-size:12px;color:var(--text2);margin-bottom:6px">Here is Your OTP:</p>
-      <div class="otp-display" id="otpDisplay">------</div>
-      <div class="form-group" style="margin-top:12px">
-        <label>Enter OTP</label>
-        <input type="text" id="otpInput" placeholder="6-digit OTP" maxlength="6" inputmode="numeric"/>
-      </div>
-      <button class="modal-btn" onclick="verifyOTP()">Verify & Login ✓</button>
-      <button class="modal-btn secondary" onclick="showStep1()">← Change Number</button>
-    </div>
-  </div>
+<div class="modal">
+<button class="modal-close" onclick="closeModal('authModal')">✕</button>
+<h2>🔐 Login / Register</h2>
+<p class="modal-sub">🇮🇳 Made in India. Made for India.</p>
+<div id="authStep1">
+<div class="form-group">
+<label>Your Name</label>
+<input type="text" id="nameInput" placeholder="What should we call you?" maxlength="40"/>
+</div>
+<div class="form-group">
+<label>Mobile Number</label>
+<input type="tel" id="mobileInput" placeholder="10-digit mobile" maxlength="10" inputmode="numeric"/>
+</div>
+<div class="form-group">
+<label>Gender</label>
+<select id="genderInput" style="width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 11px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;">
+<option value="male">Male</option>
+<option value="female">Female</option>
+<option value="other">Other / Prefer not to say</option>
+</select>
+</div>
+<div class="form-group">
+<label>Pick Your Social Vibe </label>
+<div class="sigma-picker" id="sigmaPicker">
+<span class="sigma-opt selected" data-emoji="😤" onclick="pickSigma(this)">😤</span>
+<span class="sigma-opt" data-emoji="🗿" onclick="pickSigma(this)">🗿</span>
+<span class="sigma-opt" data-emoji="💀" onclick="pickSigma(this)">💀</span>
+<span class="sigma-opt" data-emoji="🤌" onclick="pickSigma(this)">🤌</span>
+<span class="sigma-opt" data-emoji="😎" onclick="pickSigma(this)">😎</span>
+<span class="sigma-opt" data-emoji="🥷" onclick="pickSigma(this)">🥷</span>
+<span class="sigma-opt" data-emoji="👑" onclick="pickSigma(this)">👑</span>
+<span class="sigma-opt" data-emoji="🔥" onclick="pickSigma(this)">🔥</span>
+<span class="sigma-opt" data-emoji="🚀" onclick="pickSigma(this)">🚀</span>
+<span class="sigma-opt" data-emoji="💎" onclick="pickSigma(this)">💎</span>
+<span class="sigma-opt" data-emoji="📈" onclick="pickSigma(this)">📈</span>
+<span class="sigma-opt" data-emoji="💰" onclick="pickSigma(this)">💰</span>
+<span class="sigma-opt" data-emoji="⚡" onclick="pickSigma(this)">⚡</span>
+</div>
+</div>
+<button class="modal-btn" onclick="sendOTP()">Send OTP →</button>
+</div>
+<div id="authStep2" style="display:none">
+<p style="font-size:12px;color:var(--text2);margin-bottom:6px">Here is Your OTP:</p>
+<div class="otp-display" id="otpDisplay">------</div>
+<div class="form-group" style="margin-top:12px">
+<label>Enter OTP</label>
+<input type="text" id="otpInput" placeholder="6-digit OTP" maxlength="6" inputmode="numeric"/>
+</div>
+<button class="modal-btn" onclick="verifyOTP()">Verify & Login ✓</button>
+<button class="modal-btn secondary" onclick="showStep1()">← Change Number</button>
+</div>
+</div>
 </div>
 
 <!-- USER PROFILE MODAL (#2 fix) -->
 <div class="modal-overlay" id="profileModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
-    <div class="user-hero">
-      <div class="user-sigma" id="profileEmoji">😤</div>
-      <div class="user-name-big" id="profileName">User</div>
-      <div id="profileBadge" class="user-plan-badge">FREE</div><br/>
-      <!-- <button class="share-earn-btn" onclick="shareAndEarn()">🔗 Sabko Jagao</button> -->
-       <button class="share-earn-btn" onclick="window.location.href='partner.html'">🔗 Share & Earn</button>
-    </div>
-    <div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Purchase History</div>
-    <div id="purchaseList"><p style="font-size:12px;color:var(--text3)">No premium purchases yet.</p></div>
-    <button class="modal-btn secondary" style="margin-top:14px" onclick="logout()">Logout</button>
-  </div>
+<div class="modal">
+<button class="modal-close" onclick="closeModal('profileModal')">✕</button>
+<div class="user-hero">
+<div class="user-sigma" id="profileEmoji">😤</div>
+<div class="user-name-big" id="profileName">User</div>
+<div id="profileBadge" class="user-plan-badge">FREE</div><br/>
+<button class="share-earn-btn" onclick="shareAndEarn()">🔗 Sabko Jagao</button>
+</div>
+<div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Purchase History</div>
+<div id="purchaseList"><p style="font-size:12px;color:var(--text3)">No premium purchases yet.</p></div>
+<button class="modal-btn secondary" style="margin-top:14px" onclick="logout()">Logout</button>
+</div>
 </div>
 
 <!-- PAYWALL MODAL -->
 <div class="modal-overlay" id="paywallModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('paywallModal')">✕</button>
-    <h2>⚡ Daily Limit Reached</h2>
-    <p class="modal-sub">Upgrade for more chats, or wait for your free quota to reset at midnight IST.</p>
-    <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px;text-align:center;">
-      <div style="font-size:28px;margin-bottom:8px;">🚀</div>
-      <div style="font-weight:700;color:var(--text);margin-bottom:6px;">Unlock More Chats!</div>
-      <div style="font-size:12px;color:var(--text2);">Choose a plan below to keep going.</div>
-    </div>
-    <div class="plan-cards" style="margin-top:14px;">
-      <div class="plan-card featured" onclick="buyPlan('pro',49)"><div class="plan-name">Pro</div><div class="plan-price">₹49<span>/mo</span></div><div class="plan-chats">10 chats/day</div></div>
-      <div class="plan-card" onclick="buyPlan('unlimited',99)"><div class="plan-name">Unlimited</div><div class="plan-price">₹99<span>/mo</span></div><div class="plan-chats">Unlimited chats</div></div>
-    </div>
-  </div>
+<div class="modal">
+<button class="modal-close" onclick="closeModal('paywallModal')">✕</button>
+<h2>🔒 Coming Very Soon!</h2>
+<p class="modal-sub">Premium plans are being set up. Wait 24 hours for free reset, or share feedback below!</p>
+<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px;text-align:center;">
+<div style="font-size:28px;margin-bottom:8px;">🔒</div>
+<div style="font-weight:700;color:var(--text);margin-bottom:6px;">Unlock Very Soon!</div>
+<div style="font-size:12px;color:var(--text2);">Payment system is being set up.<br/>Free services fully working meanwhile!</div>
+</div>
+<div class="plan-cards" id="paywallPlans" style="display:none"></div>
+</div>
 </div>
 
 <!-- SERVICE MODAL -->
 <div class="modal-overlay" id="serviceModal">
-  <div class="modal" style="max-width:540px">
-    <button class="modal-close" onclick="closeModal('serviceModal')">✕</button>
-    <h2 id="serviceModalTitle">Service</h2>
-    <p class="modal-sub" id="serviceModalDesc"></p>
-    <div id="serviceModalBody"></div>
-  </div>
+<div class="modal" style="max-width:540px">
+<button class="modal-close" onclick="closeModal('serviceModal')">✕</button>
+<h2 id="serviceModalTitle">Service</h2>
+<p class="modal-sub" id="serviceModalDesc"></p>
+<div id="serviceModalBody"></div>
+</div>
 </div>
 
 <!-- CUSTOM SERVICE MODAL (removed from sidebar, kept functional) -->
 <div class="modal-overlay" id="customServiceModal">
-  <div class="modal" style="max-width:500px">
-    <button class="modal-close" onclick="closeModal('customServiceModal')">✕</button>
-    <h2>➕ Custom Service</h2>
-    <p class="modal-sub">Add your own requirement — AI will generate the document.</p>
-    <div class="form-group">
-      <label>Service Name</label>
-      <input type="text" id="customServiceName" placeholder="e.g. Rent Dispute Notice"/>
-    </div>
-    <div class="form-group">
-      <label>Describe What You Need</label>
-      <textarea id="customServiceDesc" placeholder="Explain the legal situation in detail..."></textarea>
-    </div>
-    <div class="form-group">
-      <label>Extra Fields (optional)</label>
-      <div id="customFieldsList"></div>
-      <button class="add-field-btn" onclick="addCustomField()">+ Add Field</button>
-    </div>
-    <button class="modal-btn" onclick="submitCustomService()">Generate (Free)</button>
-  </div>
+<div class="modal" style="max-width:500px">
+<button class="modal-close" onclick="closeModal('customServiceModal')">✕</button>
+<h2>➕ Custom Service</h2>
+<p class="modal-sub">Add your own requirement — AI will generate the document.</p>
+<div class="form-group">
+<label>Service Name</label>
+<input type="text" id="customServiceName" placeholder="e.g. Rent Dispute Notice"/>
+</div>
+<div class="form-group">
+<label>Describe What You Need</label>
+<textarea id="customServiceDesc" placeholder="Explain the legal situation in detail..."></textarea>
+</div>
+<div class="form-group">
+<label>Extra Fields (optional)</label>
+<div id="customFieldsList"></div>
+<button class="add-field-btn" onclick="addCustomField()">+ Add Field</button>
+</div>
+<button class="modal-btn" onclick="submitCustomService()">Generate (Free)</button>
+</div>
 </div>
 
 <!-- RESULT MODAL -->
 <div class="modal-overlay" id="resultModal">
-  <div class="modal" style="max-width:600px">
-    <button class="modal-close" onclick="closeModal('resultModal')">✕</button>
-    <h2 id="resultModalTitle">Result</h2>
-    <div class="result-content" id="resultContent" contenteditable="true"></div>
-    <!-- Action buttons row: Copy + PDF only -->
-    <div style="display:flex;gap:8px;margin-top:10px;">
-      <button class="ra ra-copy" onclick="copyResult()" style="flex:1;">📋 Copy</button>
-      <button class="ra ra-pdf" onclick="downloadPDF()" style="flex:1;">⬇ PDF</button>
-    </div>
-    <!-- Single share card block — auto-shown when share button clicked -->
-    <div id="shareCardWrap" style="display:none;margin-top:14px;text-align:center;">
-      <canvas id="shareCanvas" style="border-radius:10px;max-width:100%;box-shadow:0 4px 20px rgba(0,0,0,.5);display:block;margin:0 auto;"></canvas>
-      <div style="display:flex;gap:8px;margin-top:10px;">
-  <button onclick="shareCard()" style="flex:2;padding:11px;font-size:13px;font-weight:700;background:var(--accent3);color:#000;border:none;border-radius:8px;cursor:pointer;font-family:var(--font);">↗ Share Card</button>
-  <button onclick="downloadShareCard()" style="flex:1;padding:11px;font-size:12px;font-weight:600;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:8px;cursor:pointer;font-family:var(--font);">⬇ Save Image</button>
+<div class="modal" style="max-width:600px">
+<button class="modal-close" onclick="closeModal('resultModal')">✕</button>
+<h2 id="resultModalTitle">Result</h2>
+<div class="result-content" id="resultContent" contenteditable="true"></div>
+<!-- Action buttons row: Copy + PDF only -->
+<div style="display:flex;gap:8px;margin-top:10px;">
+<button class="ra ra-copy" onclick="copyResult()" style="flex:1;">📋 Copy</button>
+<button class="ra ra-pdf" onclick="downloadPDF()" style="flex:1;">⬇ PDF</button>
 </div>
-    </div>
-    <!-- Generate button — shows the card below -->
-    <button onclick="buildShareCard()" style="width:100%;margin-top:10px;padding:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--accent3);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);">🎴 Generate Share Card</button>
-  </div>
+<!-- Single share card block — auto-shown when share button clicked -->
+<div id="shareCardWrap" style="display:none;margin-top:14px;text-align:center;">
+<canvas id="shareCanvas" style="border-radius:10px;max-width:100%;box-shadow:0 4px 20px rgba(0,0,0,.5);display:block;margin:0 auto;"></canvas>
+<div style="display:flex;gap:8px;margin-top:10px;">
+<button onclick="shareCard()" style="flex:2;padding:11px;font-size:13px;font-weight:700;background:var(--accent3);color:#000;border:none;border-radius:8px;cursor:pointer;font-family:var(--font);">↗ Share Card</button>
+<button onclick="downloadShareCard()" style="flex:1;padding:11px;font-size:12px;font-weight:600;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:8px;cursor:pointer;font-family:var(--font);">⬇ Save Image</button>
+</div>
+</div>
+<!-- Generate button — shows the card below -->
+<button onclick="buildShareCard()" style="width:100%;margin-top:10px;padding:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--accent3);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);">🎴 Generate Share Card</button>
+</div>
 </div>
 
 <script>
@@ -621,120 +618,120 @@ const ADMIN_MOBILE = localStorage.getItem('ld_admin_mobile') || '';
 
 // STATE
 let state = {
-  lang:'hi', token:localStorage.getItem('ld_token')||null,
-  mobile:localStorage.getItem('ld_mobile')||null,
-  userName:localStorage.getItem('ld_name')||null,
-  userEmoji:localStorage.getItem('ld_emoji')||'😤',
-  category:'msme', chatHistory:[],
-  usedChats:parseInt(localStorage.getItem('ld_chats_'+new Date().toDateString())||'0'),
-  currentResult:null, pendingPaymentService:null, pendingServiceData:null, pendingTeluguMsg:null, askedQuestions:{},
-  purchases:JSON.parse(localStorage.getItem('ld_purchases')||'[]'),
-  selectedSigma:'😤', warnedLastChat:false,
+lang:'hi', token:localStorage.getItem('ld_token')||null,
+mobile:localStorage.getItem('ld_mobile')||null,
+userName:localStorage.getItem('ld_name')||null,
+userEmoji:localStorage.getItem('ld_emoji')||'😤',
+category:'msme', chatHistory:[],
+usedChats:parseInt(localStorage.getItem('ld_chats_'+new Date().toDateString())||'0'),
+currentResult:null, pendingPaymentService:null, pendingServiceData:null, pendingTeluguMsg:null, askedQuestions:{},
+purchases:JSON.parse(localStorage.getItem('ld_purchases')||'[]'),
+selectedSigma:'😤', warnedLastChat:false,
 };
 
 // TRANSLATIONS
 const T = {
-  hi:{placeholder:'अपना क़ानूनी सवाल यहाँ लिखें...',emptyTitle:'आपका क़ानूनी दोस्त',emptyDesc:'कोई भी क़ानूनी सवाल पूछें — MSME, बैंकिंग, साइबर क्राइम, पुलिस राइट्स और बहुत कुछ।',quickTitle:'जल्दी सवाल',nextLabel:'आगे क्या पूछें?',cat_msme:'MSME अधिकार',cat_banking:'बैंकिंग अधिकार',cat_cyber:'साइबर क्राइम',cat_police:'पुलिस अधिकार',cat_medical:'मेडिकल अधिकार',cat_consumer:'उपभोक्ता अधिकार',cat_labour:'श्रम क़ानून',cat_property:'संपत्ति & किरायेदार',cat_women:'महिला अधिकार',cat_tax:'टैक्स & GST'},
-  te:{placeholder:'మీ న్యాయ సందేహం ఇక్కడ టైప్ చేయండి...',emptyTitle:'మీ న్యాయ స్నేహితుడు',emptyDesc:'MSME, బ్యాంకింగ్, సైబర్ క్రైమ్, పోలీస్ హక్కులు గురించి అడగండి.',quickTitle:'త్వరిత ప్రశ్నలు',nextLabel:'తర్వాత ఏమి అడగాలి?',cat_msme:'MSME హక్కులు',cat_banking:'బ్యాంకింగ్ హక్కులు',cat_cyber:'సైబర్ క్రైమ్',cat_police:'పోలీస్ హక్కులు',cat_medical:'వైద్య హక్కులు',cat_consumer:'వినియోగదారు హక్కులు',cat_labour:'కార్మిక చట్టం',cat_property:'ఆస్తి & అద్దె',cat_women:'మహిళా హక్కులు',cat_tax:'పన్ను & GST'},
-  hinglish:{placeholder:'Apna legal sawaal yahan likho...',emptyTitle:'Aapka Legal Dost',emptyDesc:'Koi bhi legal sawaal pucho — MSME, Banking, Cyber Crime, Police Rights aur bahut kuch.',quickTitle:'Quick Questions',nextLabel:'Aage kya poochho?',cat_msme:'MSME Rights',cat_banking:'Banking Rights',cat_cyber:'Cyber Crime',cat_police:'Police Rights',cat_medical:'Medical Rights',cat_consumer:'Consumer Rights',cat_labour:'Labour Law',cat_property:'Property & Tenant',cat_women:'Women Rights',cat_tax:'Tax & GST'},
+hi:{placeholder:'अपना क़ानूनी सवाल यहाँ लिखें...',emptyTitle:'आपका क़ानूनी दोस्त',emptyDesc:'कोई भी क़ानूनी सवाल पूछें — MSME, बैंकिंग, साइबर क्राइम, पुलिस राइट्स और बहुत कुछ।',quickTitle:'जल्दी सवाल',nextLabel:'आगे क्या पूछें?',cat_msme:'MSME अधिकार',cat_banking:'बैंकिंग अधिकार',cat_cyber:'साइबर क्राइम',cat_police:'पुलिस अधिकार',cat_medical:'मेडिकल अधिकार',cat_consumer:'उपभोक्ता अधिकार',cat_labour:'श्रम क़ानून',cat_property:'संपत्ति & किरायेदार',cat_women:'महिला अधिकार',cat_tax:'टैक्स & GST'},
+te:{placeholder:'మీ న్యాయ సందేహం ఇక్కడ టైప్ చేయండి...',emptyTitle:'మీ న్యాయ స్నేహితుడు',emptyDesc:'MSME, బ్యాంకింగ్, సైబర్ క్రైమ్, పోలీస్ హక్కులు గురించి అడగండి.',quickTitle:'త్వరిత ప్రశ్నలు',nextLabel:'తర్వాత ఏమి అడగాలి?',cat_msme:'MSME హక్కులు',cat_banking:'బ్యాంకింగ్ హక్కులు',cat_cyber:'సైబర్ క్రైమ్',cat_police:'పోలీస్ హక్కులు',cat_medical:'వైద్య హక్కులు',cat_consumer:'వినియోగదారు హక్కులు',cat_labour:'కార్మిక చట్టం',cat_property:'ఆస్తి & అద్దె',cat_women:'మహిళా హక్కులు',cat_tax:'పన్ను & GST'},
+hinglish:{placeholder:'Apna legal sawaal yahan likho...',emptyTitle:'Aapka Legal Dost',emptyDesc:'Koi bhi legal sawaal pucho — MSME, Banking, Cyber Crime, Police Rights aur bahut kuch.',quickTitle:'Quick Questions',nextLabel:'Aage kya poochho?',cat_msme:'MSME Rights',cat_banking:'Banking Rights',cat_cyber:'Cyber Crime',cat_police:'Police Rights',cat_medical:'Medical Rights',cat_consumer:'Consumer Rights',cat_labour:'Labour Law',cat_property:'Property & Tenant',cat_women:'Women Rights',cat_tax:'Tax & GST'},
 };
 
 const QUICK_Q = {
-  msme:{
-    hi:['MSME payment 45 दिन से ज़्यादा देर है, क्या करूं?','Udyam registration कैसे करें?','MSME Samadhaan portal पर complaint कैसे करें?','Cheque bounce हुआ MSME buyer का, कार्रवाई?','MSME को bank loan reject हुआ, क्या options हैं?'],
-    te:['MSME చెల్లింపు 45 రోజులు ఆలస్యమైతే ఏం చేయాలి?','Udyam నమోదు ఎలా చేయాలి?','MSME Samadhaan portal లో ఫిర్యాదు ఎలా చేయాలి?','MSME కి బ్యాంక్ లోన్ తిరస్కరిస్తే ఏం చేయాలి?','MSME buyer చెక్కు బౌన్స్ అయితే ఏం చేయాలి?'],
-    hinglish:['MSME payment late hai kya karun?','Udyam registration kaise kare?','MSME Samadhaan portal pe complaint kaise?','MSME buyer ka cheque bounce hua kya karun?','MSME loan reject hua options kya hain?']
-  },
-  banking:{
-    hi:['Cheque bounce होने पर 15 दिन में क्या करें?','Recovery agent घर आकर परेशान कर रहा है?','Bank ने बिना notice loan account freeze किया?','Credit card fraud हुआ, पैसे वापस मिलेंगे?','CIBIL score गलत है, कैसे ठीक करें?'],
-    te:['చెక్ బౌన్స్ అయిన తర్వాత 15 రోజులలో ఏం చేయాలి?','రికవరీ ఏజెంట్ ఇంటికి వచ్చి వేధిస్తే ఏం చేయాలి?','బ్యాంక్ నోటీసు లేకుండా ఖాతా ఫ్రీజ్ చేస్తే?','క్రెడిట్ కార్డ్ మోసం జరిగింది పైసలు వస్తాయా?','CIBIL స్కోర్ తప్పుగా ఉంటే ఎలా సరిచేయాలి?'],
-    hinglish:['Cheque bounce ke baad 15 din mein kya karun?','Recovery agent ghar aa ke pareshan kar raha hai?','Bank ne bina notice account freeze kiya?','Credit card fraud hua paisa wapas milega?','CIBIL score galat hai kaise theek kare?']
-  },
-  cyber:{
-    hi:['Online UPI fraud हुआ, पैसे वापस कैसे मिलेंगे?','WhatsApp पर fake job offer scam आया?','Cybercrime portal पर complaint कैसे दर्ज करें?','Social media पर fake profile बनाई, क्या करूं?','OTP share करके fraud हुआ, अब क्या करें?'],
-    te:['ఆన్‌లైన్ UPI మోసం జరిగింది పైసలు తిరిగి వస్తాయా?','WhatsApp లో నకిలీ job offer వచ్చింది ఏం చేయాలి?','Cybercrime portal లో ఫిర్యాదు ఎలా నమోదు చేయాలి?','సోషల్ మీడియాలో నకిలీ ప్రొఫైల్ తయారు చేస్తే ఏం చేయాలి?','OTP చెప్పి మోసం జరిగింది ఏం చేయాలి?'],
-    hinglish:['Online UPI fraud hua paisa wapas kaise milega?','WhatsApp pe fake job offer scam aaya kya karun?','Cybercrime portal pe complaint kaise kare?','Social media pe fake profile bani kya karun?','OTP share karke fraud hua ab kya kare?']
-  },
-  police:{
-    hi:['FIR लिखने से police मना कर रही है, क्या करूं?','Arrest के बाद मेरे क्या अधिकार हैं?','Anticipatory bail कैसे मिलती है?','Police ने बिना warrant घर में घुसे, legal कार्रवाई?','Section 41A notice मिला, क्या करूं?'],
-    te:['FIR రాయడానికి పోలీసులు నిరాకరిస్తే ఏం చేయాలి?','అరెస్టు తర్వాత నా హక్కులు ఏమిటి?','Anticipatory bail ఎలా పొందాలి?','వారెంట్ లేకుండా పోలీసులు ఇంటికి వస్తే ఏం చేయాలి?','Section 41A నోటీస్ వచ్చింది ఏం చేయాలి?'],
-    hinglish:['FIR likhne se police mana kar rahi hai kya karun?','Arrest ke baad mere kya rights hain?','Anticipatory bail kaise milti hai?','Police bina warrant ghar mein ghusi legal kya kare?','Section 41A notice mila kya karun?']
-  },
-  medical:{
-    hi:['Doctor ने गलत treatment दिया, कहाँ complaint करूं?','Hospital ने बिना consent operation किया?','Medical negligence case कैसे file करें?','Hospital bill बहुत ज़्यादा है, क्या कर सकता हूँ?','Pharmacy ने expired medicine दी, क्या करूं?'],
-    te:['డాక్టర్ తప్పు చికిత్స చేస్తే ఎక్కడ ఫిర్యాదు చేయాలి?','హాస్పిటల్ అనుమతి లేకుండా ఆపరేషన్ చేస్తే?','Medical negligence కేసు ఎలా వేయాలి?','హాస్పిటల్ బిల్ చాలా ఎక్కువగా ఉంటే ఏం చేయాలి?','Pharmacy expired medicine ఇస్తే ఏం చేయాలి?'],
-    hinglish:['Doctor ne galat treatment diya kahan complaint karun?','Hospital ne bina consent operation kiya?','Medical negligence case kaise file kare?','Hospital bill bahut zyada hai kya kar sakta hun?','Pharmacy ne expired medicine di kya karun?']
-  },
-  consumer:{
-    hi:['Online order नहीं आया, refund कैसे मिलेगा?','Consumer Forum में case कैसे file करें?','Defective product exchange करने से मना कर रहे हैं?','E-commerce company false advertising कर रही है?','Service provider ने payment लेकर काम नहीं किया?'],
-    te:['ఆన్‌లైన్ ఆర్డర్ రాలేదు refund ఎలా పొందాలి?','Consumer Forum లో కేసు ఎలా వేయాలి?','లోపభూయిష్ట product exchange చేయడానికి నిరాకరిస్తే?','E-commerce company తప్పుడు ప్రకటన చేస్తే?','సేవ చేయకుండా పైసలు తీసుకుంటే ఏం చేయాలి?'],
-    hinglish:['Online order nahi aaya refund kaise milega?','Consumer Forum mein case kaise kare?','Defective product exchange nahi kar rahe kya karun?','E-commerce false advertising kar rahi hai kya karun?','Service provider ne payment lekar kaam nahi kiya?']
-  },
-  labour:{
-    hi:['Salary नहीं दी, कहाँ complaint करूं?','Wrongful termination हुई, क्या legal options हैं?','PF और gratuity कैसे मिलेगी?','Employer ने overtime pay नहीं दिया?','Maternity leave के लिए employer ने मना किया?'],
-    te:['జీతం ఇవ్వలేదు ఎక్కడ ఫిర్యాదు చేయాలి?','తప్పుగా తొలగించారు legal options ఏమిటి?','PF మరియు gratuity ఎలా పొందాలి?','Employer overtime pay ఇవ్వలేదు ఏం చేయాలి?','Maternity leave కి employer నిరాకరిస్తే?'],
-    hinglish:['Salary nahi di kahan complaint karun?','Wrongful termination hua kya legal options hain?','PF aur gratuity kaise milegi?','Employer ne overtime pay nahi diya?','Maternity leave ke liye employer ne mana kiya?']
-  },
-  property:{
-    hi:['Landlord security deposit वापस नहीं दे रहा?','Rent agreement बनाने का सही तरीका क्या है?','Property dispute court में कैसे file करें?','Eviction notice मिला, क्या मेरे rights हैं?','Landlord बिना notice किराया बढ़ा रहा है?'],
-    te:['Landlord security deposit తిరిగి ఇవ్వడం లేదు ఏం చేయాలి?','Rent agreement ఎలా తయారు చేయాలి?','Property dispute court లో ఎలా file చేయాలి?','Eviction notice వచ్చింది నా హక్కులు ఏమిటి?','Landlord నోటీస్ లేకుండా అద్దె పెంచుతే ఏం చేయాలి?'],
-    hinglish:['Landlord deposit wapas nahi de raha kya karun?','Rent agreement banane ka sahi tarika kya hai?','Property dispute court mein kaise file kare?','Eviction notice mila kya mere rights hain?','Landlord bina notice kiraya badha raha hai?']
-  },
-  women:{
-    hi:['Domestic violence complaint कहाँ और कैसे करें?','Workplace sexual harassment के लिए क्या करूं?','Dowry harassment case कैसे file करें?','Maintenance कैसे और कहाँ से मिलती है?','POCSO act क्या है और कब लागू होता है?'],
-    te:['గృహ హింస ఫిర్యాదు ఎక్కడ ఎలా చేయాలి?','కార్యాలయంలో లైంగిక వేధింపులకు ఏం చేయాలి?','కట్నం వేధింపు కేసు ఎలా వేయాలి?','Maintenance ఎలా ఎక్కడ నుండి పొందాలి?','POCSO act ఏమిటి ఎప్పుడు వర్తిస్తుంది?'],
-    hinglish:['Domestic violence complaint kahan aur kaise karun?','Workplace sexual harassment ke liye kya karun?','Dowry harassment case kaise file kare?','Maintenance kaise aur kahan se milti hai?','POCSO act kya hai kab lagoo hota hai?']
-  },
-  tax:{
-    hi:['GST notice आया, कैसे reply करूं?','ITR file करने की last date और process क्या है?','Income tax demand notice का क्या करूं?','GST registration कैसे करें small business के लिए?','TDS refund कैसे claim करें?'],
-    te:['GST నోటీస్ వచ్చింది ఎలా reply చేయాలి?','ITR file చేయడానికి last date మరియు process ఏమిటి?','Income tax demand notice కి ఏం చేయాలి?','Small business కి GST registration ఎలా చేయాలి?','TDS refund ఎలా claim చేయాలి?'],
-    hinglish:['GST notice aaya kaise reply karun?','ITR file karne ki last date aur process kya hai?','Income tax demand notice ka kya karun?','Small business ke liye GST registration kaise kare?','TDS refund kaise claim kare?']
-  },
+msme:{
+hi:['MSME payment 45 दिन से ज़्यादा देर है, क्या करूं?','Udyam registration कैसे करें?','MSME Samadhaan portal पर complaint कैसे करें?','Cheque bounce हुआ MSME buyer का, कार्रवाई?','MSME को bank loan reject हुआ, क्या options हैं?'],
+te:['MSME చెల్లింపు 45 రోజులు ఆలస్యమైతే ఏం చేయాలి?','Udyam నమోదు ఎలా చేయాలి?','MSME Samadhaan portal లో ఫిర్యాదు ఎలా చేయాలి?','MSME కి బ్యాంక్ లోన్ తిరస్కరిస్తే ఏం చేయాలి?','MSME buyer చెక్కు బౌన్స్ అయితే ఏం చేయాలి?'],
+hinglish:['MSME payment late hai kya karun?','Udyam registration kaise kare?','MSME Samadhaan portal pe complaint kaise?','MSME buyer ka cheque bounce hua kya karun?','MSME loan reject hua options kya hain?']
+},
+banking:{
+hi:['Cheque bounce होने पर 15 दिन में क्या करें?','Recovery agent घर आकर परेशान कर रहा है?','Bank ने बिना notice loan account freeze किया?','Credit card fraud हुआ, पैसे वापस मिलेंगे?','CIBIL score गलत है, कैसे ठीक करें?'],
+te:['చెక్ బౌన్స్ అయిన తర్వాత 15 రోజులలో ఏం చేయాలి?','రికవరీ ఏజెంట్ ఇంటికి వచ్చి వేధిస్తే ఏం చేయాలి?','బ్యాంక్ నోటీసు లేకుండా ఖాతా ఫ్రీజ్ చేస్తే?','క్రెడిట్ కార్డ్ మోసం జరిగింది పైసలు వస్తాయా?','CIBIL స్కోర్ తప్పుగా ఉంటే ఎలా సరిచేయాలి?'],
+hinglish:['Cheque bounce ke baad 15 din mein kya karun?','Recovery agent ghar aa ke pareshan kar raha hai?','Bank ne bina notice account freeze kiya?','Credit card fraud hua paisa wapas milega?','CIBIL score galat hai kaise theek kare?']
+},
+cyber:{
+hi:['Online UPI fraud हुआ, पैसे वापस कैसे मिलेंगे?','WhatsApp पर fake job offer scam आया?','Cybercrime portal पर complaint कैसे दर्ज करें?','Social media पर fake profile बनाई, क्या करूं?','OTP share करके fraud हुआ, अब क्या करें?'],
+te:['ఆన్‌లైన్ UPI మోసం జరిగింది పైసలు తిరిగి వస్తాయా?','WhatsApp లో నకిలీ job offer వచ్చింది ఏం చేయాలి?','Cybercrime portal లో ఫిర్యాదు ఎలా నమోదు చేయాలి?','సోషల్ మీడియాలో నకిలీ ప్రొఫైల్ తయారు చేస్తే ఏం చేయాలి?','OTP చెప్పి మోసం జరిగింది ఏం చేయాలి?'],
+hinglish:['Online UPI fraud hua paisa wapas kaise milega?','WhatsApp pe fake job offer scam aaya kya karun?','Cybercrime portal pe complaint kaise kare?','Social media pe fake profile bani kya karun?','OTP share karke fraud hua ab kya kare?']
+},
+police:{
+hi:['FIR लिखने से police मना कर रही है, क्या करूं?','Arrest के बाद मेरे क्या अधिकार हैं?','Anticipatory bail कैसे मिलती है?','Police ने बिना warrant घर में घुसे, legal कार्रवाई?','Section 41A notice मिला, क्या करूं?'],
+te:['FIR రాయడానికి పోలీసులు నిరాకరిస్తే ఏం చేయాలి?','అరెస్టు తర్వాత నా హక్కులు ఏమిటి?','Anticipatory bail ఎలా పొందాలి?','వారెంట్ లేకుండా పోలీసులు ఇంటికి వస్తే ఏం చేయాలి?','Section 41A నోటీస్ వచ్చింది ఏం చేయాలి?'],
+hinglish:['FIR likhne se police mana kar rahi hai kya karun?','Arrest ke baad mere kya rights hain?','Anticipatory bail kaise milti hai?','Police bina warrant ghar mein ghusi legal kya kare?','Section 41A notice mila kya karun?']
+},
+medical:{
+hi:['Doctor ने गलत treatment दिया, कहाँ complaint करूं?','Hospital ने बिना consent operation किया?','Medical negligence case कैसे file करें?','Hospital bill बहुत ज़्यादा है, क्या कर सकता हूँ?','Pharmacy ने expired medicine दी, क्या करूं?'],
+te:['డాక్టర్ తప్పు చికిత్స చేస్తే ఎక్కడ ఫిర్యాదు చేయాలి?','హాస్పిటల్ అనుమతి లేకుండా ఆపరేషన్ చేస్తే?','Medical negligence కేసు ఎలా వేయాలి?','హాస్పిటల్ బిల్ చాలా ఎక్కువగా ఉంటే ఏం చేయాలి?','Pharmacy expired medicine ఇస్తే ఏం చేయాలి?'],
+hinglish:['Doctor ne galat treatment diya kahan complaint karun?','Hospital ne bina consent operation kiya?','Medical negligence case kaise file kare?','Hospital bill bahut zyada hai kya kar sakta hun?','Pharmacy ne expired medicine di kya karun?']
+},
+consumer:{
+hi:['Online order नहीं आया, refund कैसे मिलेगा?','Consumer Forum में case कैसे file करें?','Defective product exchange करने से मना कर रहे हैं?','E-commerce company false advertising कर रही है?','Service provider ने payment लेकर काम नहीं किया?'],
+te:['ఆన్‌లైన్ ఆర్డర్ రాలేదు refund ఎలా పొందాలి?','Consumer Forum లో కేసు ఎలా వేయాలి?','లోపభూయిష్ట product exchange చేయడానికి నిరాకరిస్తే?','E-commerce company తప్పుడు ప్రకటన చేస్తే?','సేవ చేయకుండా పైసలు తీసుకుంటే ఏం చేయాలి?'],
+hinglish:['Online order nahi aaya refund kaise milega?','Consumer Forum mein case kaise kare?','Defective product exchange nahi kar rahe kya karun?','E-commerce false advertising kar rahi hai kya karun?','Service provider ne payment lekar kaam nahi kiya?']
+},
+labour:{
+hi:['Salary नहीं दी, कहाँ complaint करूं?','Wrongful termination हुई, क्या legal options हैं?','PF और gratuity कैसे मिलेगी?','Employer ने overtime pay नहीं दिया?','Maternity leave के लिए employer ने मना किया?'],
+te:['జీతం ఇవ్వలేదు ఎక్కడ ఫిర్యాదు చేయాలి?','తప్పుగా తొలగించారు legal options ఏమిటి?','PF మరియు gratuity ఎలా పొందాలి?','Employer overtime pay ఇవ్వలేదు ఏం చేయాలి?','Maternity leave కి employer నిరాకరిస్తే?'],
+hinglish:['Salary nahi di kahan complaint karun?','Wrongful termination hua kya legal options hain?','PF aur gratuity kaise milegi?','Employer ne overtime pay nahi diya?','Maternity leave ke liye employer ne mana kiya?']
+},
+property:{
+hi:['Landlord security deposit वापस नहीं दे रहा?','Rent agreement बनाने का सही तरीका क्या है?','Property dispute court में कैसे file करें?','Eviction notice मिला, क्या मेरे rights हैं?','Landlord बिना notice किराया बढ़ा रहा है?'],
+te:['Landlord security deposit తిరిగి ఇవ్వడం లేదు ఏం చేయాలి?','Rent agreement ఎలా తయారు చేయాలి?','Property dispute court లో ఎలా file చేయాలి?','Eviction notice వచ్చింది నా హక్కులు ఏమిటి?','Landlord నోటీస్ లేకుండా అద్దె పెంచుతే ఏం చేయాలి?'],
+hinglish:['Landlord deposit wapas nahi de raha kya karun?','Rent agreement banane ka sahi tarika kya hai?','Property dispute court mein kaise file kare?','Eviction notice mila kya mere rights hain?','Landlord bina notice kiraya badha raha hai?']
+},
+women:{
+hi:['Domestic violence complaint कहाँ और कैसे करें?','Workplace sexual harassment के लिए क्या करूं?','Dowry harassment case कैसे file करें?','Maintenance कैसे और कहाँ से मिलती है?','POCSO act क्या है और कब लागू होता है?'],
+te:['గృహ హింస ఫిర్యాదు ఎక్కడ ఎలా చేయాలి?','కార్యాలయంలో లైంగిక వేధింపులకు ఏం చేయాలి?','కట్నం వేధింపు కేసు ఎలా వేయాలి?','Maintenance ఎలా ఎక్కడ నుండి పొందాలి?','POCSO act ఏమిటి ఎప్పుడు వర్తిస్తుంది?'],
+hinglish:['Domestic violence complaint kahan aur kaise karun?','Workplace sexual harassment ke liye kya karun?','Dowry harassment case kaise file kare?','Maintenance kaise aur kahan se milti hai?','POCSO act kya hai kab lagoo hota hai?']
+},
+tax:{
+hi:['GST notice आया, कैसे reply करूं?','ITR file करने की last date और process क्या है?','Income tax demand notice का क्या करूं?','GST registration कैसे करें small business के लिए?','TDS refund कैसे claim करें?'],
+te:['GST నోటీస్ వచ్చింది ఎలా reply చేయాలి?','ITR file చేయడానికి last date మరియు process ఏమిటి?','Income tax demand notice కి ఏం చేయాలి?','Small business కి GST registration ఎలా చేయాలి?','TDS refund ఎలా claim చేయాలి?'],
+hinglish:['GST notice aaya kaise reply karun?','ITR file karne ki last date aur process kya hai?','Income tax demand notice ka kya karun?','Small business ke liye GST registration kaise kare?','TDS refund kaise claim kare?']
+},
 };
 
 const NEXT_STEPS = {
-  msme:{hi:['MSME court case kaise karein?','Samadhaan portal complaint?','Udyam certificate ke fayde?'],te:['MSME కోర్టు కేసు?','Samadhaan complaint?'],hinglish:['MSME court case kaise?','Samadhaan complaint?']},
-  banking:{hi:['Bank ombudsman complaint kaise?','Cheque bounce case file kaise?','CIBIL score fix kaise karein?'],te:['ఒంబుడ్స్మాన్ complaint?','CIBIL score fix?'],hinglish:['Bank ombudsman complaint?','CIBIL score fix?']},
-  cyber:{hi:['Cybercrime portal pe complaint kaise?','Bank refund kaise milega?','Evidence collect kaise karein?'],te:['Cybercrime portal?','Bank refund?'],hinglish:['Cybercrime portal complaint?','Bank refund kaise?']},
-  police:{hi:['Bail application kaise likhein?','Magistrate complaint kaise?','Lawyer hire kaise karein?'],te:['బెయిల్ application?','Magistrate complaint?'],hinglish:['Bail application kaise?','Magistrate complaint?']},
-  women:{hi:['NCW complaint kaise karein?','One Stop Centre kya hai?','POCSO case mein kya process?'],te:['NCW complaint?','One Stop Centre?'],hinglish:['NCW complaint kaise?','One Stop Centre kya?']},
-  property:{hi:['Rent control court mein case?','Tenant eviction process?','Rent increase pe kya rights?'],te:['అద్దె కోర్టు కేసు?','Eviction process?'],hinglish:['Rent control case?','Tenant eviction process?']},
-  default:{hi:['Legal notice kaise bhejein?','Lawyer hire kaise karein?','Court fees kitni hoti hai?'],te:['లీగల్ నోటీస్?','లాయర్ hire?'],hinglish:['Legal notice kaise bhejein?','Lawyer hire kaise?']},
+msme:{hi:['MSME court case kaise karein?','Samadhaan portal complaint?','Udyam certificate ke fayde?'],te:['MSME కోర్టు కేసు?','Samadhaan complaint?'],hinglish:['MSME court case kaise?','Samadhaan complaint?']},
+banking:{hi:['Bank ombudsman complaint kaise?','Cheque bounce case file kaise?','CIBIL score fix kaise karein?'],te:['ఒంబుడ్స్మాన్ complaint?','CIBIL score fix?'],hinglish:['Bank ombudsman complaint?','CIBIL score fix?']},
+cyber:{hi:['Cybercrime portal pe complaint kaise?','Bank refund kaise milega?','Evidence collect kaise karein?'],te:['Cybercrime portal?','Bank refund?'],hinglish:['Cybercrime portal complaint?','Bank refund kaise?']},
+police:{hi:['Bail application kaise likhein?','Magistrate complaint kaise?','Lawyer hire kaise karein?'],te:['బెయిల్ application?','Magistrate complaint?'],hinglish:['Bail application kaise?','Magistrate complaint?']},
+women:{hi:['NCW complaint kaise karein?','One Stop Centre kya hai?','POCSO case mein kya process?'],te:['NCW complaint?','One Stop Centre?'],hinglish:['NCW complaint kaise?','One Stop Centre kya?']},
+property:{hi:['Rent control court mein case?','Tenant eviction process?','Rent increase pe kya rights?'],te:['అద్దె కోర్టు కేసు?','Eviction process?'],hinglish:['Rent control case?','Tenant eviction process?']},
+default:{hi:['Legal notice kaise bhejein?','Lawyer hire kaise karein?','Court fees kitni hoti hai?'],te:['లీగల్ నోటీస్?','లాయర్ hire?'],hinglish:['Legal notice kaise bhejein?','Lawyer hire kaise?']},
 };
 
 const INTENT_MAP = {
-  cheque_bounce:{kw:['cheque bounce','cheque bounced','dishonour','138','cheque wapas','చెక్ బౌన్స్'],service:'cheque_notice',cta:{hi:'📄 Cheque Bounce Notice banayen — ₹149',te:'📄 Cheque Bounce Notice తయారు చేయండి — ₹149',hinglish:'📄 Generate Cheque Bounce Notice — ₹149'},price:149},
-  msme_payment:{kw:['payment nahi','payment not received','invoice due','outstanding','చెల్లించలేదు'],service:'msme_notice',cta:{hi:'⚖️ MSME Payment Recovery Notice — ₹269',te:'⚖️ MSME Payment Recovery Notice — ₹269',hinglish:'⚖️ MSME Payment Recovery Notice — ₹269'},price:269},
-  complaint:{kw:['complaint','shikayat','police complaint','fraud','धोखा','ఫిర్యాదు'],service:'complaint_draft',cta:{hi:'📝 Complaint Letter Draft karein — ₹99',te:'📝 Complaint Letter తయారు చేయండి — ₹99',hinglish:'📝 Draft Complaint Letter — ₹99'},price:99},
-  legal_reply:{kw:['notice mila','notice received','reply karna','jawab dena','threat message','నోటీస్ వచ్చింది'],service:'legal_reply',cta:{hi:'✉️ Legal Notice ka Reply — ₹49',te:'✉️ Legal Notice Reply తయారు చేయండి — ₹49',hinglish:'✉️ Draft Legal Notice Reply — ₹49'},price:49},
+cheque_bounce:{kw:['cheque bounce','cheque bounced','dishonour','138','cheque wapas','చెక్ బౌన్స్'],service:'cheque_notice',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:149},
+msme_payment:{kw:['payment nahi','payment not received','invoice due','outstanding','చెల్లించలేదు'],service:'msme_notice',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:249},
+complaint:{kw:['complaint','shikayat','police complaint','fraud','धोखा','ఫిర్యాదు'],service:'complaint_draft',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:69},
+legal_reply:{kw:['notice mila','notice received','reply karna','jawab dena','threat message','నోటీస్ వచ్చింది'],service:'legal_reply',cta:{hi:'🔒 Unlock Very Soon',te:'🔒 చాలా త్వరలో',hinglish:'🔒 Unlock Very Soon'},price:19},
 };
 
 function detectIntent(text){
-  const t=text.toLowerCase();
-  for(const[k,d] of Object.entries(INTENT_MAP)){if(d.kw.some(w=>t.includes(w))) return{intent:k,...d};}
-  return null;
+const t=text.toLowerCase();
+for(const[k,d] of Object.entries(INTENT_MAP)){if(d.kw.some(w=>t.includes(w))) return{intent:k,...d};}
+return null;
 }
 
 // LANG
 function setLang(lang){
-  state.lang=lang;
-  document.querySelectorAll('.lang-option').forEach(o=>o.classList.toggle('active',o.dataset.lang===lang));
-  const labels={hi:'🌐 हिंदी ▾',te:'🌐 తెలుగు ▾',hinglish:'🌐 Hinglish ▾'};
-  document.getElementById('langDdBtn').textContent=labels[lang]||'🌐 ▾';
-  document.getElementById('langDdMenu').classList.remove('open');
-  updateUI();renderQuickCards();
+state.lang=lang;
+document.querySelectorAll('.lang-option').forEach(o=>o.classList.toggle('active',o.dataset.lang===lang));
+const labels={hi:'🌐 हिंदी ▾',te:'🌐 తెలుగు ▾',hinglish:'🌐 Hinglish ▾'};
+document.getElementById('langDdBtn').textContent=labels[lang]||'🌐 ▾';
+document.getElementById('langDdMenu').classList.remove('open');
+updateUI();renderQuickCards();
 }
 function toggleLangMenu(){document.getElementById('langDdMenu').classList.toggle('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('.lang-dropdown')) document.getElementById('langDdMenu').classList.remove('open');});
 function t(k){return(T[state.lang]&&T[state.lang][k])||T.hi[k]||k;}
 
 function updateUI(){
-  document.getElementById('chatInput').placeholder=t('placeholder');
-  document.getElementById('emptyTitle').textContent=t('emptyTitle');
-  document.getElementById('emptyDesc').textContent=t('emptyDesc');
-  document.getElementById('quickTitle').textContent=t('quickTitle');
-  document.querySelectorAll('[data-key]').forEach(el=>{const v=t(el.dataset.key);if(v)el.textContent=v;});
-  updateUsageBar();
+document.getElementById('chatInput').placeholder=t('placeholder');
+document.getElementById('emptyTitle').textContent=t('emptyTitle');
+document.getElementById('emptyDesc').textContent=t('emptyDesc');
+document.getElementById('quickTitle').textContent=t('quickTitle');
+document.querySelectorAll('[data-key]').forEach(el=>{const v=t(el.dataset.key);if(v)el.textContent=v;});
+updateUsageBar();
 }
 
 // SIDEBAR
@@ -743,154 +740,154 @@ function closeSidebar(){document.getElementById('sidebar').classList.remove('ope
 function toggleDotsMenu(){document.getElementById('dotsMenu').classList.toggle('open');}
 function closeDotsMenu(){document.getElementById('dotsMenu').classList.remove('open');}
 document.addEventListener('click',e=>{
-  if(!e.target.closest('#dotsBtn')&&!e.target.closest('#dotsMenu')) closeDotsMenu();
+if(!e.target.closest('#dotsBtn')&&!e.target.closest('#dotsMenu')) closeDotsMenu();
 });
 function toggleExtraTopics(btn){
-  const el=document.getElementById('extraTopics');
-  const show=el.style.display==='none';
-  el.style.display=show?'block':'none';
-  btn.textContent=show?'− Show less':'+ View all 10 topics';
+const el=document.getElementById('extraTopics');
+const show=el.style.display==='none';
+el.style.display=show?'block':'none';
+btn.textContent=show?'− Show less':'+ View all 10 topics';
 }
 function toggleExtraServices(btn){
-  const el=document.getElementById('extraServices');
-  const show=el.style.display==='none';
-  el.style.display=show?'block':'none';
-  btn.textContent=show?'− Show less':'+ View all 5 services';
+const el=document.getElementById('extraServices');
+const show=el.style.display==='none';
+el.style.display=show?'block':'none';
+btn.textContent=show?'− Show less':'+ View all 5 services';
 }
 // Update dots menu auth label
 function updateDotsAuth(){
-  const lbl=document.getElementById('dotAuthLabel');
-  if(lbl) lbl.textContent=state.token?(state.userEmoji+' '+state.userName):'Login / Register';
+const lbl=document.getElementById('dotAuthLabel');
+if(lbl) lbl.textContent=state.token?(state.userEmoji+' '+state.userName):'Login / Register';
 }
 function selectCategory(cat,el){
-  state.category=cat;
-  if(state.askedQuestions) state.askedQuestions={}; // reset per topic
-  document.querySelectorAll('.category-item').forEach(e=>e.classList.remove('active'));
-  el.classList.add('active');
-  renderQuickCards();
+state.category=cat;
+if(state.askedQuestions) state.askedQuestions={}; // reset per topic
+document.querySelectorAll('.category-item').forEach(e=>e.classList.remove('active'));
+el.classList.add('active');
+renderQuickCards();
 
-  const chatMessages=document.getElementById('chatMessages');
-  const qa=document.getElementById('quickCardsArea');
-  const hasChats=chatMessages && chatMessages.querySelectorAll('.msg').length>0;
+const chatMessages=document.getElementById('chatMessages');
+const qa=document.getElementById('quickCardsArea');
+const hasChats=chatMessages && chatMessages.querySelectorAll('.msg').length>0;
 
-  if(!hasChats){
-    // No chat yet — show cards in their normal top position
-    if(qa) qa.style.display='block';
-    if(chatMessages) chatMessages.scrollTop=0;
-  } else {
-    // Mid-chat — inject fresh quick cards inline at bottom of chat
-    if(qa) qa.style.display='none'; // keep top hidden
-    // Remove any previous injected topic switch cards
-    document.querySelectorAll('.topic-switch-cards').forEach(e=>e.remove());
-    const qs=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]
-            ||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
-    if(qs.length>0){
-      const catNames={msme:'MSME Rights',banking:'Banking Rights',police:'Police Rights',
-        cyber:'Cyber Crime',medical:'Medical Rights',consumer:'Consumer Rights',
-        labour:'Labour Law',property:'Property & Tenant',women:'Women Rights',tax:'Tax & GST'};
-      const catName=catNames[cat]||cat;
-      const label={hi:`${catName} ke sawaal:`,te:`${catName} ప్రశ్నలు:`,hinglish:`${catName} questions:`}[state.lang]||`${catName} questions:`;
-      const wrap=document.createElement('div');
-      wrap.className='topic-switch-cards';
-      wrap.style.cssText='margin:10px 0 4px 0;';
-      const cards=qs.map(q=>
-        `<div onclick="fillAndSend(this.dataset.q)" data-q="${q.replace(/"/g,'&quot;')}"
-          style="cursor:pointer;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);transition:all .15s;line-height:1.4;display:inline-block;"
-          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'"
-          onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'"
-        >→ ${q}</div>`
-      ).join('');
-      wrap.innerHTML=`<div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:6px;letter-spacing:.4px">⚖️ ${label}</div><div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;">${cards}</div>`;
-      const msgWrap=document.createElement('div');
-      msgWrap.className='msg ai';
-      msgWrap.innerHTML=`<div class="msg-avatar">⚖️</div><div><div class="msg-bubble">${wrap.outerHTML}</div></div>`;
-      chatMessages.appendChild(msgWrap);
-      scrollBottom();
-    }
-  }
-  if(window.innerWidth<=680) closeSidebar();
+if(!hasChats){
+// No chat yet — show cards in their normal top position
+if(qa) qa.style.display='block';
+if(chatMessages) chatMessages.scrollTop=0;
+} else {
+// Mid-chat — inject fresh quick cards inline at bottom of chat
+if(qa) qa.style.display='none'; // keep top hidden
+// Remove any previous injected topic switch cards
+document.querySelectorAll('.topic-switch-cards').forEach(e=>e.remove());
+const qs=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]
+||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
+if(qs.length>0){
+const catNames={msme:'MSME Rights',banking:'Banking Rights',police:'Police Rights',
+cyber:'Cyber Crime',medical:'Medical Rights',consumer:'Consumer Rights',
+labour:'Labour Law',property:'Property & Tenant',women:'Women Rights',tax:'Tax & GST'};
+const catName=catNames[cat]||cat;
+const label={hi:`${catName} ke sawaal:`,te:`${catName} ప్రశ్నలు:`,hinglish:`${catName} questions:`}[state.lang]||`${catName} questions:`;
+const wrap=document.createElement('div');
+wrap.className='topic-switch-cards';
+wrap.style.cssText='margin:10px 0 4px 0;';
+const cards=qs.map(q=>
+`<div onclick="fillAndSend(this.dataset.q)" data-q="${q.replace(/"/g,'&quot;')}"
+style="cursor:pointer;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);transition:all .15s;line-height:1.4;display:inline-block;"
+onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'"
+onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'"
+>→ ${q}</div>`
+).join('');
+wrap.innerHTML=`<div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:6px;letter-spacing:.4px">⚖️ ${label}</div><div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;">${cards}</div>`;
+const msgWrap=document.createElement('div');
+msgWrap.className='msg ai';
+msgWrap.innerHTML=`<div class="msg-avatar">⚖️</div><div><div class="msg-bubble">${wrap.outerHTML}</div></div>`;
+chatMessages.appendChild(msgWrap);
+scrollBottom();
+}
+}
+if(window.innerWidth<=680) closeSidebar();
 }
 function renderQuickCards(){
-  const qs=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
-  document.getElementById('quickCards').innerHTML=qs.map(q=>`<div class="quick-card" onclick="fillAndSend(this.textContent)">${q}</div>`).join('');
+const qs=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
+document.getElementById('quickCards').innerHTML=qs.map(q=>`<div class="quick-card" onclick="fillAndSend(this.textContent)">${q}</div>`).join('');
 }
 function fillAndSend(t){document.getElementById('chatInput').value=t;sendMessage();}
 
 // USAGE BAR (#6 fix — above input, centered, funny CTA)
 function getLimit(){
-  // Admin mobile gets unlimited
-  const adminMob = localStorage.getItem('ld_admin_mobile');
-  if(state.mobile && adminMob && state.mobile === adminMob) return 9999;
-  const plan=localStorage.getItem('ld_plan')||'free';
-  if(plan==='unlimited') return 9999;
-  if(plan==='pro') return 10;
-  return state.lang==='te'?3:5;
+// Admin mobile gets unlimited
+const adminMob = localStorage.getItem('ld_admin_mobile');
+if(state.mobile && adminMob && state.mobile === adminMob) return 9999;
+const plan=localStorage.getItem('ld_plan')||'free';
+if(plan==='unlimited') return 9999;
+if(plan==='pro') return 10;
+return state.lang==='te'?3:5;
 }
 function getResetTimeIST(){
-  // Quota resets daily at midnight IST (UTC+5:30)
-  const now=new Date();
-  const istMs=now.getTime()+(5.5*60*60*1000);
-  const istNow=new Date(istMs);
-  const nextMid=new Date(istNow);
-  nextMid.setUTCHours(24,0,0,0);
-  const left=nextMid-istNow;
-  const h=Math.floor(left/3600000);
-  const m=Math.floor((left%3600000)/60000);
-  if(h>0)return `${h}h ${m}m`;
-  if(m>0)return `${m}m`;
-  return 'kuch hi der mein';
+// Quota resets daily at midnight IST (UTC+5:30)
+const now=new Date();
+const istMs=now.getTime()+(5.5*60*60*1000);
+const istNow=new Date(istMs);
+const nextMid=new Date(istNow);
+nextMid.setUTCHours(24,0,0,0);
+const left=nextMid-istNow;
+const h=Math.floor(left/3600000);
+const m=Math.floor((left%3600000)/60000);
+if(h>0)return `${h}h ${m}m`;
+if(m>0)return `${m}m`;
+return 'kuch hi der mein';
 }
 function updateUsageBar(){
-  const adminMob = localStorage.getItem('ld_admin_mobile');
-  const isAdmin = state.mobile && adminMob && state.mobile === adminMob;
-  if(isAdmin){document.getElementById('usageBarWrap').style.display='none';return;}
-  document.getElementById('usageBarWrap').style.display='block';
-  const limit=getLimit(),used=state.usedChats,rem=Math.max(0,limit-used);
-  const countEl=document.getElementById('usageCount');
-  countEl.textContent=`${rem}/${limit}`;
-  countEl.className='usage-count'+(rem<=1?' warn':'');
-  const resetIn=getResetTimeIST();
-  const ctas={
-    hi: rem===0
-      ? `Free quota khatam — ${resetIn} mein reset hogi 🔄`
-      : `Free mein poochho — jaldi jaldi! 🚀`,
-    te: rem===0
-      ? `Free quota అయిపోయింది — ${resetIn} లో reset అవుతుంది 🔄`
-      : `Free lo aduguo — jaldi! 🚀`,
-    hinglish: rem===0
-      ? `Free quota khatam — ${resetIn} mein reset hogi 🔄`
-      : `Free mein poochho — jaldi! 🚀`
-  };
-  document.getElementById('usageCta').textContent=ctas[state.lang]||ctas.hi;
+const adminMob = localStorage.getItem('ld_admin_mobile');
+const isAdmin = state.mobile && adminMob && state.mobile === adminMob;
+if(isAdmin){document.getElementById('usageBarWrap').style.display='none';return;}
+document.getElementById('usageBarWrap').style.display='block';
+const limit=getLimit(),used=state.usedChats,rem=Math.max(0,limit-used);
+const countEl=document.getElementById('usageCount');
+countEl.textContent=`${rem}/${limit}`;
+countEl.className='usage-count'+(rem<=1?' warn':'');
+const resetIn=getResetTimeIST();
+const ctas={
+hi: rem===0
+? `Free quota khatam — ${resetIn} mein reset hogi 🔄`
+: `Free mein poochho — jaldi jaldi! 🚀`,
+te: rem===0
+? `Free quota అయిపోయింది — ${resetIn} లో reset అవుతుంది 🔄`
+: `Free lo aduguo — jaldi! 🚀`,
+hinglish: rem===0
+? `Free quota khatam — ${resetIn} mein reset hogi 🔄`
+: `Free mein poochho — jaldi! 🚀`
+};
+document.getElementById('usageCta').textContent=ctas[state.lang]||ctas.hi;
 }
 function incrementUsage(){
-  const adminMob = localStorage.getItem('ld_admin_mobile');
-  const isAdmin = state.mobile && adminMob && state.mobile === adminMob;
-  if(isAdmin) return;
-  state.usedChats++;
-  localStorage.setItem('ld_chats_'+new Date().toDateString(),state.usedChats);
-  const limit=getLimit(),rem=Math.max(0,limit-state.usedChats);
-  const g=localStorage.getItem('ld_gender')||'other';
-  const sal=g==='female'?'Ma\'am':'Sir';
+const adminMob = localStorage.getItem('ld_admin_mobile');
+const isAdmin = state.mobile && adminMob && state.mobile === adminMob;
+if(isAdmin) return;
+state.usedChats++;
+localStorage.setItem('ld_chats_'+new Date().toDateString(),state.usedChats);
+const limit=getLimit(),rem=Math.max(0,limit-state.usedChats);
+const g=localStorage.getItem('ld_gender')||'other';
+const sal=g==='female'?'Ma\'am':'Sir';
 
-  // Show login nudge AFTER 3rd chat answer (usedChats just became 3)
-  if(!state.token && state.usedChats===3){
-    setTimeout(()=>{
-      openModal('authModal');
-      toast('3 free chats ho gaye '+sal+' — Login karein for better experience 🙏','warn');
-    },900);
-  }
+// Show login nudge AFTER 3rd chat answer (usedChats just became 3)
+if(!state.token && state.usedChats===3){
+setTimeout(()=>{
+openModal('authModal');
+toast('3 free chats ho gaye '+sal+' — Login karein for better experience 🙏','warn');
+},900);
+}
 
-  // "1 chat left" warning — only AFTER answer, separate from login nudge
-  // fires when rem===1 AND we haven't warned yet AND login nudge isn't showing
-  if(rem===1&&!state.warnedLastChat&&(state.token||state.usedChats>3)){
-    state.warnedLastChat=true;
-    setTimeout(()=>{
-      toast('⚠️ Sirf 1 free chat bacha hai '+sal+'! Upgrade karein.','warn');
-      playCommand(g==='female'?'last-chat-maam':'last-chat-sir');
-    },1200);
-  }
-  updateUsageBar();
+// "1 chat left" warning — only AFTER answer, separate from login nudge
+// fires when rem===1 AND we haven't warned yet AND login nudge isn't showing
+if(rem===1&&!state.warnedLastChat&&(state.token||state.usedChats>3)){
+state.warnedLastChat=true;
+setTimeout(()=>{
+toast('⚠️ Sirf 1 free chat bacha hai '+sal+'! Upgrade karein.','warn');
+playCommand(g==='female'?'last-chat-maam':'last-chat-sir');
+},1200);
+}
+updateUsageBar();
 }
 
 // CHAT
@@ -898,175 +895,174 @@ function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMe
 function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
 
 async function sendMessage(){
-  const input=document.getElementById('chatInput');
-  const text=input.value.trim();
-  if(!text) return;
+const input=document.getElementById('chatInput');
+const text=input.value.trim();
+if(!text) return;
 
-  // ── Enforce frontend limit BEFORE calling backend ──
-  const adminMob=localStorage.getItem('ld_admin_mobile');
-  const isAdminUser=state.mobile&&adminMob&&state.mobile===adminMob;
-  if(!isAdminUser){
-    const limit=getLimit();
-    if(state.usedChats>=limit){
-      // Show paywall inline
-      const paywallData={paywall:true,plans:[
-        {name:'Pro',price:49,chats:'10/day',plan_id:'pro'},
-        {name:'Unlimited',price:99,chats:'Unlimited',plan_id:'unlimited'}
-      ]};
-      hideEmpty();showPaywallInChat(paywallData);
-      return;
-    }
-  }
+// ── Enforce frontend limit BEFORE calling backend ──
+const adminMob=localStorage.getItem('ld_admin_mobile');
+const isAdminUser=state.mobile&&adminMob&&state.mobile===adminMob;
+if(!isAdminUser){
+const limit=getLimit();
+if(state.usedChats>=limit){
+// Show paywall inline
+const paywallData={paywall:true,plans:[
+{name:'Pro',price:49,chats:'10/day',plan_id:'pro'},
+{name:'Unlimited',price:99,chats:'Unlimited',plan_id:'unlimited'}
+]};
+hideEmpty();showPaywallInChat(paywallData);
+return;
+}
+}
 
-  // Telugu users: on their 3rd question (usedChats===2 means this is the 3rd),
-  // force login BEFORE answering — store message in state, show login prompt
-  if(state.lang==='te' && !state.token && state.usedChats===2){
-    state.pendingTeluguMsg = text;  // store BEFORE building DOM — no inline JSON
-    hideEmpty();appendMsg('user',text);
-    input.value='';input.style.height='auto';
-    setTimeout(()=>{
-      appendRaw(
-        '<div style="padding:4px 0">' +
-        '<div style="font-size:13px;color:var(--text);margin-bottom:8px">మీ 3వ ప్రశ్నకు సమాధానం పొందడానికి లాగిన్ చేయండి. ఇది మీ ఉచిత ప్రశ్నలను సేవ్ చేస్తుంది.</div>' +
-        '<div style="font-size:12px;color:var(--text2);margin-bottom:10px">Login to get your 3rd answer — it saves your free quota too.</div>' +
-        '<button onclick="openAuth()" ' +
-        'style="background:var(--accent);color:#000;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font)">లాగిన్ చేయండి / Login →</button>' +
-        '</div>'
-      );
-      toast('3వ ప్రశ్న: Login అవసరం','warn');
-    },300);
-    document.getElementById('sendBtn').disabled=false;
-    return;
-  }
+// Telugu users: on their 3rd question (usedChats===2 means this is the 3rd),
+// force login BEFORE answering — store message in state, show login prompt
+if(state.lang==='te' && !state.token && state.usedChats===2){
+state.pendingTeluguMsg = text;  // store BEFORE building DOM — no inline JSON
+hideEmpty();appendMsg('user',text);
+input.value='';input.style.height='auto';
+setTimeout(()=>{
+appendRaw(
+<div style="padding:4px 0">' +
+<div style="font-size:13px;color:var(--text);margin-bottom:8px">మీ 3వ ప్రశ్నకు సమాధానం పొందడానికి లాగిన్ చేయండి. ఇది మీ ఉచిత ప్రశ్నలను సేవ్ చేస్తుంది.</div>' +
+<div style="font-size:12px;color:var(--text2);margin-bottom:10px">Login to get your 3rd answer — it saves your free quota too.</div>' +
+<button onclick="openAuth()" 
+style="background:var(--accent);color:#000;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font)">లాగిన్ చేయండి / Login →</button>' +
+</div>
+);
+toast('3వ ప్రశ్న: Login అవసరం','warn');
+},300);
+document.getElementById('sendBtn').disabled=false;
+return;
+}
 
-  hideEmpty();appendMsg('user',text);
-  input.value='';input.style.height='auto';
-  document.getElementById('sendBtn').disabled=true;
-  const tid=appendTyping();
-  try{
-    const res=await fetch(`${API}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,language:state.lang,session_token:state.token,conversation_history:state.chatHistory.slice(-8)})});
-    const data=await res.json();removeTyping(tid);
-    if(data.paywall){showPaywallInChat(data);}
-    else{
-      state.chatHistory.push({role:'user',content:text});
-      state.chatHistory.push({role:'assistant',content:data.response||''});
-      appendAiMsg(data.response||'',data.intent,text);
-      incrementUsage();
-    }
-  }catch(err){removeTyping(tid);appendMsg('ai','⚠️ Backend not reachable. Check if server is running on port 8000.');}
-  document.getElementById('sendBtn').disabled=false;scrollBottom();
+hideEmpty();appendMsg('user',text);
+input.value='';input.style.height='auto';
+document.getElementById('sendBtn').disabled=true;
+const tid=appendTyping();
+try{
+const res=await fetch(`${API}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,language:state.lang,session_token:state.token,conversation_history:state.chatHistory.slice(-8)})});
+const data=await res.json();removeTyping(tid);
+if(data.paywall){showPaywallInChat(data);}
+else{
+state.chatHistory.push({role:'user',content:text});
+state.chatHistory.push({role:'assistant',content:data.response||''});
+appendAiMsg(data.response||'',data.intent,text);
+incrementUsage();
+}
+}catch(err){removeTyping(tid);appendMsg('ai','⚠️ Backend not reachable. Check if server is running on port 8000.');}
+document.getElementById('sendBtn').disabled=false;scrollBottom();
 }
 
 function hideEmpty(){
-  const e=document.getElementById('emptyState');if(e)e.style.display='none';
-  const q=document.getElementById('quickCardsArea');if(q)q.style.display='none';
+const e=document.getElementById('emptyState');if(e)e.style.display='none';
+const q=document.getElementById('quickCardsArea');if(q)q.style.display='none';
 }
 
 function appendMsg(role,text){
-  const c=document.getElementById('chatMessages');
-  const d=document.createElement('div');d.className=`msg ${role}`;
-  const av=role==='user'?(state.userName?state.userName[0].toUpperCase():'U'):'⚖️';
-  d.innerHTML=`<div class="msg-avatar">${av}</div><div><div class="msg-bubble">${esc(text).replace(/\n/g,'<br>')}</div></div>`;
-  c.appendChild(d);scrollBottom();
+const c=document.getElementById('chatMessages');
+const d=document.createElement('div');d.className=`msg ${role}`;
+const av=role==='user'?(state.userName?state.userName[0].toUpperCase():'U'):'⚖️';
+d.innerHTML=`<div class="msg-avatar">${av}</div><div><div class="msg-bubble">${esc(text).replace(/\n/g,'<br>')}</div></div>`;
+c.appendChild(d);scrollBottom();
 }
 
 function appendRaw(html){
-  const c=document.getElementById('chatMessages');
-  const d=document.createElement('div');d.className='msg ai';
-  d.innerHTML=`<div class="msg-avatar">⚖️</div><div><div class="msg-bubble">${html}</div></div>`;
-  c.appendChild(d);scrollBottom();
+const c=document.getElementById('chatMessages');
+const d=document.createElement('div');d.className='msg ai';
+d.innerHTML=`<div class="msg-avatar">⚖️</div><div><div class="msg-bubble">${html}</div></div>`;
+c.appendChild(d);scrollBottom();
 }
 
 function getNextQuestions(asked){
-  // Track asked questions per category in state
-  if(!state.askedQuestions) state.askedQuestions={};
-  const key=state.category+'_'+state.lang;
-  if(!state.askedQuestions[key]) state.askedQuestions[key]=[];
-  // Add the newly asked question
-  if(asked && asked.trim()) state.askedQuestions[key].push(asked.trim());
-  // Get all questions for this topic
-  const all=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]
-          ||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
-  // Filter out ALL previously asked questions
-  const asked_set=state.askedQuestions[key];
-  const remaining=all.filter(q=>!asked_set.includes(q.trim()));
-  return remaining.slice(0,4); // max 4 shown
+// Track asked questions per category in state
+if(!state.askedQuestions) state.askedQuestions={};
+const key=state.category+'_'+state.lang;
+if(!state.askedQuestions[key]) state.askedQuestions[key]=[];
+// Add the newly asked question
+if(asked && asked.trim()) state.askedQuestions[key].push(asked.trim());
+// Get all questions for this topic
+const all=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]
+||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
+// Filter out ALL previously asked questions
+const asked_set=state.askedQuestions[key];
+const remaining=all.filter(q=>!asked_set.includes(q.trim()));
+return remaining.slice(0,4); // max 4 shown
 }
 
 function appendAiMsg(text,intent,askedQuestion){
-  const c=document.getElementById('chatMessages');
-  const d=document.createElement('div');d.className='msg ai';
-  let intentHtml='';
-  if(intent){
-    const cta=intent.cta||'';
-    const svcKey=intent.service||'priority_answer';
-    intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="openService('${svcKey}')">⚡ Generate Now</button></div>`;
-  }
+const c=document.getElementById('chatMessages');
+const d=document.createElement('div');d.className='msg ai';
+let intentHtml='';
+if(intent){
+const cta=intent.cta||'';
+intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="showComingSoon()" style="opacity:.7">🔒 Unlock Soon</button></div>`;
+}
 
-  // Build next questions — remaining from current topic
-  const nextQs=getNextQuestions(askedQuestion||'');
-  let nextHtml='';
-  if(nextQs.length>0){
-    const label={hi:'Aur puchho:',te:'ఇంకా అడగండి:',hinglish:'Aur puchho:'}[state.lang]||'Aur puchho:';
-    const cards=nextQs.map(q=>
-      `<div onclick="fillAndSend(this.dataset.q)" data-q="${q.replace(/"/g,'&quot;')}"
-        style="cursor:pointer;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);transition:all .15s;line-height:1.4;display:inline-block;"
-        onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'"
-        onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'"
-      >→ ${q}</div>`
-    ).join('');
-    nextHtml=`<div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
-      <div style="font-size:10px;color:var(--text3);font-weight:700;margin-bottom:6px;letter-spacing:.4px">${label}</div>
-      <div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;">${cards}</div>
-    </div>`;
-  } else {
-    // Fallback nudge if no more questions in this topic
-    const nudge={hi:'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>',
-                 te:'<em style="color:var(--text3);font-size:12px">Inkaa adagaalantaa? 🤔</em>',
-                 hinglish:'<em style="color:var(--text3);font-size:12px">Aur kuch puchho? 🤔</em>'}[state.lang]
-              ||'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>';
-    nextHtml=`<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:7px">${nudge}</div>`;
-  }
+// Build next questions — remaining from current topic
+const nextQs=getNextQuestions(askedQuestion||'');
+let nextHtml='';
+if(nextQs.length>0){
+const label={hi:'Aur puchho:',te:'ఇంకా అడగండి:',hinglish:'Aur puchho:'}[state.lang]||'Aur puchho:';
+const cards=nextQs.map(q=>
+`<div onclick="fillAndSend(this.dataset.q)" data-q="${q.replace(/"/g,'&quot;')}"
+style="cursor:pointer;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);transition:all .15s;line-height:1.4;display:inline-block;"
+onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'"
+onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'"
+>→ ${q}</div>`
+).join('');
+nextHtml=`<div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
+<div style="font-size:10px;color:var(--text3);font-weight:700;margin-bottom:6px;letter-spacing:.4px">${label}</div>
+<div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;">${cards}</div>
+</div>`;
+} else {
+// Fallback nudge if no more questions in this topic
+const nudge={hi:'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>',
+te:'<em style="color:var(--text3);font-size:12px">Inkaa adagaalantaa? 🤔</em>',
+hinglish:'<em style="color:var(--text3);font-size:12px">Aur kuch puchho? 🤔</em>'}[state.lang]
+||'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>';
+nextHtml=`<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:7px">${nudge}</div>`;
+}
 
-  d.innerHTML=`<div class="msg-avatar">⚖️</div><div>
-    <div class="msg-bubble">${esc(text).replace(/\n/g,'<br>')}${intentHtml}${nextHtml}</div>
-    <div class="msg-actions">
-      <button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button>
-      <button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>
-      <div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px">
-        <button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" title="Get detailed expert answer">⚡ Expert ₹7</button>
-        <span style="font-size:9px;color:var(--text3);font-style:italic;opacity:.7">Thala for a reason!</span>
-      </div>
-    </div></div>`;
-  c.appendChild(d);scrollBottom();
+d.innerHTML=`<div class="msg-avatar">⚖️</div><div>
+<div class="msg-bubble">${esc(text).replace(/\n/g,'<br>')}${intentHtml}${nextHtml}</div>
+<div class="msg-actions">
+<button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button>
+<button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>
+<div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px">
+<button class="msg-action-btn" onclick="showComingSoon()" style="font-size:11px;opacity:.55;cursor:not-allowed" title="Coming very soon!">🔒 Expert</button>
+<span style="font-size:9px;color:var(--text3);font-style:italic;opacity:.5">Unlock soon</span>
+</div>
+</div></div>`;
+c.appendChild(d);scrollBottom();
 }
 
 function appendTyping(){
-  const c=document.getElementById('chatMessages');const d=document.createElement('div');
-  d.className='msg ai';d.id='typ-'+Date.now();
-  d.innerHTML=`<div class="msg-avatar">⚖️</div><div class="msg-bubble">
-    <div class="typing-dots"><span></span><span></span><span></span></div>
-    <div class="progress-bar-wrap"><div class="progress-bar"></div></div>
-  </div>`;
-  c.appendChild(d);scrollBottom();return d.id;
+const c=document.getElementById('chatMessages');const d=document.createElement('div');
+d.className='msg ai';d.id='typ-'+Date.now();
+d.innerHTML=`<div class="msg-avatar">⚖️</div><div class="msg-bubble">
+<div class="typing-dots"><span></span><span></span><span></span></div>
+<div class="progress-bar-wrap"><div class="progress-bar"></div></div>
+</div>`;
+c.appendChild(d);scrollBottom();return d.id;
 }
 function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
 
 function showPaywallInChat(data){
-  const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='paywall-msg';
-  const plans=(data.plans||[]).map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="buyPlan('${p.plan_id}',${p.price})"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats}</div></div>`).join('');
-  const gender=localStorage.getItem('ld_gender')||'other';
-  const salutation=gender==='female'?"Ma'am":'Sir';
-  // Display text — emoji ok for screen
-  const displayMsg=state.lang==='te'
-    ? `నేడు మీ ఉచిత కోటా అయిపోయింది ${salutation}`
-    : state.lang==='hinglish'
-    ? `Aaj ki muft seema khatam ho gayi ${salutation}`
-    : `आज की मुफ्त सीमा खत्म हो गई ${salutation}`;
-  // Use dedicated voice fn — pure Devanagari, no emoji, no English
-  playCommand(gender==='female'?'quota-over-maam':'quota-over-sir');
-  d.innerHTML=`<h3>${displayMsg} 🚫</h3><p>Upgrade karein ya 24 ghante baad free reset ka intezaar karein.</p><div class="plan-cards">${plans}</div>`;
-  c.appendChild(d);scrollBottom();
+const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='paywall-msg';
+const plans=(data.plans||[]).map(p=>`<div class="plan-card ${p.plan_id==='pro'?'featured':''}" onclick="showComingSoon()" style="opacity:.7;cursor:not-allowed"><div class="plan-name">${p.name}</div><div class="plan-price">₹${p.price}<span>/mo</span></div><div class="plan-chats">${p.chats} <span style='font-size:9px;color:var(--text3)'>🔒 Soon</span></div></div>`).join('');
+const gender=localStorage.getItem('ld_gender')||'other';
+const salutation=gender==='female'?"Ma'am":'Sir';
+// Display text — emoji ok for screen
+const displayMsg=state.lang==='te'
+? `నేడు మీ ఉచిత కోటా అయిపోయింది ${salutation}`
+: state.lang==='hinglish'
+? `Aaj ki muft seema khatam ho gayi ${salutation}`
+: `आज की मुफ्त सीमा खत्म हो गई ${salutation}`;
+// Use dedicated voice fn — pure Devanagari, no emoji, no English
+playCommand(gender==='female'?'quota-over-maam':'quota-over-sir');
+d.innerHTML=`<h3>${displayMsg} 🚫</h3><p>Upgrade karein ya 24 ghante baad free reset ka intezaar karein.</p><div class="plan-cards">${plans}</div>`;
+c.appendChild(d);scrollBottom();
 }
 function scrollBottom(){const c=document.getElementById('chatMessages');c.scrollTop=c.scrollHeight;}
 
@@ -1076,994 +1072,550 @@ function openAuth(){openModal('authModal');}
 function pickSigma(el){document.querySelectorAll('.sigma-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');state.selectedSigma=el.dataset.emoji;}
 
 async function sendOTP(){
-  const name=document.getElementById('nameInput').value.trim();
-  const mobile=document.getElementById('mobileInput').value.trim();
-  if(!name) return toast('Enter your name','error');
-  if(!/^\d{10}$/.test(mobile)) return toast('Enter valid 10-digit mobile','error');
-  state.pendingName=name;
-  const btn=document.querySelector('#authStep1 .modal-btn');
-  if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending OTP...';}
-  try{
-    const res=await fetch(`${API}/api/auth/send-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile})});
-    const data=await res.json();
-    if(!res.ok){if(btn){btn.disabled=false;btn.textContent='Send OTP →';}return toast(data.detail||'Error','error');}
-    document.getElementById('otpDisplay').textContent=data.otp;
-    document.getElementById('authStep1').style.display='none';
-    document.getElementById('authStep2').style.display='block';
-  }catch(e){if(btn){btn.disabled=false;btn.textContent='Send OTP →';}toast('Network error','error');}
+const name=document.getElementById('nameInput').value.trim();
+const mobile=document.getElementById('mobileInput').value.trim();
+if(!name) return toast('Enter your name','error');
+if(!/^\d{10}$/.test(mobile)) return toast('Enter valid 10-digit mobile','error');
+state.pendingName=name;
+const btn=document.querySelector('#authStep1 .modal-btn');
+if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending OTP...';}
+try{
+const res=await fetch(`${API}/api/auth/send-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile})});
+const data=await res.json();
+if(!res.ok){if(btn){btn.disabled=false;btn.textContent='Send OTP →';}return toast(data.detail||'Error','error');}
+document.getElementById('otpDisplay').textContent=data.otp;
+document.getElementById('authStep1').style.display='none';
+document.getElementById('authStep2').style.display='block';
+}catch(e){if(btn){btn.disabled=false;btn.textContent='Send OTP →';}toast('Network error','error');}
 }
 
 async function verifyOTP(){
-  const mobile=document.getElementById('mobileInput').value.trim();
-  const otp=document.getElementById('otpInput').value.trim();
-  const gender=document.getElementById('genderInput')?document.getElementById('genderInput').value:'other';
-  try{
-    const res=await fetch(`${API}/api/auth/verify-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,otp,name: state.pendingName})});
-    const data=await res.json();
-    if(!res.ok) return toast(data.detail||'Invalid OTP','error');
-    state.token=data.token;state.mobile=data.mobile;
-    state.userName=state.pendingName||'User';state.userEmoji=state.selectedSigma;
-    localStorage.setItem('ld_token',data.token);
-    localStorage.setItem('ld_mobile',data.mobile);
-    localStorage.setItem('ld_name',state.userName);
-    localStorage.setItem('ld_emoji',state.userEmoji);
-    localStorage.setItem('ld_gender',gender);
-    fetch(`${API}/api/auth/me`,{headers:{Authorization:'Bearer '+data.token}})
-      .then(r=>r.json()).then(u=>{if(u.is_admin)localStorage.setItem('ld_admin_mobile',data.mobile);}).catch(()=>{});
-    closeModal('authModal');updateAuthBtn();updateUsageBar();
-    toast('Welcome '+state.userName+'! 🎉','success');
-    const g=localStorage.getItem('ld_gender')||'other';
-    playCommand(g==='female'?'welcome-maam':'welcome-sir');
-
-    // ── Resume pending payment if login was triggered by a payment attempt ──
-    if(state.pendingPaymentService && state.pendingPaymentAmount){
-      const svcKey = state.pendingPaymentService;
-      const amount  = state.pendingPaymentAmount;
-      const vals    = state.pendingServiceData;
-      // Clear pending flags before resuming so they don't re-fire
-      state.pendingPaymentService = null;
-      state.pendingPaymentAmount  = null;
-      // Give Razorpay a moment to be ready after modal close
-      setTimeout(async ()=>{
-        const paymentResult = await initiatePayment(svcKey, amount);
-        if(!paymentResult) return;
-        // Payment success — generate first, then record purchase
-        const svc = SERVICES[svcKey];
-        if(svc && vals){
-          closeModal('serviceModal');
-          toast('Generating your document...','info');
-          document.getElementById('pdfOverlay').classList.add('show');
-          try{
-            const output = await generateServiceOutput(svcKey, svc, vals, paymentResult);
-            document.getElementById('pdfOverlay').classList.remove('show');
-            recordSuccessfulPurchase(svcKey, svc, paymentResult);
-            state.currentResult={title:svc.title,content:output,serviceType:svcKey};
-            document.getElementById('resultModalTitle').textContent=svc.title;
-            document.getElementById('resultContent').textContent=output;
-            document.getElementById('shareCardWrap').style.display='none';
-            openModal('resultModal');
-            toast('Document ready! ✓','success');
-          }catch(e){
-            document.getElementById('pdfOverlay').classList.remove('show');
-            toast(e.message || 'Generation failed. Please try again.','error');
-          }
-        }
-      }, 600);
-      return; // skip the Telugu message resume below
-    }
-
-    // Resume Telugu pending message if login was triggered by 3rd question gate
-    if(state.pendingTeluguMsg){
-      const msg=state.pendingTeluguMsg;
-      state.pendingTeluguMsg=null;
-      setTimeout(()=>{document.getElementById('chatInput').value=msg;sendMessage();},700);
-    }
-  }catch(e){toast('Network error','error');}
+const mobile=document.getElementById('mobileInput').value.trim();
+const otp=document.getElementById('otpInput').value.trim();
+const gender=document.getElementById('genderInput')?document.getElementById('genderInput').value:'other';
+try{
+const res=await fetch(`${API}/api/auth/verify-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,otp})});
+const data=await res.json();
+if(!res.ok) return toast(data.detail||'Invalid OTP','error');
+state.token=data.token;state.mobile=data.mobile;
+state.userName=state.pendingName||'User';state.userEmoji=state.selectedSigma;
+localStorage.setItem('ld_token',data.token);
+localStorage.setItem('ld_mobile',data.mobile);
+localStorage.setItem('ld_name',state.userName);
+localStorage.setItem('ld_emoji',state.userEmoji);
+localStorage.setItem('ld_gender',gender);
+fetch(`${API}/api/auth/me`,{headers:{Authorization:'Bearer '+data.token}})
+.then(r=>r.json()).then(u=>{if(u.is_admin)localStorage.setItem('ld_admin_mobile',data.mobile);}).catch(()=>{});
+closeModal('authModal');updateAuthBtn();updateUsageBar();
+toast('Welcome '+state.userName+'! 🎉','success');
+const g=localStorage.getItem('ld_gender')||'other';
+playCommand(g==='female'?'welcome-maam':'welcome-sir');
+// Resume Telugu pending message if login was triggered by 3rd question gate
+if(state.pendingTeluguMsg){
+const msg=state.pendingTeluguMsg;
+state.pendingTeluguMsg=null;
+setTimeout(()=>{document.getElementById('chatInput').value=msg;sendMessage();},700);
+}
+}catch(e){toast('Network error','error');}
 }
 
 function showStep1(){document.getElementById('authStep1').style.display='block';document.getElementById('authStep2').style.display='none';}
 
 function updateAuthBtn(){
-  const btn=document.getElementById('authBtn');
-  if(state.token&&state.userName){btn.textContent=`${state.userEmoji} ${state.userName.split(' ')[0]}`;btn.classList.add('logged-in');}
-  else{btn.textContent='Login';btn.classList.remove('logged-in');}
-  updateDotsAuth();
+const btn=document.getElementById('authBtn');
+if(state.token&&state.userName){btn.textContent=`${state.userEmoji} ${state.userName.split(' ')[0]}`;btn.classList.add('logged-in');}
+else{btn.textContent='Login';btn.classList.remove('logged-in');}
+updateDotsAuth();
 }
 
 function logout(){
-  state.token=null;state.mobile=null;state.userName=null;
-  localStorage.removeItem('ld_token');localStorage.removeItem('ld_mobile');localStorage.removeItem('ld_name');
-  updateAuthBtn();closeModal('profileModal');toast('Logged out');
+state.token=null;state.mobile=null;state.userName=null;
+localStorage.removeItem('ld_token');localStorage.removeItem('ld_mobile');localStorage.removeItem('ld_name');
+updateAuthBtn();closeModal('profileModal');toast('Logged out');
 }
 
 function openProfileModal(){
-  document.getElementById('profileEmoji').textContent=state.userEmoji||'😤';
-  document.getElementById('profileName').textContent=state.userName||'User';
-  const adminMobCheck=localStorage.getItem('ld_admin_mobile');
-  const isAdminProfile=state.mobile&&adminMobCheck&&state.mobile===adminMobCheck;
-  const plan=isAdminProfile?'admin':(localStorage.getItem('ld_plan')||'free');
-  const badge=document.getElementById('profileBadge');
-  badge.textContent=plan.toUpperCase();
-  badge.className='user-plan-badge'+(plan==='admin'?' paid':plan!=='free'?' paid':'');
-  if(plan==='admin') badge.style.cssText='background:rgba(245,158,11,.2);color:#f59e0b;border-color:rgba(245,158,11,.4);';
-  const list=document.getElementById('purchaseList');
-  if(!state.purchases.length){list.innerHTML='<p style="font-size:12px;color:var(--text3)">No premium purchases yet.</p>';}
-  else{
-    list.innerHTML=state.purchases.map(p=>{
-      const exp=new Date(p.expiry);const expired=exp<new Date();
-      return `<div class="purchase-row"><div><div class="purchase-name">${p.name}</div><div class="purchase-dates">Bought: ${p.date} · Expires: ${exp.toLocaleDateString('en-IN')}</div></div>${expired?`<button class="renew-btn" onclick="openService('${p.service}')">Renew</button>`:'<span style="font-size:10px;color:var(--accent3)">Active ✓</span>'}</div>`;
-    }).join('');
-  }
-  openModal('profileModal');
+document.getElementById('profileEmoji').textContent=state.userEmoji||'😤';
+document.getElementById('profileName').textContent=state.userName||'User';
+const adminMobCheck=localStorage.getItem('ld_admin_mobile');
+const isAdminProfile=state.mobile&&adminMobCheck&&state.mobile===adminMobCheck;
+const plan=isAdminProfile?'admin':(localStorage.getItem('ld_plan')||'free');
+const badge=document.getElementById('profileBadge');
+badge.textContent=plan.toUpperCase();
+badge.className='user-plan-badge'+(plan==='admin'?' paid':plan!=='free'?' paid':'');
+if(plan==='admin') badge.style.cssText='background:rgba(245,158,11,.2);color:#f59e0b;border-color:rgba(245,158,11,.4);';
+const list=document.getElementById('purchaseList');
+if(!state.purchases.length){list.innerHTML='<p style="font-size:12px;color:var(--text3)">No premium purchases yet.</p>';}
+else{
+list.innerHTML=state.purchases.map(p=>{
+const exp=new Date(p.expiry);const expired=exp<new Date();
+return `<div class="purchase-row"><div><div class="purchase-name">${p.name}</div><div class="purchase-dates">Bought: ${p.date} · Expires: ${exp.toLocaleDateString('en-IN')}</div></div>${expired?`<button class="renew-btn" onclick="openService('${p.service}')">Renew</button>`:'<span style="font-size:10px;color:var(--accent3)">Active ✓</span>'}</div>`;
+}).join('');
+}
+openModal('profileModal');
 }
 
 function shareAndEarn(){
-  const text=`⚖️ Bklchai — Aapka Kanooni Dost!\nHindi, Telugu & Hinglish mein free legal help!\n\n🔗 bklchai.com`;
-  if(navigator.share) navigator.share({title:'Bklchai',text,url:'https://bklchai.com'}).catch(()=>{});
-  else{navigator.clipboard.writeText('https://bklchai.com');toast('Link copied! Share karo 🔗','success');}
+const text=`⚖️ Bklchai — Aapka Kanooni Dost!\nHindi, Telugu & Hinglish mein free legal help!\n\n🔗 bklchai.com`;
+if(navigator.share) navigator.share({title:'Bklchai',text,url:'https://bklchai.com'}).catch(()=>{});
+else{navigator.clipboard.writeText('https://bklchai.com');toast('Link copied! Share karo 🔗','success');}
 }
 
 // PAYWALL
 function openPaywall(){
-  openModal('paywallModal');
+// PAYMENTS DISABLED
+showComingSoon();
 }
 
-// PAYMENT — key fetched from backend /api/config which reads your .env RAZORPAY_KEY_ID
-async function getRazorpayKey(){
-  if(window._rzpKey) return window._rzpKey;
-  try{
-    const res = await fetch(`${API}/api/config`);
-    const data = await res.json();
-    window._rzpKey = data.razorpay_key_id;
-    return window._rzpKey;
-  }catch(e){
-    toast('Could not load payment config. Check server.','error');
-    return null;
-  }
-}
-
-async function initiatePayment(service, amount){
-  if(!state.token){
-    // Store everything so we can resume automatically after login
-    state.pendingPaymentService = service;
-    state.pendingPaymentAmount  = amount;
-    // pendingServiceData is already set by submitService before calling here
-    toast('Login karein — payment turant khulega! 🔐','warn');
-    openAuth();
-    return null;
-  }
-  const rzpKey = await getRazorpayKey();
-  if(!rzpKey) return null;
-  return new Promise((resolve) => {
-    const options = {
-      key: rzpKey,
-      amount: amount * 100,
-      currency: 'INR',
-      name: 'Bklchai',
-      description: service,
-      handler: function(response){
-        toast('Payment successful! ✓','success');
-        resolve(response);
-      },
-      prefill: { contact: state.mobile || '' },
-      theme: { color: '#f59e0b' },
-      modal: {
-        ondismiss: function(){
-          toast('Payment cancelled.','warn');
-          resolve(null);
-        }
-      }
-    };
-    const rzp = new Razorpay(options);
-    rzp.on('payment.failed', function(response){
-      toast('Payment failed: '+(response.error.description||'Unknown error'),'error');
-      resolve(null);
-    });
-    rzp.open();
-  });
+// PAYMENT
+async function initiatePayment(service,amount){
+// PAYMENTS DISABLED — Razorpay setup in progress
+showComingSoon();
+return null;
 }
 
 
-async function buyPlan(planId, amount){
-  const paymentResult = await initiatePayment('plan_'+planId, amount);
-  if(!paymentResult) return;
-  localStorage.setItem('ld_plan', planId);
-  toast('Plan activated! Enjoy your upgraded access 🎉','success');
-  closeModal('paywallModal');
-  updateUsageBar();
-} 
+// SHARE CARD — draws branded canvas card (like reference image)
 function wrapText(ctx, text, x, y, maxW, lineH, maxY){
-  const words=text.replace(/[#*_`]/g,'').split(' ');
-  let line='';
-  for(const w of words){
-    const test=line+(line?' ':'')+w;
-    if(ctx.measureText(test).width>maxW&&line){
-      ctx.fillText(line,x,y);line=w;y+=lineH;
-      if(y>maxY){ctx.fillStyle='#6a6a80';ctx.fillText('... (open app for full answer)',x,y);return y;}
-    } else line=test;
-  }
-  if(line&&y<=maxY) ctx.fillText(line,x,y);
-  return y;
+const words=text.replace(/[#*_`]/g,'').split(' ');
+let line='';
+for(const w of words){
+const test=line+(line?' ':'')+w;
+if(ctx.measureText(test).width>maxW&&line){
+ctx.fillText(line,x,y);line=w;y+=lineH;
+if(y>maxY){ctx.fillStyle='#6a6a80';ctx.fillText('... (open app for full answer)',x,y);return y;}
+} else line=test;
+}
+if(line&&y<=maxY) ctx.fillText(line,x,y);
+return y;
 }
 
 function drawShareCanvas(question, bodyText){
-  const wrap=document.getElementById('shareCardWrap');
-  const canvas=document.getElementById('shareCanvas');
-  const ctx=canvas.getContext('2d');
-  const W=640,H=500;
-  canvas.width=W;canvas.height=H;
-  canvas.style.width='100%';canvas.style.maxWidth='100%';
+const wrap=document.getElementById('shareCardWrap');
+const canvas=document.getElementById('shareCanvas');
+const ctx=canvas.getContext('2d');
+const W=640,H=500;
+canvas.width=W;canvas.height=H;
+canvas.style.width='100%';canvas.style.maxWidth='100%';
 
-  // BG
-  ctx.fillStyle='#0d0d14';ctx.fillRect(0,0,W,H);
+// BG
+ctx.fillStyle='#0d0d14';ctx.fillRect(0,0,W,H);
 
-  // Top gradient bar
-  const g=ctx.createLinearGradient(0,0,W,0);
-  g.addColorStop(0,'#f59e0b');g.addColorStop(1,'#f97316');
-  ctx.fillStyle=g;ctx.fillRect(0,0,W,5);
+// Top gradient bar
+const g=ctx.createLinearGradient(0,0,W,0);
+g.addColorStop(0,'#f59e0b');g.addColorStop(1,'#f97316');
+ctx.fillStyle=g;ctx.fillRect(0,0,W,5);
 
-  // Logo strip
-  ctx.fillStyle='#14141e';ctx.fillRect(0,5,W,60);
-  ctx.font='bold 18px sans-serif';ctx.fillStyle='#f59e0b';
-  ctx.fillText('\u2696\uFE0F  Bklchai',20,38);
-  ctx.font='12px sans-serif';ctx.fillStyle='#888';
-  ctx.fillText('bklchai.com  •  Pocket Lawyer for Indian Citizens',20,56);
+// Logo strip
+ctx.fillStyle='#14141e';ctx.fillRect(0,5,W,60);
+ctx.font='bold 18px sans-serif';ctx.fillStyle='#f59e0b';
+ctx.fillText('\u2696\uFE0F  Bklchai',20,38);
+ctx.font='12px sans-serif';ctx.fillStyle='#888';
+ctx.fillText('bklchai.com  •  Pocket Lawyer for Indian Citizens',20,56);
 
-  // Divider
-  ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(0,65);ctx.lineTo(W,65);ctx.stroke();
+// Divider
+ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(0,65);ctx.lineTo(W,65);ctx.stroke();
 
-  // QUESTION block
-  const qClean=(question||'Legal Question').replace(/[#*_`]/g,'').trim();
-  ctx.fillStyle='rgba(245,158,11,0.08)';
-  ctx.beginPath();ctx.roundRect(16,75,W-32,44,8);ctx.fill();
-  ctx.fillStyle='#f59e0b';ctx.font='bold 12px sans-serif';
-  ctx.fillText('Q  →',24,96);
-  ctx.fillStyle='#f0f0f5';ctx.font='13px sans-serif';
-  // Single line question with ellipsis
-  let qText=qClean;
-  while(ctx.measureText(qText).width>W-100&&qText.length>10) qText=qText.slice(0,-1);
-  if(qText!==qClean) qText+='...';
-  ctx.fillText(qText,60,96);
-  ctx.fillStyle='#2a2a38';ctx.fillRect(16,119,W-32,1);
+// QUESTION block
+const qClean=(question||'Legal Question').replace(/[#*_`]/g,'').trim();
+ctx.fillStyle='rgba(245,158,11,0.08)';
+ctx.beginPath();ctx.roundRect(16,75,W-32,44,8);ctx.fill();
+ctx.fillStyle='#f59e0b';ctx.font='bold 12px sans-serif';
+ctx.fillText('Q  →',24,96);
+ctx.fillStyle='#f0f0f5';ctx.font='13px sans-serif';
+// Single line question with ellipsis
+let qText=qClean;
+while(ctx.measureText(qText).width>W-100&&qText.length>10) qText=qText.slice(0,-1);
+if(qText!==qClean) qText+='...';
+ctx.fillText(qText,60,96);
+ctx.fillStyle='#2a2a38';ctx.fillRect(16,119,W-32,1);
 
-  // ANSWER block
-  ctx.fillStyle='#f59e0b';ctx.font='bold 12px sans-serif';
-  ctx.fillText('A  →',24,140);
-  ctx.fillStyle='#d0d0e0';ctx.font='13px sans-serif';
-  const ansClean=bodyText.replace(/[#*_`]/g,'').replace(/\n+/g,' ').trim();
-  wrapText(ctx, ansClean, 60, 140, W-80, 20, H-60);
+// ANSWER block
+ctx.fillStyle='#f59e0b';ctx.font='bold 12px sans-serif';
+ctx.fillText('A  →',24,140);
+ctx.fillStyle='#d0d0e0';ctx.font='13px sans-serif';
+const ansClean=bodyText.replace(/[#*_`]/g,'').replace(/\n+/g,' ').trim();
+wrapText(ctx, ansClean, 60, 140, W-80, 20, H-60);
 
-  // Disclaimer — English only, proper spacing above bottom bar
-  ctx.font='10px sans-serif';ctx.fillStyle='#5a5a6a';ctx.textAlign='left';
-  const disc='Disclaimer: AI-generated info only. Not legal advice. Consult a qualified lawyer before taking action.';
-  const discWords=disc.split(' ');let discLine='',discY=H-72;
-  for(const w of discWords){
-    const test=discLine+(discLine?' ':'')+w;
-    if(ctx.measureText(test).width>W-42&&discLine){ctx.fillText(discLine,20,discY);discLine=w;discY+=13;}
-    else discLine=test;
-  }
-  if(discLine) ctx.fillText(discLine,20,discY);
+// Disclaimer — English only, proper spacing above bottom bar
+ctx.font='10px sans-serif';ctx.fillStyle='#5a5a6a';ctx.textAlign='left';
+const disc='Disclaimer: AI-generated info only. Not legal advice. Consult a qualified lawyer before taking action.';
+const discWords=disc.split(' ');let discLine='',discY=H-72;
+for(const w of discWords){
+const test=discLine+(discLine?' ':'')+w;
+if(ctx.measureText(test).width>W-42&&discLine){ctx.fillText(discLine,20,discY);discLine=w;discY+=13;}
+else discLine=test;
+}
+if(discLine) ctx.fillText(discLine,20,discY);
 
-  // Bottom bar
-  ctx.fillStyle='#14141e';ctx.fillRect(0,H-44,W,44);
-  ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(0,H-44);ctx.lineTo(W,H-44);ctx.stroke();
-  ctx.font='11px sans-serif';ctx.fillStyle='#555';
-  ctx.fillText('bklchai.com  •  Free legal help for every Indian',20,H-16);
-  ctx.fillStyle='#f59e0b';ctx.textAlign='right';
-  ctx.fillText('bklchai.com',W-20,H-16);
-  ctx.textAlign='left';
-  ctx.fillStyle=g;ctx.fillRect(0,H-3,W,3);
+// Bottom bar
+ctx.fillStyle='#14141e';ctx.fillRect(0,H-44,W,44);
+ctx.strokeStyle='#2a2a38';ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(0,H-44);ctx.lineTo(W,H-44);ctx.stroke();
+ctx.font='11px sans-serif';ctx.fillStyle='#555';
+ctx.fillText('bklchai.com  •  Free legal help for every Indian',20,H-16);
+ctx.fillStyle='#f59e0b';ctx.textAlign='right';
+ctx.fillText('bklchai.com',W-20,H-16);
+ctx.textAlign='left';
+ctx.fillStyle=g;ctx.fillRect(0,H-3,W,3);
 
-  wrap.style.display='block';
+wrap.style.display='block';
 }
 
 function roundRect(ctx,x,y,w,h,r){
-  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
-  ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
-  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
-  ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
-  ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
+ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
+ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
+ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
 }
 
 // Called from Result modal Generate button
 function buildShareCard(){
-  const result=state.currentResult;
-  if(!result){toast('No content to share','error');return;}
-  // title is the question for chat responses, service name for premium docs
-  drawShareCanvas(result.title||'Bklchai Response', result.content||'');
-  document.getElementById('shareCardWrap').style.display='block';
-  toast('Share card ready! ↓','success');
+const result=state.currentResult;
+if(!result){toast('No content to share','error');return;}
+// title is the question for chat responses, service name for premium docs
+drawShareCanvas(result.title||'Bklchai Response', result.content||'');
+document.getElementById('shareCardWrap').style.display='block';
+toast('Share card ready! ↓','success');
 }
 
 function downloadShareCard(){
-  const c=document.getElementById('shareCanvas');
-  const a=document.createElement('a');
-  a.href=c.toDataURL('image/png');
-  a.download='legaldost_share.png';
-  a.click();
+const c=document.getElementById('shareCanvas');
+const a=document.createElement('a');
+a.href=c.toDataURL('image/png');
+a.download='legaldost_share.png';
+a.click();
 }
 
 // FIXED: shareCard() shares only the image card, no text message.
 function shareCard(){
-  const canvas=document.getElementById('shareCanvas');
-  if(!canvas){ toast('No image to share', 'error'); return; }
-  canvas.toBlob(function(blob){
-    const file = new File([blob], 'bklchai_share.png', { type: 'image/png' });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({
-        files: [file],
-        title: 'Bklchai - Legal Card',
-      }).catch(err => {
-        if (err.name !== 'AbortError') {
-          toast('Could not share automatically. Download image instead.', 'error');
-          downloadShareCard(); // fallback download
-        }
-      });
-    } else {
-      // fallback: download
-      downloadShareCard();
-      toast('Image saved. Share it manually on WhatsApp.', 'success');
-    }
-  }, 'image/png');
+const canvas=document.getElementById('shareCanvas');
+if(!canvas){ toast('No image to share', 'error'); return; }
+canvas.toBlob(function(blob){
+const file = new File([blob], 'bklchai_share.png', { type: 'image/png' });
+if (navigator.canShare && navigator.canShare({ files: [file] })) {
+navigator.share({
+files: [file],
+title: 'Bklchai - Legal Card',
+}).catch(err => {
+if (err.name !== 'AbortError') {
+toast('Could not share automatically. Download image instead.', 'error');
+downloadShareCard(); // fallback download
+}
+});
+} else {
+// fallback: download
+downloadShareCard();
+toast('Image saved. Share it manually on WhatsApp.', 'success');
+}
+}, 'image/png');
 }
 
 function copyBubble(btn){
-  const b=btn.closest('.msg').querySelector('.msg-bubble');
-  let txt=b.innerText||'';
-  txt=txt.replace(/Aur kya jaanna hai\?.*$/i,'').replace(/Next enti\?.*$/i,'').trim();
-  navigator.clipboard.writeText(txt);
-  toast('Copied \u2713','success');
+const b=btn.closest('.msg').querySelector('.msg-bubble');
+let txt=b.innerText||'';
+txt=txt.replace(/Aur kya jaanna hai\?.*$/i,'').replace(/Next enti\?.*$/i,'').trim();
+navigator.clipboard.writeText(txt);
+toast('Copied \u2713','success');
 }
 
 function shareBubble(btn) {
-  const msgEl = btn.closest('.msg');
-  const allMsgs = [...document.querySelectorAll('.msg')];
-  const idx = allMsgs.indexOf(msgEl);
-  let question = 'Legal Question';
-  for (let i = idx - 1; i >= 0; i--) {
-    if (allMsgs[i].classList.contains('user')) {
-      question = allMsgs[i].querySelector('.msg-bubble')?.innerText || 'Legal Question';
-      break;
-    }
-  }
-  const b = msgEl.querySelector('.msg-bubble');
-  let rawText = (b?.innerText || '').replace(/Aur kya jaanna hai\?.*$/i, '').replace(/Next enti\?.*$/i, '').trim();
-  state.currentResult = { title: question, content: rawText, serviceType: 'chat' };
-  document.getElementById('resultModalTitle').textContent = 'Share This Response';
-  document.getElementById('resultContent').textContent = rawText;
-  document.getElementById('shareCardWrap').style.display = 'none';
-  openModal('resultModal');
-  setTimeout(() => { drawShareCanvas(question, rawText); }, 120);
+const msgEl = btn.closest('.msg');
+const allMsgs = [...document.querySelectorAll('.msg')];
+const idx = allMsgs.indexOf(msgEl);
+let question = 'Legal Question';
+for (let i = idx - 1; i >= 0; i--) {
+if (allMsgs[i].classList.contains('user')) {
+question = allMsgs[i].querySelector('.msg-bubble')?.innerText || 'Legal Question';
+break;
+}
+}
+const b = msgEl.querySelector('.msg-bubble');
+let rawText = (b?.innerText || '').replace(/Aur kya jaanna hai\?.*$/i, '').replace(/Next enti\?.*$/i, '').trim();
+state.currentResult = { title: question, content: rawText, serviceType: 'chat' };
+document.getElementById('resultModalTitle').textContent = 'Share This Response';
+document.getElementById('resultContent').textContent = rawText;
+document.getElementById('shareCardWrap').style.display = 'none';
+openModal('resultModal');
+setTimeout(() => { drawShareCanvas(question, rawText); }, 120);
 }
 
 // MODALS
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){
-  document.getElementById(id).classList.remove('open');
-  if(id==='authModal'){document.getElementById('authStep1').style.display='block';document.getElementById('authStep2').style.display='none';}
+document.getElementById(id).classList.remove('open');
+if(id==='authModal'){document.getElementById('authStep1').style.display='block';document.getElementById('authStep2').style.display='none';}
 }
 document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)closeModal(el.id);});});
 
 // TOAST
 function toast(msg,type=''){
-  const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
-  document.body.appendChild(el);setTimeout(()=>el.remove(),3000);
+const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
+document.body.appendChild(el);setTimeout(()=>el.remove(),3000);
 }
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 // ₹7 Expert — get priority answer for current bubble's question
 async function expertAnswerForThis(btn){
-  const msgEl=btn.closest('.msg');
-  const allMsgs=[...document.querySelectorAll('.msg')];
-  const idx=allMsgs.indexOf(msgEl);
-  let question='';
-  // Find the user question that triggered this AI response
-  for(let i=idx-1;i>=0;i--){
-    if(allMsgs[i].classList.contains('user')){
-      question=allMsgs[i].querySelector('.msg-bubble')?.innerText?.trim()||'';
-      break;
-    }
-  }
-  if(!question){toast('Could not find the question.','error');return;}
-  state.pendingExpertQuestion=question;
-  openService('expert_answer');
-  setTimeout(()=>{
-    const qField=document.getElementById('ea_question');
-    if(qField){
-      qField.value=question;
-      qField.setAttribute('readonly','true');
-      qField.style.opacity='0.7';
-    }
-  },100);
+const msgEl=btn.closest('.msg');
+const allMsgs=[...document.querySelectorAll('.msg')];
+const idx=allMsgs.indexOf(msgEl);
+let question='';
+// Find the user question that triggered this AI response
+for(let i=idx-1;i>=0;i--){
+if(allMsgs[i].classList.contains('user')){
+question=allMsgs[i].querySelector('.msg-bubble')?.innerText?.trim()||'';
+break;
+}
+}
+if(!question){toast('Could not find the question. Please use the Priority Answer service.','error');return;}
+// Pre-fill and open priority answer with this question
+state.pendingExpertQuestion=question;
+// Open service modal but pre-filled
+openService('priority_answer');
+// After modal opens, auto-fill the question field
+setTimeout(()=>{
+const qField=document.getElementById('sf_question');
+if(qField){
+qField.value=question;
+qField.setAttribute('readonly','true');
+qField.style.opacity='0.7';
+}
+},100);
 }
 
 // FEEDBACK
 function openFeedback(){openModal('feedbackModal');}
 
 function submitFeedback(){
-  const name=document.getElementById('fb_name').value.trim()||'Anonymous';
-  const type=document.getElementById('fb_type').value;
-  const msg=document.getElementById('fb_message').value.trim();
-  const phone=document.getElementById('fb_phone').value.trim();
-  if(!msg){toast('Please write your feedback first','error');return;}
+const name=document.getElementById('fb_name').value.trim()||'Anonymous';
+const type=document.getElementById('fb_type').value;
+const msg=document.getElementById('fb_message').value.trim();
+const phone=document.getElementById('fb_phone').value.trim();
+if(!msg){toast('Please write your feedback first','error');return;}
 
-  const typeLabel={suggestion:'💡 Suggestion',bug:'🐛 Bug Report',complaint:'😤 Complaint',praise:'🙌 Praise',feature:'🚀 Feature Request'}[type]||type;
-  const lang=state.lang||'hi';
-  const text=`*Bklchai Feedback*%0A%0A*Type:* ${typeLabel}%0A*Name:* ${name}%0A*Language:* ${lang}%0A*Phone:* ${phone||'Not given'}%0A%0A*Message:*%0A${encodeURIComponent(msg)}%0A%0A_Sent from bklchai.com_`;
-  window.open(`https://wa.me/918185843878?text=${text}`,'_blank');
-  closeModal('feedbackModal');
-  toast('Opening WhatsApp... Thank you! 🙏','success');
+const typeLabel={suggestion:'💡 Suggestion',bug:'🐛 Bug Report',complaint:'😤 Complaint',praise:'🙌 Praise',feature:'🚀 Feature Request'}[type]||type;
+const lang=state.lang||'hi';
+const text=`*Bklchai Feedback*%0A%0A*Type:* ${typeLabel}%0A*Name:* ${name}%0A*Language:* ${lang}%0A*Phone:* ${phone||'Not given'}%0A%0A*Message:*%0A${encodeURIComponent(msg)}%0A%0A_Sent from bklchai.com_`;
+window.open(`https://wa.me/918185843878?text=${text}`,'_blank');
+closeModal('feedbackModal');
+toast('Opening WhatsApp... Thank you! 🙏','success');
 }
 
 // ── AUDIO COMMAND SENDER ───────────────────────────────────────
 // ── AUDIO: send command to audio.html iframe ──────────────────
 function playCommand(cmd){
-  var frame=document.getElementById('audioFrame');
-  if(frame&&frame.contentWindow) frame.contentWindow.postMessage(cmd,'*');
+var frame=document.getElementById('audioFrame');
+if(frame&&frame.contentWindow) frame.contentWindow.postMessage(cmd,'*');
 }
 
-// showComingSoon kept as fallback for any truly future features
+// ── PAYMENTS TEMPORARILY DISABLED ─────────────────────────────
+// To re-enable: remove showComingSoon, rename openService_ORIG → openService
+// and restore all onclick handlers above
 function showComingSoon(){
-  toast('🚀 Coming soon — stay tuned!', 'warn');
+// Show a friendly coming-soon toast + modal
+const msg = {
+hi:       '⚡ Bahut jaldi aa raha hai! Payment system update ho raha hai.',
+te:       '⚡ చాలా త్వరలో వస్తుంది! Payment system నవీకరించబడుతోంది.',
+hinglish: '⚡ Coming soon! Payment system update ho raha hai.'
+}[state.lang] || '⚡ Coming soon!';
+toast(msg, 'warn');
+// Show the coming-soon modal
+openModal('comingSoonModal');
 }
 
-// ── SERVICES ──────────────────────────────────────────────────
-const SERVICES = {
-  cheque_notice: {
-    title: '📄 Cheque Bounce Notice',
-    desc: 'Legal notice under Section 138 NI Act — ready in 60 seconds.',
-    price: 149,
-    fields: [
-      {id:'cn_drawer',label:'Drawer Name (who gave cheque)',placeholder:'e.g. Ramesh Kumar'},
-      {id:'cn_drawer_addr',label:'Drawer Address',placeholder:'Full address'},
-      {id:'cn_amount',label:'Cheque Amount (₹)',placeholder:'e.g. 50000'},
-      {id:'cn_cheque_no',label:'Cheque Number',placeholder:'e.g. 001234'},
-      {id:'cn_bank',label:'Bank Name',placeholder:'e.g. HDFC Bank, Malviya Nagar'},
-      {id:'cn_bounce_date',label:'Bounce Date',placeholder:'e.g. 12 March 2025'},
-      {id:'cn_reason',label:'Bounce Reason (as per memo)',placeholder:'e.g. Insufficient Funds'},
-      {id:'cn_payee',label:'Your Name (Payee)',placeholder:'e.g. Suresh Traders'},
-    ],
-    btnLabel: 'Generate Notice — ₹149',
-    generate: async (vals) => {
-      const prompt = `Generate a formal legal notice under Section 138 of the Negotiable Instruments Act, 1881 for cheque dishonour. Use these details:\n- Drawer: ${vals.cn_drawer}\n- Drawer Address: ${vals.cn_drawer_addr}\n- Cheque Amount: ₹${vals.cn_amount}\n- Cheque No: ${vals.cn_cheque_no}\n- Bank: ${vals.cn_bank}\n- Bounce Date: ${vals.cn_bounce_date}\n- Reason: ${vals.cn_reason}\n- Payee (sender of notice): ${vals.cn_payee}\n\nWrite a complete, professional legal notice in English. Include demand for payment within 15 days as required under the Act. Format it like a formal lawyer's notice.`;
-      return prompt;
-    }
-  },
-  msme_notice: {
-    title: '⚖️ MSME Payment Recovery Notice',
-    desc: 'Formal payment recovery notice under MSMED Act 2006. Includes interest clause.',
-    price: 269,
-    fields: [
-      {id:'mn_buyer',label:'Buyer / Debtor Name',placeholder:'e.g. ABC Pvt Ltd'},
-      {id:'mn_buyer_addr',label:'Buyer Address',placeholder:'Full address'},
-      {id:'mn_amount',label:'Outstanding Amount (₹)',placeholder:'e.g. 1,50,000'},
-      {id:'mn_invoice_nos',label:'Invoice Numbers',placeholder:'e.g. INV-001, INV-002'},
-      {id:'mn_due_date',label:'Payment Due Since',placeholder:'e.g. 1 January 2025'},
-      {id:'mn_supplier',label:'Your Business Name (MSME)',placeholder:'e.g. XYZ Enterprises'},
-      {id:'mn_udyam',label:'Udyam Registration No.',placeholder:'e.g. UDYAM-TS-00-0012345'},
-    ],
-    btnLabel: 'Generate Notice — ₹269',
-    generate: async (vals) => {
-      const prompt = `Generate a formal payment recovery notice under the Micro, Small and Medium Enterprises Development (MSMED) Act, 2006. Use these details:\n- Buyer/Debtor: ${vals.mn_buyer}\n- Buyer Address: ${vals.mn_buyer_addr}\n- Outstanding Amount: ₹${vals.mn_amount}\n- Invoice Nos: ${vals.mn_invoice_nos}\n- Due Since: ${vals.mn_due_date}\n- MSME Supplier: ${vals.mn_supplier}\n- Udyam No.: ${vals.mn_udyam}\n\nWrite a complete, professional legal notice demanding payment within 15 days, mentioning applicable interest under the MSMED Act, and warning of reference to the MSME Facilitation Council. Format like a formal legal notice.`;
-      return prompt;
-    }
-  },
-  complaint_draft: {
-    title: '📝 Complaint Letter Draft',
-    desc: 'AI-drafted formal complaint for police, consumer forum, or any authority.',
-    price: 99,
-    fields: [
-      {id:'cd_to',label:'To (Authority)',placeholder:'e.g. SHO, Banjara Hills Police Station'},
-      {id:'cd_from',label:'Your Name',placeholder:'e.g. Priya Sharma'},
-      {id:'cd_subject',label:'Subject / Type of Complaint',placeholder:'e.g. Online fraud of ₹20,000'},
-      {id:'cd_details',label:'Describe the incident in detail',placeholder:'What happened, when, who was involved, amount/loss...'},
-      {id:'cd_relief',label:'Relief / Action requested',placeholder:'e.g. File FIR, refund of amount, arrest of accused'},
-    ],
-    btnLabel: 'Generate Complaint — ₹99',
-    generate: async (vals) => {
-      const prompt = `Write a formal complaint letter in English with these details:\n- Addressed To: ${vals.cd_to}\n- From: ${vals.cd_from}\n- Subject: ${vals.cd_subject}\n- Incident Details: ${vals.cd_details}\n- Relief Sought: ${vals.cd_relief}\n\nFormat it as a professional formal complaint letter with date, proper salutation, numbered paragraphs, and a closing prayer/request section.`;
-      return prompt;
-    }
-  },
-  legal_reply: {
-    title: '✉️ Legal Notice Reply',
-    desc: 'Professional reply to any legal notice you have received.',
-    price: 49,
-    fields: [
-      {id:'lr_notice_from',label:'Notice Sender (Opponent)',placeholder:'e.g. ABC Bank / Advocate Ravi Kumar'},
-      {id:'lr_notice_date',label:'Date of Notice Received',placeholder:'e.g. 15 March 2025'},
-      {id:'lr_subject',label:'Subject of Notice',placeholder:'e.g. Loan recovery / Property dispute / Cheque bounce'},
-      {id:'lr_your_name',label:'Your Name',placeholder:'e.g. Mukesh Agarwal'},
-      {id:'lr_your_response',label:'Your version / response (in brief)',placeholder:'e.g. Payment was already made on 10 Feb, here is the reference...'},
-    ],
-    btnLabel: 'Generate Reply — ₹49',
-    generate: async (vals) => {
-      const prompt = `Draft a formal legal reply to a notice with these details:\n- Notice From: ${vals.lr_notice_from}\n- Date of Notice: ${vals.lr_notice_date}\n- Subject: ${vals.lr_subject}\n- Reply By: ${vals.lr_your_name}\n- Our Response: ${vals.lr_your_response}\n\nWrite a professional, legally worded reply denying or clarifying the claims, reserving all legal rights, and asking for withdrawal of false/baseless claims if applicable. Format as a formal legal letter.`;
-      return prompt;
-    }
-  },
-  priority_answer: {
-    title: '⚡ Priority Legal Answer',
-    desc: 'Detailed, step-by-step answer to your specific legal question. Includes relevant law sections.',
-    price: 19,
-    fields: [
-      {id:'sf_question',label:'Your Legal Question (be specific)',placeholder:'Describe your situation in detail...'},
-      {id:'sf_state',label:'Your State (optional)',placeholder:'e.g. Telangana, Maharashtra'},
-    ],
-    btnLabel: 'Get Priority Answer — ₹19',
-    generate: async (vals) => {
-      const lang = state.lang==='hi'?'Hindi':(state.lang==='te'?'Telugu':'Hinglish (Hindi-English mix)');
-      const prompt = `You are an expert Indian legal advisor. Answer this question in ${lang} with full detail:\n\nQuestion: ${vals.sf_question}\nState: ${vals.sf_state||'Not specified'}\n\nProvide:\n1. Direct answer to the question\n2. Relevant laws/sections that apply\n3. Step-by-step action plan\n4. Government portals/authorities to contact\n5. Important deadlines/timelines\n6. A disclaimer that this is informational and not formal legal advice\n\nBe thorough, specific, and practical. Use simple language.`;
-      return prompt;
-    }
-  },
-  expert_answer: {
-    title: '⚡ Expert Answer',
-    desc: 'Quick expert-level answer with relevant law sections and action steps.',
-    price: 7,
-    fields: [
-      {id:'ea_question',label:'Your Legal Question',placeholder:'Your specific question...'},
-    ],
-    btnLabel: 'Get Expert Answer — ₹7',
-    generate: async (vals) => {
-      const lang = state.lang==='hi'?'Hindi':(state.lang==='te'?'Telugu':'Hinglish (Hindi-English mix)');
-      return `You are an expert Indian legal advisor. Answer this in ${lang} with full practical detail:\n\nQuestion: ${vals.ea_question}\n\nProvide: direct answer, relevant Indian laws/sections, step-by-step action plan, key deadlines, and a brief disclaimer.`;
-    }
-  },
-};
-
-
-async function generateServiceOutput(key, svc, vals, paymentResult){
-  let endpoint = `${API}/api/chat`;
-  let payload = null;
-
-  if(key === 'priority_answer'){
-    endpoint = `${API}/api/priority-answer`;
-    payload = {
-      question: vals.sf_question,
-      priority_flag: true,
-      language: state.lang,
-      payment_id: paymentResult.razorpay_payment_id || 'paid',
-      mobile: state.userMobile || ''
-    };
-  } else {
-    const promptText = await svc.generate(vals);
-    payload = {
-      message: promptText,
-      language: state.lang,
-      session_token: state.token,
-      conversation_history: state.chatHistory.slice(-8)
-    };
-  }
-
-  const res = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-
-  const data = await res.json();
-  if(!res.ok){
-    throw new Error(data.detail || data.error || 'Generation failed');
-  }
-
-  return data.content || data.response || '';
-}
-
-function recordSuccessfulPurchase(key, svc, paymentResult){
-  const purchase = {
-    service: key,
-    name: svc.title,
-    date: new Date().toLocaleDateString('en-IN'),
-    expiry: new Date(Date.now() + 365*24*60*60*1000).toISOString(),
-    payment_id: paymentResult.razorpay_payment_id || 'paid'
-  };
-  state.purchases.push(purchase);
-  localStorage.setItem('ld_purchases', JSON.stringify(state.purchases));
-  localStorage.setItem('ld_plan', 'pro');
-}
-
-async function openService(key){
-  const svc = SERVICES[key];
-  if(!svc){ toast('Service not found','error'); return; }
-
-  const title = document.getElementById('serviceModalTitle');
-  const desc  = document.getElementById('serviceModalDesc');
-  const body  = document.getElementById('serviceModalBody');
-
-  title.textContent = svc.title;
-  desc.textContent  = svc.desc;
-
-  const priceDisplay = `<div class="priority-price-display">₹${svc.price} — One-time payment</div>`;
-  const fields = svc.fields.map(f =>
-    `<div class="form-group">
-      <label>${f.label}</label>
-      <input type="text" id="${f.id}" placeholder="${f.placeholder}"/>
-    </div>`
-  ).join('');
-
-  body.innerHTML = priceDisplay + fields +
-    `<button class="modal-btn" onclick="submitService('${key}')">💳 ${svc.btnLabel}</button>`;
-
-  openModal('serviceModal');
-}
-
-async function submitService(key){
-  const svc = SERVICES[key];
-  if(!svc) return;
-
-  // Collect field values
-  const vals = {};
-  let missing = false;
-  svc.fields.forEach(f => {
-    const el = document.getElementById(f.id);
-    vals[f.id] = el ? el.value.trim() : '';
-    if(!vals[f.id] && !f.optional) missing = true;
-  });
-  if(missing){ toast('Please fill all required fields','error'); return; }
-
-  // Admin bypass – skip payment
-  const adminMob = localStorage.getItem('ld_admin_mobile');
-  const isAdminUser = state.mobile && adminMob && state.mobile === adminMob;
-  if (isAdminUser) {
-    closeModal('serviceModal');
-    toast('Admin mode: generating document (no payment)', 'info');
-    document.getElementById('pdfOverlay').classList.add('show');
-    try {
-      const output = await generateServiceOutput(key, svc, vals, { razorpay_payment_id: 'admin_free' });
-      document.getElementById('pdfOverlay').classList.remove('show');
-      recordSuccessfulPurchase(key, svc, { razorpay_payment_id: 'admin_free' });
-      state.currentResult = { title: svc.title, content: output, serviceType: key };
-      document.getElementById('resultModalTitle').textContent = svc.title;
-      document.getElementById('resultContent').textContent = output;
-      document.getElementById('shareCardWrap').style.display = 'none';
-      openModal('resultModal');
-      toast('Document ready! ✓', 'success');
-    } catch(e) {
-      document.getElementById('pdfOverlay').classList.remove('show');
-      toast(e.message || 'Generation failed', 'error');
-    }
-    return;
-  }
-
-  // Normal flow: initiate payment
-  state.pendingPaymentService = key;
-  state.pendingServiceData = vals;
-
-  const paymentResult = await initiatePayment(key, svc.price);
-  if(!paymentResult) return; // cancelled or failed
-
-  // Generate first, then record purchase
-  closeModal('serviceModal');
-  toast('Generating your document...', 'info');
-  document.getElementById('pdfOverlay').classList.add('show');
-
-  try {
-    const output = await generateServiceOutput(key, svc, vals, paymentResult);
-    document.getElementById('pdfOverlay').classList.remove('show');
-    recordSuccessfulPurchase(key, svc, paymentResult);
-
-    state.currentResult = { title: svc.title, content: output, serviceType: key };
-    document.getElementById('resultModalTitle').textContent = svc.title;
-    document.getElementById('resultContent').textContent = output;
-    document.getElementById('shareCardWrap').style.display = 'none';
-    openModal('resultModal');
-    toast('Document ready! ✓', 'success');
-  } catch(e) {
-    document.getElementById('pdfOverlay').classList.remove('show');
-    toast(e.message || 'Generation failed. Please try again.', 'error');
-  }
-}
-
-// ─── RESULT MODAL ACTIONS ──────────────────────────────────────────────────
-function copyResult() {
-  const content = document.getElementById('resultContent').innerText;
-  if (!content) {
-    toast('No content to copy', 'error');
-    return;
-  }
-  navigator.clipboard.writeText(content)
-    .then(() => toast('Copied to clipboard ✓', 'success'))
-    .catch(() => toast('Failed to copy', 'error'));
-}
-
-async function downloadPDF() {
-  const result = state.currentResult;
-  if (!result || !result.content) {
-    toast('No content to download', 'error');
-    return;
-  }
-  document.getElementById('pdfOverlay').classList.add('show');
-  try {
-    const res = await fetch(`${API}/api/generate-pdf`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        content: result.content,
-        title: result.title,
-        service_type: result.serviceType || 'document'
-      })
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || 'PDF generation failed');
-    }
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `bklchai_${result.serviceType || 'document'}.pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    toast(err.message, 'error');
-  } finally {
-    document.getElementById('pdfOverlay').classList.remove('show');
-  }
+function openService(key){
+// Payments disabled — show coming soon
+showComingSoon();
 }
 
 // INIT
 function init(){
-  const today=new Date().toDateString();
-  if(localStorage.getItem('ld_chat_date')!==today){
-    localStorage.setItem('ld_chat_date',today);
-    state.usedChats=0;state.warnedLastChat=false;
-    localStorage.setItem('ld_chats_'+today,'0');
-  }
-  // Reload usedChats from localStorage on every page load
-  state.usedChats=parseInt(localStorage.getItem('ld_chats_'+today)||'0');
+const today=new Date().toDateString();
+if(localStorage.getItem('ld_chat_date')!==today){
+localStorage.setItem('ld_chat_date',today);
+state.usedChats=0;state.warnedLastChat=false;
+localStorage.setItem('ld_chats_'+today,'0');
+}
+// Reload usedChats from localStorage on every page load
+state.usedChats=parseInt(localStorage.getItem('ld_chats_'+today)||'0');
 
-  // Show admin badge in nav if arrived from admin page
-  if(document.referrer.includes('admin.html')||sessionStorage.getItem('from_admin')==='1'){
-    sessionStorage.setItem('from_admin','1');
-    const adminBadge=document.createElement('a');
-    adminBadge.href='admin.html';
-    adminBadge.title='Go to Admin Dashboard';
-    adminBadge.style.cssText='position:fixed;top:0;left:50%;transform:translateX(-50%);background:#1a1a24;border:1px solid #f59e0b;color:#f59e0b;font-size:11px;font-weight:700;padding:3px 12px;border-radius:0 0 8px 8px;z-index:9999;text-decoration:none;letter-spacing:.5px;';
-    adminBadge.textContent='⚙️ ADMIN MODE';
-    document.body.appendChild(adminBadge);
-  }
+// Show admin badge in nav if arrived from admin page
+if(document.referrer.includes('admin.html')||sessionStorage.getItem('from_admin')==='1'){
+sessionStorage.setItem('from_admin','1');
+const adminBadge=document.createElement('a');
+adminBadge.href='admin.html';
+adminBadge.title='Go to Admin Dashboard';
+adminBadge.style.cssText='position:fixed;top:0;left:50%;transform:translateX(-50%);background:#1a1a24;border:1px solid #f59e0b;color:#f59e0b;font-size:11px;font-weight:700;padding:3px 12px;border-radius:0 0 8px 8px;z-index:9999;text-decoration:none;letter-spacing:.5px;';
+adminBadge.textContent='⚙️ ADMIN MODE';
+document.body.appendChild(adminBadge);
+}
 
-  updateUI();renderQuickCards();updateAuthBtn();updateUsageBar();
+updateUI();renderQuickCards();updateAuthBtn();updateUsageBar();
 }
 init();
 
 // Auto-show language dropdown hint (arrow and open dropdown for 5 seconds)
 function showLanguageHint() {
-  const arrow = document.getElementById('langArrow');
-  const langBtn = document.getElementById('langDdBtn');
-  const langMenu = document.getElementById('langDdMenu');
-  if (!arrow || !langBtn || !langMenu) return;
+const arrow = document.getElementById('langArrow');
+const langBtn = document.getElementById('langDdBtn');
+const langMenu = document.getElementById('langDdMenu');
+if (!arrow || !langBtn || !langMenu) return;
 
-  // Position the arrow relative to the language button
-  const btnRect = langBtn.getBoundingClientRect();
-  arrow.style.left = (btnRect.left + btnRect.width / 2 - 20) + 'px';
-  arrow.style.top = (btnRect.top + btnRect.height + 5) + 'px';
-  arrow.style.display = 'block';
+// Position the arrow relative to the language button
+const btnRect = langBtn.getBoundingClientRect();
+arrow.style.left = (btnRect.left + btnRect.width / 2 - 20) + 'px';
+arrow.style.top = (btnRect.top + btnRect.height + 5) + 'px';
+arrow.style.display = 'block';
 
-  // Open the dropdown
-  langMenu.classList.add('open');
+// Open the dropdown
+langMenu.classList.add('open');
 
-  // Hide arrow and close dropdown after 5 seconds
-  setTimeout(() => {
-    arrow.style.display = 'none';
-    langMenu.classList.remove('open');
-  }, 5000);
+// Hide arrow and close dropdown after 5 seconds
+setTimeout(() => {
+arrow.style.display = 'none';
+langMenu.classList.remove('open');
+}, 5000);
 }
 
 // Call the hint when the page is fully loaded (and after any login checks)
 window.addEventListener('load', () => {
-  // Wait a bit for the UI to stabilize (optional)
-  setTimeout(showLanguageHint, 500);
+// Wait a bit for the UI to stabilize (optional)
+setTimeout(showLanguageHint, 500);
 });
 
 
 // Voice Input (Speech-to-Text) – language follows the toggle
 function startVoiceInput() {
-  const micBtn = document.getElementById('micBtn');
-  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-    toast('Your browser does not support voice input. Please use Chrome, Edge, or Safari.', 'error');
-    return;
-  }
+const micBtn = document.getElementById('micBtn');
+if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+toast('Your browser does not support voice input. Please use Chrome, Edge, or Safari.', 'error');
+return;
+}
 
-  // Map state.lang to speech recognition language codes
-  let langCode = 'en-IN'; // default for hinglish or unknown
-  if (state.lang === 'hi') langCode = 'hi-IN';
-  else if (state.lang === 'te') langCode = 'te-IN';
-  else if (state.lang === 'hinglish') langCode = 'en-IN';
+// Map state.lang to speech recognition language codes
+let langCode = 'en-IN'; // default for hinglish or unknown
+if (state.lang === 'hi') langCode = 'hi-IN';
+else if (state.lang === 'te') langCode = 'te-IN';
+else if (state.lang === 'hinglish') langCode = 'en-IN';
 
-  // Create a new recognition instance every time to ensure language is fresh
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SpeechRecognition();
-  recognition.lang = langCode;
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
+// Create a new recognition instance every time to ensure language is fresh
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+recognition.lang = langCode;
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
 
-  recognition.onstart = () => {
-    micBtn.classList.add('active');
-    toast(`🎙️ Listening... (${langCode})`, 'info');
-  };
+recognition.onstart = () => {
+micBtn.classList.add('active');
+toast(`🎙️ Listening... (${langCode})`, 'info');
+};
 
-  recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript;
-    document.getElementById('chatInput').value = transcript;
-    micBtn.classList.remove('active');
-    toast('Voice captured!', 'success');
-    // Optional: auto-send after voice (uncomment if desired)
-    // sendMessage();
-  };
+recognition.onresult = (event) => {
+const transcript = event.results[0][0].transcript;
+document.getElementById('chatInput').value = transcript;
+micBtn.classList.remove('active');
+toast('Voice captured!', 'success');
+// Optional: auto-send after voice (uncomment if desired)
+// sendMessage();
+};
 
-  recognition.onerror = (event) => {
-    micBtn.classList.remove('active');
-    toast(`Voice error: ${event.error}`, 'error');
-  };
+recognition.onerror = (event) => {
+micBtn.classList.remove('active');
+toast(`Voice error: ${event.error}`, 'error');
+};
 
-  recognition.onend = () => {
-    micBtn.classList.remove('active');
-  };
+recognition.onend = () => {
+micBtn.classList.remove('active');
+};
 
-  recognition.start();
+recognition.start();
 }
 
 // ========== FILE UPLOAD TRIGGER ==========
 function triggerFileUpload() {
-  document.getElementById('fileUploadInput').click();
+document.getElementById('fileUploadInput').click();
 }
 
 // Inside init() function, before the closing brace
-document.getElementById('fileUploadInput').addEventListener('change', async function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  document.getElementById('fileUploadInput').value = '';
-
-  const MAX_MB = 5;
-  if (file.size > MAX_MB * 1024 * 1024) {
-    toast(`File too large (max ${MAX_MB}MB)`, 'error');
-    return;
-  }
-
-  const allowed = ['image/jpeg','image/png','image/webp','application/pdf'];
-  if (!allowed.includes(file.type)) {
-    toast('Only JPG, PNG, WebP or PDF files are supported', 'error');
-    return;
-  }
-
-  // Read file as base64
-  const base64 = await new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = () => rej(new Error('Read failed'));
-    r.readAsDataURL(file);
-  });
-
-  const isPDF = file.type === 'application/pdf';
-  const mediaType = file.type;
-  const label = file.name;
-
-  // Show user message with file name
-  hideEmpty();
-  appendRaw(`<span style="font-size:18px">📎</span> <strong>${label}</strong><br/><span style="font-size:12px;color:var(--text3)">Analyzing document...</span>`);
-
-  const tid = appendTyping();
-  document.getElementById('sendBtn').disabled = true;
-
-  try {
-    const langLabel = state.lang === 'hi' ? 'Hindi' : state.lang === 'te' ? 'Telugu' : 'Hinglish (Hindi-English mix)';
-    const prompt = `You are an expert Indian legal advisor. The user has uploaded a document: "${label}". Analyze it and:\n1. Summarize what this document is (type, parties involved, key terms)\n2. Identify any legal issues, risks, or important clauses\n3. Suggest what action the user should take\n4. Answer in ${langLabel}\n\nBe specific, practical, and mention relevant Indian laws where applicable.`;
-
-    const contentBlock = isPDF
-      ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } }
-      : { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } };
-
-
-const res = await fetch(`${API}/api/chat`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    message: prompt,
-    language: state.lang,
-    session_token: state.token,
-    conversation_history: state.chatHistory.slice(-8)
-  })
-});
-
-const data = await res.json();
-removeTyping(tid);
-
-if (!res.ok) {
-  throw new Error(data.detail || 'Generation failed');
-}
-
-const output = data.response || data.content || '';
-
-if (output) {
-  state.chatHistory.push({ role: 'user', content: `[Document: ${label}]` });
-  state.chatHistory.push({ role: 'assistant', content: output });
-  appendAiMsg(output, null, label);
-  incrementUsage();
-} else {
-  appendMsg('ai', '⚠️ Could not analyze this document. Please try again.');
-}
-} catch (err) {
-  removeTyping(tid);
-  appendMsg('ai', '⚠️ Document analysis failed. Please try again.');
-}
-
-document.getElementById('sendBtn').disabled = false;
-scrollBottom();
+document.getElementById('fileUploadInput').addEventListener('change', function(e) {
+const file = e.target.files[0];
+if (!file) return;
+toast('File upload is currently disabled. Document analysis will return soon.', 'warn');
+document.getElementById('fileUploadInput').value = '';
 });
 
 </script>
 <!-- FEEDBACK MODAL -->
 <div class="modal-overlay" id="feedbackModal">
-  <div class="modal" style="max-width:480px">
-    <button class="modal-close" onclick="closeModal('feedbackModal')">✕</button>
-    <h2>📝 Share Your Feedback</h2>
-    <p class="modal-sub">Help us improve Bklchai. Your feedback goes directly to the founder.</p>
-    <div class="form-group">
-      <label>Your Name (optional)</label>
-      <input type="text" id="fb_name" placeholder="What should we call you?"/>
-    </div>
-    <div class="form-group">
-      <label>Feedback Type</label>
-      <select id="fb_type">
-        <option value="suggestion">💡 Suggestion / Improvement</option>
-        <option value="bug">🐛 Bug / Issue Report</option>
-        <option value="complaint">😤 Complaint</option>
-        <option value="praise">🙌 Praise / Testimonial</option>
-        <option value="feature">🚀 Feature Request</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Your Message *</label>
-      <textarea id="fb_message" placeholder="Tell us what you think, what's broken, or what you'd love to see..." style="min-height:100px;"></textarea>
-    </div>
-    <div class="form-group">
-      <label>Your Phone (optional — for follow-up)</label>
-      <input type="tel" id="fb_phone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"/>
-    </div>
-    <button class="modal-btn" onclick="submitFeedback()">Send Feedback via WhatsApp →</button>
-    <p style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Opens WhatsApp. Your feedback is sent directly to the founder.</p>
-  </div>
+<div class="modal" style="max-width:480px">
+<button class="modal-close" onclick="closeModal('feedbackModal')">✕</button>
+<h2>📝 Share Your Feedback</h2>
+<p class="modal-sub">Help us improve Bklchai. Your feedback goes directly to the founder.</p>
+<div class="form-group">
+<label>Your Name (optional)</label>
+<input type="text" id="fb_name" placeholder="What should we call you?"/>
+</div>
+<div class="form-group">
+<label>Feedback Type</label>
+<select id="fb_type">
+<option value="suggestion">💡 Suggestion / Improvement</option>
+<option value="bug">🐛 Bug / Issue Report</option>
+<option value="complaint">😤 Complaint</option>
+<option value="praise">🙌 Praise / Testimonial</option>
+<option value="feature">🚀 Feature Request</option>
+</select>
+</div>
+<div class="form-group">
+<label>Your Message *</label>
+<textarea id="fb_message" placeholder="Tell us what you think, what's broken, or what you'd love to see..." style="min-height:100px;"></textarea>
+</div>
+<div class="form-group">
+<label>Your Phone (optional — for follow-up)</label>
+<input type="tel" id="fb_phone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"/>
+</div>
+<button class="modal-btn" onclick="submitFeedback()">Send Feedback via WhatsApp →</button>
+<p style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Opens WhatsApp. Your feedback is sent directly to the founder.</p>
+</div>
 </div>
 
 
 <!-- Audio manager — hidden iframe, communicates via postMessage -->
 
 <div id="pdfOverlay">
-  <div class="pdf-spinner"></div>
-  <div class="pdf-overlay-text">PDF generate ho rahi hai...</div>
-  <div class="pdf-overlay-sub">Kripya prateeksha karein 🙏</div>
+<div class="pdf-spinner"></div>
+<div class="pdf-overlay-text">PDF generate ho rahi hai...</div>
+<div class="pdf-overlay-sub">Kripya prateeksha karein 🙏</div>
 </div>
-<!-- FEATURE INFO MODAL (repurposed from Coming Soon) -->
+<!-- COMING SOON MODAL -->
 <div class="modal-overlay" id="comingSoonModal">
-  <div class="modal" style="max-width:380px;text-align:center;">
-    <button class="modal-close" onclick="closeModal('comingSoonModal')">✕</button>
-    <div style="font-size:48px;margin-bottom:12px;">⚡</div>
-    <h2 style="margin-bottom:8px;">Naya Feature!</h2>
-    <p class="modal-sub" style="font-size:14px;line-height:1.7;margin-bottom:16px;">
-      Yeh feature abhi development mein hai.<br/>
-      <strong style="color:var(--accent);">Premium services ab live hain!</strong>
-    </p>
-    <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:14px;margin-bottom:16px;">
-      <div style="font-size:12px;color:var(--text3);margin-bottom:6px;">Ab available hai:</div>
-      <div style="font-size:13px;color:var(--text);line-height:1.8;">
-        💳 Cheque Bounce Notice — ₹149<br/>
-        ⚖️ MSME Recovery Notice — ₹269<br/>
-        📝 Complaint Draft — ₹99<br/>
-        ✉️ Legal Reply — ₹49<br/>
-        ⚡ Priority Answer — ₹19
-      </div>
-    </div>
-    <button onclick="closeModal('comingSoonModal')"
-      style="width:100%;padding:11px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);">
-      ✓ Got it
-    </button>
-    <div style="font-size:11px;color:var(--text3);margin-top:10px;">bklchai.com</div>
-  </div>
+<div class="modal" style="max-width:380px;text-align:center;">
+<button class="modal-close" onclick="closeModal('comingSoonModal')">✕</button>
+<div style="font-size:48px;margin-bottom:12px;">⚡</div>
+<h2 style="margin-bottom:8px;">Bahut Jaldi!</h2>
+<p class="modal-sub" style="font-size:14px;line-height:1.7;margin-bottom:16px;">
+Premium services are being set up.<br/>
+We'll notify you the moment payments go live.<br/>
+<strong style="color:var(--accent);">Free services are fully working!</strong>
+</p>
+<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px;margin-bottom:16px;">
+<div style="font-size:12px;color:var(--text3);margin-bottom:6px;">Meanwhile, use for free:</div>
+<div style="font-size:13px;color:var(--text);line-height:1.8;">
+✅ Hindi legal Q&A — 5/day<br/>
+✅ Telugu legal Q&A — 3/day<br/>
+✅ Hinglish Q&A — 5/day<br/>
+✅ Quick questions on all 10 topics
+</div>
+</div>
+<button onclick="openFeedback();closeModal('comingSoonModal')"
+style="width:100%;padding:11px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);">
+📝 Notify Me When Live
+</button>
+<div style="font-size:11px;color:var(--text3);margin-top:10px;">bklchai.com</div>
+</div>
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
