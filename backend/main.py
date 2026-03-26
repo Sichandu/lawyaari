@@ -1320,6 +1320,7 @@ async def admin_users(
             {
                 "_id": 0,
                 "mobile": 1,
+                "name": 1,
                 "plan": 1,
                 "created_at": 1,
                 "last_login_at": 1,
@@ -1395,6 +1396,35 @@ async def admin_payments(
 
     return {"items": docs}
 
+# @app.get("/api/admin/recent-chats")
+# async def admin_recent_chats(
+#     x_admin_key: Optional[str] = Header(None),
+#     limit: int = 20
+# ):
+#     check_admin_key(x_admin_key)
+
+#     docs = list(
+#         chats_col.find(
+#             {},
+#             {
+#                 "_id": 0,
+#                 "mobile": 1,
+#                 "message": 1,
+#                 "response": 1,
+#                 "language": 1,
+#                 "intent": 1,
+#                 "timestamp": 1
+#             }
+#         ).sort("timestamp", -1).limit(min(limit, 100))
+#     )
+
+#     for d in docs:
+#         d["timestamp"] = safe_iso(d.get("timestamp"))
+#         if d.get("response"):
+#             d["response"] = str(d["response"])[:180]
+
+#     return {"items": docs}
+
 @app.get("/api/admin/recent-chats")
 async def admin_recent_chats(
     x_admin_key: Optional[str] = Header(None),
@@ -1402,20 +1432,29 @@ async def admin_recent_chats(
 ):
     check_admin_key(x_admin_key)
 
-    docs = list(
-        chats_col.find(
-            {},
-            {
-                "_id": 0,
-                "mobile": 1,
-                "message": 1,
-                "response": 1,
-                "language": 1,
-                "intent": 1,
-                "timestamp": 1
-            }
-        ).sort("timestamp", -1).limit(min(limit, 100))
-    )
+    pipeline = [
+        {"$sort": {"timestamp": -1}},
+        {"$limit": min(limit, 100)},
+        {"$lookup": {
+            "from": "users",
+            "localField": "mobile",
+            "foreignField": "mobile",
+            "as": "user"
+        }},
+        {"$unwind": {"path": "$user", "preserveNullAndEmptyArrays": True}},
+        {"$project": {
+            "_id": 0,
+            "mobile": 1,
+            "message": 1,
+            "response": 1,
+            "language": 1,
+            "intent": 1,
+            "timestamp": 1,
+            "name": {"$ifNull": ["$user.name", None]}   # ✅ get name from user, null if missing
+        }}
+    ]
+
+    docs = list(chats_col.aggregate(pipeline))
 
     for d in docs:
         d["timestamp"] = safe_iso(d.get("timestamp"))
