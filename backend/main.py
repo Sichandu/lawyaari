@@ -19,6 +19,27 @@ from reportlab.pdfbase.ttfonts import TTFont
 import io
 from fastapi.responses import StreamingResponse
 import razorpay
+import os
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FONT_DIR = os.path.join(BASE_DIR, "fonts")
+
+FREE_SANS = os.path.join(FONT_DIR, "FreeSans.ttf")
+FREE_SANS_BOLD = os.path.join(FONT_DIR, "FreeSansBold.ttf")
+
+print("BASE_DIR:", BASE_DIR)
+print("FONT_DIR:", FONT_DIR)
+print("FreeSans exists:", os.path.exists(FREE_SANS))
+print("FreeSansBold exists:", os.path.exists(FREE_SANS_BOLD))
+
+try:
+    pdfmetrics.registerFont(TTFont("FreeSans", FREE_SANS))
+    pdfmetrics.registerFont(TTFont("FreeSansBold", FREE_SANS_BOLD))
+    print("✅ FreeSans fonts loaded successfully.")
+except Exception as e:
+    print(f"⚠️ Font loading failed: {e}. Using Helvetica (English only).")
 
 load_dotenv()
 
@@ -55,7 +76,9 @@ RAZORPAY_KEY_ID  = os.getenv("RAZORPAY_KEY_ID", "")
 RAZORPAY_SECRET  = os.getenv("RAZORPAY_SECRET", "")
 
 GROQ_MODEL   = "llama-3.3-70b-versatile"
-OPENAI_MODEL = "gpt-4o"
+OPENAI_MODEL_MINI = os.getenv("OPENAI_MODEL_MINI", "gpt-4o-mini")
+OPENAI_MODEL_PREMIUM = os.getenv("OPENAI_MODEL_PREMIUM", "gpt-4o")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", OPENAI_MODEL_PREMIUM)
 
 # ─── ADMIN FREE ACCESS ────────────────────────────────────────────────────────
 ADMIN_MOBILES = set(filter(None, os.getenv("ADMIN_MOBILE", "").split(",")))
@@ -113,9 +136,17 @@ def detect_intent(text: str) -> Optional[dict]:
 def route_model(task: str, language: str) -> str:
     if language == "te":
         return "openai"
-    if task in ("legal_document", "high_accuracy", "premium"):
+    if task in ("legal_document", "high_accuracy", "premium", "expert_answer"):
         return "openai"
     return "groq"
+
+
+def select_openai_model(task: str, language: str) -> str:
+    if task in ("legal_document", "expert_answer"):
+        return OPENAI_MODEL_PREMIUM
+    if language == "te" or task in ("high_accuracy", "premium"):
+        return OPENAI_MODEL_MINI
+    return OPENAI_MODEL
 
 async def call_groq(messages: list, system: str = "") -> str:
     if not GROQ_API_KEY:
@@ -132,12 +163,12 @@ async def call_groq(messages: list, system: str = "") -> str:
         r.raise_for_status()
         return r.json()["choices"][0]["message"]["content"]
 
-async def call_openai(messages: list, system: str = "") -> str:
+async def call_openai(messages: list, system: str = "", model_name: Optional[str] = None) -> str:
     if not OPENAI_API_KEY:
         return "⚠️ OpenAI API key not configured. Please add OPENAI_API_KEY to .env"
     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"}
     payload = {
-        "model": OPENAI_MODEL,
+        "model": model_name or OPENAI_MODEL,
         "messages": [{"role": "system", "content": system}] + messages if system else messages,
         "max_tokens": 2048,
         "temperature": 0.5
@@ -148,20 +179,21 @@ async def call_openai(messages: list, system: str = "") -> str:
         return r.json()["choices"][0]["message"]["content"]
 
 async def call_ai(messages: list, system: str, task: str = "normal_chat", language: str = "hi") -> str:
-    model = route_model(task, language)
+    provider = route_model(task, language)
+    openai_model = select_openai_model(task, language)
     try:
-        if model == "openai":
-            return await call_openai(messages, system)
+        if provider == "openai":
+            return await call_openai(messages, system, model_name=openai_model)
         else:
             return await call_groq(messages, system)
-    except Exception as primary_err:
+    except Exception:
         try:
-            if model == "openai":
+            if provider == "openai":
                 return await call_groq(messages, system)
             else:
-                return await call_openai(messages, system)
-        except Exception as fallback_err:
-            return f"⚠️ Both AI services unavailable. Check your API keys in .env file. (Groq: GROQ_API_KEY, OpenAI: OPENAI_API_KEY)"
+                return await call_openai(messages, system, model_name=openai_model)
+        except Exception:
+            return "⚠️ Both AI services unavailable. Check your API keys in .env file. (Groq: GROQ_API_KEY, OpenAI: OPENAI_API_KEY)"
 
 def get_token(authorization: Optional[str] = Header(None)) -> Optional[str]:
     if authorization and authorization.startswith("Bearer "):
@@ -185,51 +217,115 @@ def generate_token(length=32):
 
 def get_system_prompt(language: str, category: str = "general") -> str:
     if category == "legal":
-        return """You are Bklchai, a professional legal document drafting assistant for Indian law.
+        return """You are BKLChai — a professional Indian legal document drafting assistant.
 
-LANGUAGE: Write ALL legal documents in formal English only. No Hindi, Telugu, or Hinglish.
+LANGUAGE:
+- Write ALL documents in formal, professional legal English
+- No Hindi, Telugu, or Hinglish
 
-DATA BINDING RULES (most important):
-- Use ONLY the exact names, amounts, and dates explicitly provided in the input
-- If a required value is missing or blank, write [REQUIRED: field_name] — NEVER invent or guess it
-- Do NOT invent dates — only use dates explicitly given in the input — if a date is not given, write [INSERT DATE] as a placeholder
-- Do NOT mix up party names — Supplier/Claimant is the one sending the notice, Buyer/Opponent receives it
-- AMOUNT FORMAT: Always write as "Rs. X,XX,XXX" (Indian format, e.g. Rs. 1,80,000 not 180000)
+DOCUMENT TYPE DETECTION:
+- Identify the correct document type based on user input:
+  - Payment issue → Legal Demand Notice
+  - MSME delay → MSME Recovery Notice
+  - Fraud → Police Complaint
+  - Consumer issue → Consumer Complaint
+  - Employment issue → Legal Notice / Complaint
+- If unclear, default to "Legal Notice"
+
+DATA BINDING RULES (CRITICAL):
+- Use ONLY exact names, amounts, and dates provided
+- NEVER invent or assume any value
+- Missing values → [REQUIRED: field_name]
+- Missing dates → [INSERT DATE]
+- Maintain correct party roles:
+  - Sender = Claimant / Complainant
+  - Receiver = Opponent / Respondent
+- AMOUNT FORMAT: Rs. X,XX,XXX (Indian format)
 
 LEGAL ACCURACY RULES:
-- Cite ONLY laws that directly apply to the specific facts given
-- Do NOT apply laws from unrelated contexts (e.g. Section 138 NI Act is ONLY for cheque bounce)
-- If unsure whether a section applies, omit it — better to cite nothing than cite wrongly
-- Legal context mapping: bank/loan → RBI guidelines, Banking Ombudsman; landlord/tenant → Rent Control Act, Transfer of Property Act; police → IPC Sections 166/323; consumer → Consumer Protection Act 2019; MSME → MSMED Act 2006
+- Cite ONLY directly applicable laws
+- If unsure → DO NOT mention section
+- Prefer correctness over quantity
+- Context mapping:
+  - MSME → MSMED Act, 2006
+  - Banking → RBI Guidelines, Banking Ombudsman
+  - Consumer → Consumer Protection Act, 2019
+  - Property → Transfer of Property Act
+  - Police → Relevant IPC/CrPC sections
+
+DOCUMENT STRUCTURE (MANDATORY):
+- Use the structure explicitly requested by the user prompt
+- Keep headings, numbering, and party details clean and print-ready
+
+TONE CONTROL:
+- Default: Professional + firm
+- Payment cases → Assertive
+- Complaints → Serious
+- Avoid emotional or casual language
 
 FORMATTING RULES:
-- Use A. B. C. D. for section headers
-- Use numbered lists 1. 2. 3. for steps
-- Use bullet points with - for checklists
-- No markdown asterisks ** anywhere
-- Keep paragraphs short and precise
+- Use A. B. C. headers where relevant
+- Use numbered points for facts or steps
+- Keep paragraphs short and clear
+- No markdown symbols (** etc.)
 
-End every document with: "Note: This document is AI-generated. Consult a qualified lawyer before sending."
-"""
+ENDING (MANDATORY):
+"Note: This document is AI-generated. Consult a qualified lawyer before sending.""" 
 
     lang_instruction = {
-        "hi": "Always respond in Hindi (Devanagari script). Be helpful and simple.",
-        "te": "IMPORTANT: Always respond ONLY in Telugu script (తెలుగు). Every word of your response must be in Telugu. Do NOT mix English words unless they are proper legal terms with no Telugu equivalent. Use simple, clear Telugu that common people can understand. Cite Indian laws by their Telugu names where possible.",
-        "hinglish": "Respond in Hinglish (Hindi written in English script). Keep it casual yet accurate.",
+        "hi": "Respond ONLY in Hindi (Devanagari script). Use simple, natural language understood by common Indian users.",
+        "te": "Respond ONLY in Telugu script. Use simple, natural Telugu. Do not mix English except unavoidable legal terms.",
+        "hinglish": "Respond ONLY in Hinglish (Hindi in English script). Keep it clean, simple, and natural.",
     }.get(language, "Respond in Hindi.")
 
-    return f"""You are Bklchai, an AI legal assistant for Indian citizens — especially MSMEs, workers, and common people.
+    disclaimer = {
+        "hi": "यह कानूनी सलाह नहीं है। किसी वकील से सलाह लें।",
+        "te": "ఇది అధికారిక న్యాయ సలహా కాదు. అవసరమైతే న్యాయవాదిని సంప్రదించండి.",
+        "hinglish": "Yeh kanooni salah nahi hai. Zarurat ho to kisi vakil se salah lein.",
+    }.get(language, "यह कानूनी सलाह नहीं है। किसी वकील से सलाह लें।")
+
+    if category == "expert":
+        return f"""You are BKLChai — a premium Indian legal assistant for paid expert answers.
+
+LANGUAGE RULE:
 {lang_instruction}
 
-Scope: Indian law only. Categories: MSME, Banking, Cyber Crime, Police Rights, Medical Rights, Consumer Rights, Labour Law, Property, Women Rights, Tax.
+STRICT RULES:
+- Answer only on the basis of facts given by the user
+- Do NOT assume missing facts
+- If an important fact is missing, say clearly what is missing and how the answer may change
+- Give practical, strategic, and specific guidance
+- Cite exact Indian laws/sections ONLY if clearly applicable
+- If exact section is uncertain, mention only the relevant Act, rule, or legal principle
+- No illegal advice
+- No generic filler, no motivational talk, no fluff
+- Output must feel premium, professional, and immediately useful
+- End with this disclaimer exactly: {disclaimer}
+"""
 
-Rules:
-- Give practical, actionable advice
-- Cite relevant Indian laws/sections when applicable
-- Do NOT assume facts not given
-- Never give advice on illegal activities
-- Add disclaimer: "यह कानूनी सलाह नहीं है। किसी वकील से सलाह लें।" (in relevant language)
-- Keep responses concise and clear"""
+    return f"""You are BKLChai — a professional AI legal assistant for Indian citizens (MSMEs, workers, and common people).
+
+LANGUAGE RULE:
+{lang_instruction}
+- Use simple, local language.
+
+SCOPE:
+- Only Indian laws
+- Categories: MSME, Banking, Cyber Crime, Police, Medical, Consumer, Labour, Property, Women Rights, Tax
+
+STRICT RULES:
+- Do NOT assume facts
+- Do NOT guess legal sections
+- If unsure, say that the exact section depends on the specific facts
+- Never suggest illegal actions
+- Always prioritize practical advice
+
+OUTPUT STYLE:
+- Clear, confident, helpful
+- Short paragraphs
+- No unnecessary theory
+- End with this disclaimer exactly: {disclaimer}
+"""
 
 # ─── MODELS ──────────────────────────────────────────────────────────────────
 class SendOTPRequest(BaseModel):
@@ -297,6 +393,12 @@ class ComplaintDraftRequest(BaseModel):
 class PriorityAnswerRequest(BaseModel):
     question: str
     priority_flag: bool = False
+    language: str = "hi"
+    payment_id: Optional[str] = None
+    mobile: Optional[str] = None
+
+class ExpertAnswerRequest(BaseModel):
+    question: str
     language: str = "hi"
     payment_id: Optional[str] = None
     mobile: Optional[str] = None
@@ -714,14 +816,18 @@ A. MSME Eligibility Check
 Write this section using the pre-computed eligibility text above, verbatim.
 
 B. Formal Demand Notice
-Start with the notice header below VERBATIM, then write 5 assertive paragraphs:
+Start with the notice header below VERBATIM, then write 6 assertive paragraphs:
 
 {notice_header}
 Para 1: State that {req.business_name} supplied goods/services to {req.buyer_name} as per Invoice {req.invoice_number} dated {req.invoice_date} for {principal_label}. Payment was due on {req.due_date}.
-Para 2: Despite {overdue_str} having elapsed and despite repeated reminders, {req.buyer_name} has willfully withheld payment without lawful cause. This constitutes a violation of Section 15 of the MSMED Act, 2006.
+Para 2: Despite {overdue_str} having elapsed and despite repeated reminders, {req.buyer_name} has withheld payment without lawful cause. This constitutes a violation of Section 15 of the MSMED Act, 2006.
 Para 3: Include the full interest calculation table above verbatim. State that interest continues to accrue daily.
-Para 4: "You are hereby called upon to pay {total_label} to {req.business_name} within 15 days of receipt of this notice. Failing which, {req.business_name} shall be constrained to initiate proceedings before the MSME Facilitation Council under Section 18 of the MSMED Act, 2006, and pursue all other remedies available under law, the costs whereof shall be borne by you."
-Para 5: "This notice is being issued via registered post/speed post and shall be treated as final intimation before legal action. All rights of {req.business_name} are expressly reserved."
+Para 4: "You are hereby called upon to pay {total_label} to {req.business_name} within 15 days of receipt of this notice, failing which interest shall continue to accrue and legal proceedings shall be initiated without further notice."
+Para 5: "You may remit the above amount via bank transfer or any mutually agreed mode immediately upon receipt of this notice. Failing which, {req.business_name} shall be constrained to initiate proceedings before the MSME Facilitation Council under Section 18 of the MSMED Act, 2006, and pursue all other remedies available under law, the costs whereof shall be borne by you."
+Para 6: "The non-payment of legitimate dues has caused serious financial prejudice to {req.business_name} and is adversely affecting its business operations. This notice is being issued via registered post/speed post and shall be treated as final intimation before legal action. All rights of {req.business_name} are expressly reserved."
+
+Add before closing:
+"All disputes arising out of this notice shall be subject to the jurisdiction of the appropriate courts/authorities."
 
 Close with:
 Yours faithfully,
@@ -875,29 +981,32 @@ A. To:
 {issue_info['authority']}, {req.location}
 
 B. Subject:
-Write one complete, specific subject line using actual issue type and opponent name
+Write one complete, specific subject line using actual issue type and opponent name.
 
 C. Facts:
-Write numbered paragraphs using ONLY the facts given. Each sentence complete and specific.
+Start with: "The Complainant most respectfully submits as under:" Then write numbered paragraphs using ONLY the facts given. Each sentence must be complete and specific.
 
-D. Legal Grounds:
-Write out the applicable sections by name. For consumer complaints ALWAYS cite: Section 2(7) Consumer Protection Act 2019 (definition of consumer), Section 2(47) Consumer Protection Act 2019 (deficiency of service), Section 35 Consumer Protection Act 2019 (right to file complaint). For others use only: {issue_info['sections']}
+D. Cause of Action:
+State when the cause of action arose based on the incident date and continued non-resolution.
 
-E. Jurisdiction:
-Write one complete sentence explaining why this forum has jurisdiction — use actual location and issue type
+E. Legal Grounds:
+Write out the applicable sections by name. For consumer complaints ALWAYS cite: Section 2(7) Consumer Protection Act 2019, Section 2(47) Consumer Protection Act 2019, and Section 35 Consumer Protection Act 2019. For others use only: {issue_info['sections']}
 
-F. Relief Sought:
-Write numbered specific reliefs using firm language: "direct", "order", "award compensation"
+F. Jurisdiction:
+Write one complete sentence explaining why this forum has jurisdiction using actual location and issue type.
 
-G. Verification:
+G. Relief Sought:
+Write numbered specific reliefs using strong prayer language such as "direct", "order", "grant compensation", and "pass appropriate orders".
+
+H. Verification:
 I, {req.user_name}, do hereby verify and declare that the contents of this complaint are true and correct to the best of my knowledge and belief. Nothing material has been concealed.
 Place: {req.location}
 Date: {today}
 Signature: _______________
 {req.user_name}
 
-H. List of Annexures:
-Write numbered annexures based on evidence mentioned in the facts
+I. List of Annexures:
+Write numbered annexures based on evidence mentioned in the facts.
 
 {issue_info['copy_to']}"""
 
@@ -919,40 +1028,108 @@ async def priority_answer(req: PriorityAnswerRequest):
     system = get_system_prompt(req.language)
 
     if req.priority_flag:
-        prompt = f"""Answer the following legal question with maximum detail and structure.
-Question: "{req.question}"
+        prompt = f"""You are generating a premium Priority Legal Answer for an Indian legal context.
 
-Rules:
-- Give clear, actionable steps
-- Do NOT give generic advice
-- Cite exact Indian laws/sections
-- Be precise, not vague
+QUESTION:
+{req.question}
 
-Output format — use PLAIN TEXT headers only, NO emoji:
+STRICT RULES:
+- Answer only based on the facts in the question
+- Do NOT assume missing facts
+- If an important fact is missing, say clearly how the answer may change
+- Give practical, specific, actionable guidance
+- Do NOT give generic or motivational advice
+- Cite exact Indian laws/sections ONLY if clearly applicable
+- If exact section is uncertain, mention only the relevant Act, rule, or legal principle
+- Keep the answer legally safe and realistic
+- Keep paragraphs short
+- No emoji
+- No markdown bold
+- Output must feel premium, professional, and immediately useful
+
+OUTPUT FORMAT:
 
 Situation:
-[Clear understanding of the legal situation]
+Write 2-4 lines clearly explaining the legal situation based on the user's question.
 
 Legal Position:
-[Exact Indian laws, sections, acts that apply]
+- Mention the applicable Indian law, act, section, or legal principle
+- If exact section is uncertain, say so and avoid guessing
+- Explain what legal rights or risks exist
 
 What You Should Do:
-1. [First action]
-2. [Second action]
-3. [Third action]
+1. Give the first practical action
+2. Give the second practical action
+3. Give the third practical action
+4. Add 1-2 more steps if genuinely useful
 
 What You Can Say or Write:
-[Exact words, draft text, or template the user can use]
+Write a short ready-to-use message, complaint line, reply text, or spoken statement the user can actually use.
 
 Important Note:
-[Any warnings, caveats, or next steps]"""
+Mention any deadline, evidence requirement, risk, authority/forum to approach, or when a lawyer should be consulted."""
         task = "high_accuracy"
     else:
-        prompt = f"""Answer this legal question concisely: "{req.question}" """
+        prompt = f"""Answer this Indian legal question clearly and briefly using only the facts given: {req.question}
+Give practical next steps, avoid guessing sections, and end with a short disclaimer."""
         task = "normal_chat"
 
     response = await call_ai([{"role": "user", "content": prompt}], system, task=task, language=req.language)
     return {"content": response, "priority": req.priority_flag, "service": "priority_answer"}
+
+
+@app.post("/api/expert-answer")
+async def expert_answer(req: ExpertAnswerRequest):
+    admin_ok = is_admin_mobile(getattr(req, "mobile", None))
+    if not admin_ok:
+        if not req.payment_id:
+            raise HTTPException(402, "Payment required for expert answer")
+        if not check_payment(req.payment_id, "expert_answer", getattr(req, "mobile", None)):
+            raise HTTPException(402, "Payment not verified")
+
+    system = get_system_prompt(req.language, "expert")
+    prompt = f"""Generate a ₹7 Expert Legal Answer for an Indian legal question.
+
+QUESTION:
+{req.question}
+
+STRICT RULES:
+- Use only the facts given in the question
+- Do NOT assume missing facts
+- If crucial facts are missing, state what is missing before giving the answer
+- Give specific, practical, and strategy-oriented guidance
+- Cite exact Indian laws/sections ONLY if clearly applicable
+- If exact section is uncertain, mention only the relevant Act, forum, or legal principle
+- No generic filler, no motivational lines, no vague advice
+- Keep it legally safe and realistic
+- Keep headers in plain text only, no emoji
+- Output should feel more valuable than a basic answer but shorter than a full legal notice
+
+OUTPUT FORMAT:
+
+Situation:
+Briefly explain the user's legal situation in 2-4 lines.
+
+Legal Position:
+Explain the key legal rights, risks, and applicable law. Mention exact section only if clearly applicable.
+
+Best Next Steps:
+1. Give the best immediate step.
+2. Give the next strategic step.
+3. Give the third practical step.
+4. Add one evidence or documentation step.
+
+What You Can Say or Write:
+Provide a short ready-to-use line, message, complaint sentence, or response template.
+
+Important Risk or Deadline:
+Mention any major deadline, evidence issue, authority to approach, or why delay may weaken the case.
+
+Final Note:
+Give a short professional caution and remind the user that facts can change the answer."""
+    response = await call_ai([{"role": "user", "content": prompt}], system, task="expert_answer", language=req.language)
+    log_analytics("expert_answer_generated", {"payment_id": req.payment_id, "mobile": req.mobile})
+    return {"content": response, "service": "expert_answer", "price": 7}
 
 # ─── FONT SETUP ──────────────────────────────────────────────────────────────
 import os as _os, logging as _logging
@@ -960,17 +1137,31 @@ import os as _os, logging as _logging
 _FREESANS_PATH      = '/usr/share/fonts/truetype/freefont/FreeSans.ttf'
 _FREESANS_BOLD_PATH = '/usr/share/fonts/truetype/freefont/FreeSansBold.ttf'
 
+
 def _register_fonts():
     try:
-        registered = pdfmetrics.getRegisteredFontNames()
-        if 'LD-Regular' not in registered:
-            pdfmetrics.registerFont(TTFont('LD-Regular', _FREESANS_PATH))
-        if 'LD-Bold' not in registered:
-            pdfmetrics.registerFont(TTFont('LD-Bold', _FREESANS_BOLD_PATH))
-        _logging.info("PDF fonts registered: FreeSans (supports Devanagari/Hindi)")
-        return True
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        font_dir = os.path.join(base_dir, "fonts")
+
+        regular_path = os.path.join(font_dir, "FreeSans.ttf")
+        bold_path = os.path.join(font_dir, "FreeSansBold.ttf")
+
+        print("BASE_DIR:", base_dir)
+        print("FONT_DIR:", font_dir)
+        print("FreeSans exists:", os.path.exists(regular_path))
+        print("FreeSansBold exists:", os.path.exists(bold_path))
+
+        if os.path.exists(regular_path) and os.path.exists(bold_path):
+            pdfmetrics.registerFont(TTFont("LD-Regular", regular_path))
+            pdfmetrics.registerFont(TTFont("LD-Bold", bold_path))
+            print("✅ PDF fonts registered successfully: FreeSans")
+            return True
+        else:
+            print("⚠️ Font files not found. Using Helvetica (English only).")
+            return False
+
     except Exception as e:
-        _logging.error(f"Font registration failed: {e}")
+        print(f"⚠️ Font registration failed: {e}. Falling back to Helvetica.")
         return False
 
 _FONTS_OK = _register_fonts()
@@ -1040,6 +1231,10 @@ def _para(text: str, style) -> Paragraph:
 # ─── PDF GENERATION ───────────────────────────────────────────────────────────
 @app.post("/api/generate-pdf")
 async def generate_pdf(req: GeneratePDFRequest):
+    # Replace ₹ with Rs. to avoid font issues in PDF
+    content = req.content.replace("₹", "Rs.")
+    title   = req.title.replace("₹", "Rs.")
+
     try:
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(
@@ -1070,12 +1265,12 @@ async def generate_pdf(req: GeneratePDFRequest):
         els.append(_para("Your legal rights, explained.", s_sub))
         els.append(HRFlowable(width="100%", thickness=1.5,
             color=colors.HexColor("#f59e0b"), spaceAfter=10))
-        els.append(_para(_strip_emoji(req.title), s_title))
+        els.append(_para(_strip_emoji(title), s_title))
         els.append(HRFlowable(width="100%", thickness=0.5,
             color=colors.HexColor("#dddddd"), spaceAfter=8))
         els.append(Spacer(1, 0.08*inch))
 
-        for raw_line in req.content.split("\n"):
+        for raw_line in content.split("\n"):
             line = raw_line.strip()
             if not line:
                 els.append(Spacer(1, 0.05*inch))
@@ -1129,7 +1324,6 @@ async def generate_pdf(req: GeneratePDFRequest):
         _logging.error(f"PDF generation error: {e}", exc_info=True)
         raise HTTPException(500, f"PDF generation failed: {str(e)}")
 
-
 # ─── PAYMENTS ─────────────────────────────────────────────────────────────────
 @app.post("/api/create-order")
 async def create_order(req: CreateOrderRequest):
@@ -1169,6 +1363,8 @@ async def verify_payment(req: VerifyPaymentRequest):
             {"order_id": req.razorpay_order_id},
             {"$set": {"status": "verified", "payment_id": payment_id, "verified_at": datetime.utcnow()}}
         )
+        if req.mobile and req.service not in ("pro", "unlimited"):
+            await credit_partner_commission(req.mobile, req.service, float(payments_col.find_one({"order_id": req.razorpay_order_id}).get("amount", 0)))
         log_analytics("payment_verified_demo", {"service": req.service, "order_id": req.razorpay_order_id})
         return {"success": True, "payment_id": payment_id}
 
@@ -1184,6 +1380,9 @@ async def verify_payment(req: VerifyPaymentRequest):
 
     if req.service in ("pro", "unlimited") and req.mobile:
         users_col.update_one({"mobile": req.mobile}, {"$set": {"plan": req.service}})
+
+    if req.mobile and req.service not in ("pro", "unlimited"):
+        await credit_partner_commission(req.mobile, req.service, float(payments_col.find_one({"order_id": req.razorpay_order_id}).get("amount", 0)))
 
     log_analytics("payment_verified", {"service": req.service, "payment_id": req.razorpay_payment_id})
     return {"success": True, "payment_id": req.razorpay_payment_id}
@@ -1396,34 +1595,6 @@ async def admin_payments(
 
     return {"items": docs}
 
-# @app.get("/api/admin/recent-chats")
-# async def admin_recent_chats(
-#     x_admin_key: Optional[str] = Header(None),
-#     limit: int = 20
-# ):
-#     check_admin_key(x_admin_key)
-
-#     docs = list(
-#         chats_col.find(
-#             {},
-#             {
-#                 "_id": 0,
-#                 "mobile": 1,
-#                 "message": 1,
-#                 "response": 1,
-#                 "language": 1,
-#                 "intent": 1,
-#                 "timestamp": 1
-#             }
-#         ).sort("timestamp", -1).limit(min(limit, 100))
-#     )
-
-#     for d in docs:
-#         d["timestamp"] = safe_iso(d.get("timestamp"))
-#         if d.get("response"):
-#             d["response"] = str(d["response"])[:180]
-
-#     return {"items": docs}
 
 @app.get("/api/admin/recent-chats")
 async def admin_recent_chats(
