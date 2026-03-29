@@ -105,22 +105,22 @@ INTENT_MAP = {
         "keywords": ["payment nahi mila", "payment not received", "invoice due", "msme payment",
                      "outstanding payment", "amount nahi diya", "చెల్లించలేదు", "పేమెంట్"],
         "service": "msme_notice",
-        "cta": {"hi": "MSME रिकवरी नोटिस (₹249)", "te": "MSME నోటీస్ రూ.249", "hinglish": "MSME Recovery Notice banao (₹249)"},
-        "price": 249
+        "cta": {"hi": "MSME रिकवरी नोटिस (₹269)", "te": "MSME నోటీస్ రూ.269", "hinglish": "MSME Recovery Notice banao (₹269)"},
+        "price": 269
     },
     "complaint": {
         "keywords": ["complaint", "shikayat", "police complaint", "consumer complaint",
                      "cybercrime", "fraud", "धोखा", "ఫిర్యాదు", "పోలీస్"],
         "service": "complaint_draft",
-        "cta": {"hi": "शिकायत ड्राफ्ट करें (₹69)", "te": "ఫిర్యాదు తయారు చేయండి ₹69", "hinglish": "Complaint draft karo (₹69)"},
-        "price": 69
+        "cta": {"hi": "शिकायत ड्राफ्ट करें (₹99)", "te": "ఫిర్యాదు తయారు చేయండి ₹99", "hinglish": "Complaint draft karo (₹99)"},
+        "price": 99
     },
     "legal_reply": {
         "keywords": ["notice mila", "notice received", "reply karna", "jawab dena",
                      "bank notice", "threat message", "recovery agent", "నోటీస్ వచ్చింది"],
         "service": "legal_reply",
-        "cta": {"hi": "क़ानूनी जवाब बनाएं (₹19)", "te": "లీగల్ రిప్లై రూ.19", "hinglish": "Legal Reply generate karo (₹19)"},
-        "price": 19
+        "cta": {"hi": "क़ानूनी जवाब बनाएं (₹49)", "te": "లీగల్ రిప్లై రూ.49", "hinglish": "Legal Reply generate karo (₹49)"},
+        "price": 49
     }
 }
 
@@ -133,39 +133,12 @@ def detect_intent(text: str) -> Optional[dict]:
                 return {"intent": intent_key, **intent_data}
     return None
 
-def route_model(task: str, language: str) -> str:
-    if language == "te":
-        return "openai"
-    if task in ("legal_document", "high_accuracy", "premium", "expert_answer"):
-        return "openai"
-    return "groq"
-
-
-def select_openai_model(task: str, language: str) -> str:
-    if task in ("legal_document", "expert_answer"):
-        return OPENAI_MODEL_PREMIUM
-    if language == "te" or task in ("high_accuracy", "premium"):
-        return OPENAI_MODEL_MINI
-    return OPENAI_MODEL
-
-async def call_groq(messages: list, system: str = "") -> str:
-    if not GROQ_API_KEY:
-        return "⚠️ Groq API key not configured. Please add GROQ_API_KEY to .env"
-    headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
-    payload = {
-        "model": GROQ_MODEL,
-        "messages": [{"role": "system", "content": system}] + messages if system else messages,
-        "max_tokens": 1024,
-        "temperature": 0.7
-    }
-    async with httpx.AsyncClient(timeout=30) as c:
-        r = await c.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
-        r.raise_for_status()
-        return r.json()["choices"][0]["message"]["content"]
-
+# ------------------------------------------------------------------------------
+# PROVIDER FALLBACK HELPERS
+# ------------------------------------------------------------------------------
 async def call_openai(messages: list, system: str = "", model_name: Optional[str] = None) -> str:
     if not OPENAI_API_KEY:
-        return "⚠️ OpenAI API key not configured. Please add OPENAI_API_KEY to .env"
+        raise RuntimeError("OpenAI API key not configured")
     headers = {"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"}
     payload = {
         "model": model_name or OPENAI_MODEL,
@@ -178,22 +151,71 @@ async def call_openai(messages: list, system: str = "", model_name: Optional[str
         r.raise_for_status()
         return r.json()["choices"][0]["message"]["content"]
 
-async def call_ai(messages: list, system: str, task: str = "normal_chat", language: str = "hi") -> str:
-    provider = route_model(task, language)
-    openai_model = select_openai_model(task, language)
-    try:
-        if provider == "openai":
-            return await call_openai(messages, system, model_name=openai_model)
-        else:
-            return await call_groq(messages, system)
-    except Exception:
+async def call_groq(messages: list, system: str = "") -> str:
+    if not GROQ_API_KEY:
+        raise RuntimeError("Groq API key not configured")
+    headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
+    payload = {
+        "model": GROQ_MODEL,
+        "messages": [{"role": "system", "content": system}] + messages if system else messages,
+        "max_tokens": 2048,
+        "temperature": 0.7
+    }
+    async with httpx.AsyncClient(timeout=45) as c:
+        r = await c.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
+        r.raise_for_status()
+        return r.json()["choices"][0]["message"]["content"]
+
+async def call_with_fallback(messages: list, system: str, task: str = "normal_chat", language: str = "hi", use_openai_first: bool = False) -> str:
+    """
+    Attempts OpenAI first if use_openai_first is True and key exists,
+    otherwise tries Groq. Falls back to the other provider on failure.
+    """
+    # Decide if we should try OpenAI first
+    if use_openai_first and OPENAI_API_KEY:
         try:
-            if provider == "openai":
-                return await call_groq(messages, system)
+            print(f"[call_with_fallback] Trying OpenAI first for task: {task}")
+            if task in ("legal_document", "expert_answer", "high_accuracy"):
+                model = OPENAI_MODEL_PREMIUM
             else:
-                return await call_openai(messages, system, model_name=openai_model)
-        except Exception:
-            return "⚠️ Both AI services unavailable. Check your API keys in .env file. (Groq: GROQ_API_KEY, OpenAI: OPENAI_API_KEY)"
+                model = OPENAI_MODEL_MINI
+            return await call_openai(messages, system, model_name=model)
+        except Exception as e:
+            print(f"[call_with_fallback] OpenAI failed: {e}. Falling back to Groq.")
+            # Fall back to Groq
+            try:
+                return await call_groq(messages, system)
+            except Exception as e2:
+                print(f"[call_with_fallback] Groq fallback also failed: {e2}")
+                return "⚠️ AI service unavailable. Please check your API keys."
+    else:
+        # Try Groq first
+        if GROQ_API_KEY:
+            try:
+                print(f"[call_with_fallback] Trying Groq first for task: {task}")
+                return await call_groq(messages, system)
+            except Exception as e:
+                print(f"[call_with_fallback] Groq failed: {e}. Falling back to OpenAI.")
+                if OPENAI_API_KEY:
+                    try:
+                        model = OPENAI_MODEL_MINI if task in ("normal_chat", "priority_answer") else OPENAI_MODEL_PREMIUM
+                        return await call_openai(messages, system, model_name=model)
+                    except Exception as e2:
+                        print(f"[call_with_fallback] OpenAI fallback also failed: {e2}")
+                        return "⚠️ AI service unavailable. Please check your API keys."
+                else:
+                    return "⚠️ AI service unavailable. Please check your API keys."
+        else:
+            # No Groq key, try OpenAI if available
+            if OPENAI_API_KEY:
+                try:
+                    model = OPENAI_MODEL_MINI if task in ("normal_chat", "priority_answer") else OPENAI_MODEL_PREMIUM
+                    return await call_openai(messages, system, model_name=model)
+                except Exception as e:
+                    print(f"[call_with_fallback] OpenAI failed: {e}")
+                    return "⚠️ AI service unavailable. Please check your API keys."
+            else:
+                return "⚠️ AI service unavailable. Please check your API keys."
 
 def get_token(authorization: Optional[str] = Header(None)) -> Optional[str]:
     if authorization and authorization.startswith("Bearer "):
@@ -270,7 +292,7 @@ FORMATTING RULES:
 - No markdown symbols (** etc.)
 
 ENDING (MANDATORY):
-"Note: This document is AI-generated. Consult a qualified lawyer before sending.""" 
+"Note: This document is AI-generated. Consult a qualified lawyer before sending."""
 
     lang_instruction = {
         "hi": "Respond ONLY in Hindi (Devanagari script). Use simple, natural language understood by common Indian users.",
@@ -327,6 +349,120 @@ OUTPUT STYLE:
 - End with this disclaimer exactly: {disclaimer}
 """
 
+# ─── PROMPT BUILDERS FOR PREMIUM SERVICES ────────────────────────────────────
+
+def build_expert_answer_prompt(question: str, language: str) -> str:
+    return f"""You are generating a premium Expert Legal Answer for an Indian legal question.
+
+QUESTION:
+{question}
+
+LANGUAGE: Respond in {language.upper()}. Use the language specified.
+
+STRICT RULES:
+- Use only the facts given in the question
+- Do NOT assume missing facts
+- If crucial facts are missing, state what is missing before giving the answer
+- Give specific, practical, and strategy-oriented guidance
+- Cite exact Indian laws/sections ONLY if clearly applicable
+- If exact section is uncertain, mention only the relevant Act, forum, or legal principle
+- No generic filler, no motivational lines, no vague advice
+- Keep it legally safe and realistic
+- Keep headers in plain text only, no emoji
+- Output must feel more valuable than a basic answer but shorter than a full legal notice
+
+OUTPUT FORMAT (use exactly these headers, no emoji):
+
+Expert Answer
+
+Situation:
+Briefly explain the user's legal situation in 2-4 lines.
+
+Legal Position:
+Explain the key legal rights, risks, and applicable law. Mention exact section only if clearly applicable.
+
+What You Should Do Now:
+1. First step
+2. Second step
+3. Third step
+4. Fourth step (if relevant)
+
+Documents to Keep Ready:
+- Document 1
+- Document 2
+- Document 3
+
+What You Can Say or Write:
+Provide a short ready-to-use line, message, complaint sentence, or response template.
+
+Mistakes to Avoid:
+- Mistake 1
+- Mistake 2
+
+When to Escalate:
+State clearly under what circumstances the user should approach a lawyer, police, consumer forum, bank ombudsman, or other authority.
+
+Important Note:
+Give a short professional caution and remind the user that facts can change the answer.
+
+Note: This is AI-generated guidance, not legal advice. Consult a qualified lawyer for formal legal action.
+"""
+
+def build_priority_answer_prompt(question: str, language: str) -> str:
+    return f"""You are generating a Priority Legal Answer for an Indian legal question.
+
+QUESTION:
+{question}
+
+LANGUAGE: Respond in {language.upper()}. Use the language specified.
+
+STRICT RULES:
+- Answer ONLY the exact question asked
+- Do NOT drift into unrelated topics
+- Be concise but premium: every sentence must carry value
+- Do NOT assume facts
+- Cite sections only if clearly applicable
+
+OUTPUT FORMAT (use exactly these headers, no emoji):
+
+Priority Legal Answer
+
+स्थिति / Situation:
+[2-4 lines restating the situation]
+
+कानूनी स्थिति / Legal Position:
+[Explain rights, risks, law]
+
+आपको अभी क्या करना चाहिए / What You Should Do Now:
+1.
+2.
+3.
+
+आप क्या कह सकते हैं या लिख सकते हैं / What You Can Say or Write:
+[Short actionable script]
+
+महत्वपूर्ण नोट / Important Note:
+[Key risk, deadline, or caution]
+
+Note: This is AI-generated guidance, not legal advice.
+"""
+
+def build_cheque_notice_prompt(vals: dict, today: str) -> str:
+    # Use the existing strong prompt but with added seriousness and personalisation
+    # We'll reuse the existing prompt from the route with enhancements
+    # Actually we'll inline it in the route to avoid duplication, but we'll ensure the prompt is robust.
+    # For clarity, we'll keep the prompt building inside the route.
+    pass
+
+def build_msme_notice_prompt(vals: dict, today: str) -> str:
+    pass
+
+def build_complaint_draft_prompt(vals: dict, today: str) -> str:
+    pass
+
+def build_legal_reply_prompt(vals: dict, today: str) -> str:
+    pass
+
 # ─── MODELS ──────────────────────────────────────────────────────────────────
 class SendOTPRequest(BaseModel):
     mobile: str
@@ -352,6 +488,7 @@ class ChequeNoticeRequest(BaseModel):
     cheque_amount: str
     bank_name: str
     dishonour_reason: str
+    liability_description: Optional[str] = ""  # new field
     language: str = "hi"
     payment_id: str
     mobile: Optional[str] = None
@@ -365,6 +502,8 @@ class MSMENoticeRequest(BaseModel):
     outstanding_amount: str
     due_date: str
     udyam_number: Optional[str] = ""
+    goods_description: Optional[str] = ""   # new field
+    reminders_sent: Optional[str] = ""      # new field
     language: str = "hi"
     payment_id: str
     mobile: Optional[str] = None
@@ -386,6 +525,9 @@ class ComplaintDraftRequest(BaseModel):
     opponent_name: Optional[str] = ""
     date: str
     user_name: str
+    relief_wanted: Optional[str] = ""      # new field
+    amount_involved: Optional[str] = ""    # new field
+    prior_complaint: Optional[str] = ""    # new field
     language: str = "hi"
     payment_id: str
     mobile: Optional[str] = None
@@ -562,7 +704,7 @@ async def chat(req: ChatRequest, request: Request):
     messages = history + [{"role": "user", "content": req.message}]
 
     system = get_system_prompt(language)
-    response_text = await call_ai(messages, system, task="normal_chat", language=language)
+    response_text = await call_with_fallback(messages, system, task="normal_chat", language=language, use_openai_first=False)
 
     if mobile:
         users_col.update_one({"mobile": mobile}, {"$inc": {"daily_chats": 1}, "$set": {"last_chat_date": today}})
@@ -607,48 +749,66 @@ async def cheque_notice(req: ChequeNoticeRequest):
 
     today = datetime.utcnow().strftime('%d %B %Y')
     system = get_system_prompt(req.language, "legal")
-    prompt = (
-        "Generate a complete, ready-to-print-and-send legal notice under Section 138 "
-        "of the Negotiable Instruments Act, 1881. "
-        "READY-TO-USE RULE: Write every line with actual data. Zero square brackets. Zero blank fields.\n\n"
-        f"DATA — USE EXACTLY AS GIVEN:\n"
-        f"Complainant: {req.client_name}\n"
-        f"Complainant Address: {req.client_address}\n"
-        f"Cheque Drawer: {req.drawer_name}\n"
-        f"Drawer Address: {req.drawer_address}\n"
-        f"Cheque No: {req.cheque_number}  |  Date: {req.cheque_date}  |  Amount: Rs. {req.cheque_amount}\n"
-        f"Bank: {req.bank_name}\n"
-        f"Dishonour Reason: {req.dishonour_reason}\n"
-        f"Notice Date: {today}\n\n"
-        "OUTPUT — write all 4 sections as a final document:\n\n"
-        "A. Section 138 Suitability Check\n"
-        f"Assess all 4 conditions using the actual facts. Cheque No {req.cheque_number} for "
-        f"Rs. {req.cheque_amount} dishonoured due to {req.dishonour_reason}. "
-        "State whether eligible for Section 138 proceedings in 3-4 complete sentences.\n\n"
-        "B. Formal Legal Notice\n"
-        f"Write the complete notice as it will be physically sent:\n"
-        f"{today}\n\n"
-        f"To,\n{req.drawer_name}\n{req.drawer_address}\n\n"
-        f"Sub: Legal Notice under Section 138 of the Negotiable Instruments Act, 1881 for "
-        f"dishonour of Cheque No. {req.cheque_number} dated {req.cheque_date} for Rs. {req.cheque_amount} "
-        f"drawn on {req.bank_name}\n\n"
-        "Dear Sir/Madam,\n\n"
-        "Write the full body paragraphs covering: (1) the cheque was issued for a legitimate debt/liability, "
-        f"(2) it was presented to {req.bank_name} for payment but dishonoured with reason "
-        f"'{req.dishonour_reason}', (3) demand Rs. {req.cheque_amount} within 15 days of "
-        "receipt of this notice, (4) failure will result in criminal proceedings under Section 138 "
-        "of the Negotiable Instruments Act, 1881.\n\n"
-        f"Yours faithfully,\n\n"
-        f"Sd/-\n{req.client_name}\n{req.client_address}\n\n"
-        "C. Document Checklist\n"
-        "Numbered list of specific documents to keep ready for court filing.\n\n"
-        "D. Next Steps\n"
-        "Numbered steps with timelines: send by Speed Post / Registered Post AD within 30 days "
-        "of dishonour, wait 15 days for response, then file complaint under Section 138 before "
-        "the Magistrate court having jurisdiction."
-    )
 
-    response = await call_ai([{"role": "user", "content": prompt}], system, task="legal_document", language=req.language)
+    # Build prompt with new optional fields
+    liability_note = ""
+    if req.liability_description:
+        liability_note = f"The cheque was issued towards: {req.liability_description}."
+
+    prompt = f"""
+Generate a complete, ready-to-print-and-send legal notice under Section 138 of the Negotiable Instruments Act, 1881.
+READY-TO-USE RULE: Write every line with actual data. Zero square brackets. Zero blank fields.
+
+DATA — USE EXACTLY AS GIVEN:
+Complainant: {req.client_name}
+Complainant Address: {req.client_address}
+Cheque Drawer: {req.drawer_name}
+Drawer Address: {req.drawer_address}
+Cheque No: {req.cheque_number}  |  Date: {req.cheque_date}  |  Amount: Rs. {req.cheque_amount}
+Bank: {req.bank_name}
+Dishonour Reason: {req.dishonour_reason}
+{liability_note}
+Notice Date: {today}
+
+OUTPUT — write all 4 sections as a final document:
+
+A. Section 138 Suitability Check
+Assess all 4 conditions using the actual facts. Cheque No {req.cheque_number} for Rs. {req.cheque_amount} dishonoured due to {req.dishonour_reason}. 
+State whether eligible for Section 138 proceedings in 3-4 complete sentences. If any core fact is missing, say exactly what is missing.
+
+B. Formal Legal Notice
+Write the complete notice as it will be physically sent:
+
+{today}
+
+To,
+{req.drawer_name}
+{req.drawer_address}
+
+Sub: Legal Notice under Section 138 of the Negotiable Instruments Act, 1881 for dishonour of Cheque No. {req.cheque_number} dated {req.cheque_date} for Rs. {req.cheque_amount} drawn on {req.bank_name}
+
+Dear Sir/Madam,
+
+Write the full body paragraphs covering:
+(1) the cheque was issued for a legitimate debt/liability {liability_note}
+(2) it was presented to {req.bank_name} for payment but dishonoured with reason '{req.dishonour_reason}'
+(3) demand Rs. {req.cheque_amount} within 15 days of receipt of this notice
+(4) failure will result in criminal proceedings under Section 138 of the Negotiable Instruments Act, 1881.
+
+Yours faithfully,
+
+Sd/-
+{req.client_name}
+{req.client_address}
+
+C. Document Checklist
+Numbered list of specific documents to keep ready for court filing (original cheque, bank memo, etc.).
+
+D. Next Steps
+Numbered steps with timelines: send by Speed Post / Registered Post AD within 30 days of dishonour, wait 15 days for response, then file complaint under Section 138 before the Magistrate court having jurisdiction.
+"""
+
+    response = await call_with_fallback([{"role": "user", "content": prompt}], system, task="legal_document", language=req.language, use_openai_first=True)
     log_analytics("cheque_notice_generated", {"payment_id": req.payment_id})
     return {"content": response, "service": "cheque_notice"}
 
@@ -720,6 +880,9 @@ async def msme_notice(req: MSMENoticeRequest):
 
     udyam = req.udyam_number.strip() if req.udyam_number and req.udyam_number.strip() else "Not registered / to be verified"
 
+    goods_desc = req.goods_description.strip() if req.goods_description else "goods/services"
+    reminders = req.reminders_sent.strip() if req.reminders_sent else ""
+
     eligibility_block = (
         f"Supplier {req.business_name} holds Udyam Registration No. {udyam}, confirming its status "
         f"as a Micro, Small or Medium Enterprise under the MSMED Act, 2006. "
@@ -773,10 +936,10 @@ async def msme_notice(req: MSMENoticeRequest):
         f"1. Udyam Registration Certificate of {req.business_name} (Udyam No: {udyam})\n"
         f"2. Copy of Invoice No. {req.invoice_number} dated {req.invoice_date} "
         f"for {principal_label}\n"
-        f"3. Proof of delivery / acknowledgement of goods or services by {req.buyer_name}\n"
+        f"3. Proof of delivery / acknowledgement of {goods_desc} by {req.buyer_name}\n"
         f"4. Bank statement showing non-receipt of payment since {req.due_date}\n"
         f"5. All prior correspondence / emails / WhatsApp messages with {req.buyer_name} "
-        f"regarding payment\n"
+        f"regarding payment" + (f" (including: {reminders})" if reminders else "") + "\n"
         f"6. Copy of this demand notice with postal acknowledgement (AD card)\n"
         f"7. Purchase order / work order from {req.buyer_name} (if available)"
     )
@@ -798,6 +961,8 @@ Interest Rate: {MSME_INT_RATE}% p.a. (Section 16, 3x RBI Bank Rate)
 Interest Amount: {interest_label}
 Total Demanded: {total_label}
 Notice Date: {today}
+Goods/Services Description: {goods_desc}
+Reminders Sent: {reminders if reminders else "None mentioned"}
 
 === PRE-COMPUTED ELIGIBILITY ===
 {eligibility_block}
@@ -819,7 +984,7 @@ B. Formal Demand Notice
 Start with the notice header below VERBATIM, then write 6 assertive paragraphs:
 
 {notice_header}
-Para 1: State that {req.business_name} supplied goods/services to {req.buyer_name} as per Invoice {req.invoice_number} dated {req.invoice_date} for {principal_label}. Payment was due on {req.due_date}.
+Para 1: State that {req.business_name} supplied {goods_desc} to {req.buyer_name} as per Invoice {req.invoice_number} dated {req.invoice_date} for {principal_label}. Payment was due on {req.due_date}.
 Para 2: Despite {overdue_str} having elapsed and despite repeated reminders, {req.buyer_name} has withheld payment without lawful cause. This constitutes a violation of Section 15 of the MSMED Act, 2006.
 Para 3: Include the full interest calculation table above verbatim. State that interest continues to accrue daily.
 Para 4: "You are hereby called upon to pay {total_label} to {req.business_name} within 15 days of receipt of this notice, failing which interest shall continue to accrue and legal proceedings shall be initiated without further notice."
@@ -844,10 +1009,7 @@ D. Evidence Checklist
 Use the pre-written checklist below verbatim:
 {evidence_checklist}"""
 
-    response = await call_ai(
-        [{"role": "user", "content": prompt}],
-        system, task="legal_document", language=req.language
-    )
+    response = await call_with_fallback([{"role": "user", "content": prompt}], system, task="legal_document", language=req.language, use_openai_first=True)
     log_analytics("msme_notice_generated", {"payment_id": req.payment_id})
     return {"content": response, "service": "msme_notice"}
 
@@ -880,41 +1042,61 @@ async def legal_reply(req: LegalReplyRequest):
 
     today = datetime.utcnow().strftime('%d %B %Y')
     system = get_system_prompt(req.language, "legal")
-    prompt = (
-        f"Generate a professional legal reply letter for an Indian legal context.\n\n"
-        f"The recipient received this notice:\n---\n{req.received_message}\n---\n\n"
-        f"Reply sender: {req.user_name}\n"
-        f"Context: {req.context}\n"
-        + (f"KEY FACTS TO ASSERT (user-provided — the reply MUST be built around these):\n{req.your_facts}\n\n" if req.your_facts and req.your_facts.strip() else "")
-        + f"Tone: {req.tone} (polite=cooperative but firm; firm=assertive; strict_legal=maximum legal pressure)\n"
-        f"Today's date: {today}\n\n"
-        "STRICT RULES:\n"
-        "- Write in formal English only\n"
-        "- Do NOT assume facts not in the notice\n"
-        f"- Always use today's date {today} — never leave [date] as placeholder\n"
-        "- CONTEXT-SPECIFIC LAW MAPPING — cite ONLY from the correct context:\n"
-        "  bank/loan context → RBI Fair Practice Code, Banking Ombudsman Scheme 2006, RBI Circular on loan recovery\n"
-        "  landlord/tenant context → Transfer of Property Act 1882, relevant State Rent Control Act, NOT Section 138 NI Act\n"
-        "  employer context → Industrial Disputes Act 1947, Payment of Wages Act 1936\n"
-        "  recovery agent context → RBI Guidelines on Recovery Agents, Section 504/506 IPC (criminal intimidation)\n"
-        "  police context → Section 166 IPC (public servant misconduct), Section 154 CrPC (right to FIR)\n"
-        "- Section 138 NI Act is ONLY for cheque bounce — NEVER use it in landlord/tenant or loan disputes\n"
-        "- Keep legally safe — no false statements\n\n"
-        "REQUIRED OUTPUT FORMAT — complete, ready-to-send letter, zero square brackets:\n"
-        f"Date: {today}\n\n"
-        "To,\n"
-        "[From the notice above, extract and write the actual sender name, designation, firm/bank name — no brackets]\n\n"
-        "Subject: [Write a specific subject line referencing the notice date and subject — no brackets]\n\n"
-        "Dear Sir/Madam,\n\n"
-        "[Write the complete reply: (1) Acknowledge the notice with its exact date and subject. (2) State your position clearly using the KEY FACTS provided. (3) Assert applicable legal rights with specific law sections. (4) Make a firm demand or request. Each paragraph complete and substantive — no placeholders.]\n\n"
-        f"Yours sincerely,\n{req.user_name}\n_______________\n(Signature)\n{today}"
-    )
+    prompt = f"""
+Generate a professional legal reply letter for an Indian legal context.
 
-    response = await call_ai([{"role": "user", "content": prompt}], system,
-                              task="legal_document", language=req.language)
+The recipient received this notice:
+---
+{req.received_message}
+---
+
+Reply sender: {req.user_name}
+Context: {req.context}
+{f"KEY FACTS TO ASSERT (user-provided — the reply MUST be built around these):\n{req.your_facts}\n\n" if req.your_facts and req.your_facts.strip() else ""}
+Tone: {req.tone} (polite=cooperative but firm; firm=assertive; strict_legal=maximum legal pressure)
+Today's date: {today}
+
+STRICT RULES:
+- Write in formal English only
+- Do NOT assume facts not in the notice
+- Always use today's date {today} — never leave [date] as placeholder
+- CONTEXT-SPECIFIC LAW MAPPING — cite ONLY from the correct context:
+  bank/loan context → RBI Fair Practice Code, Banking Ombudsman Scheme 2006, RBI Circular on loan recovery
+  landlord/tenant context → Transfer of Property Act 1882, relevant State Rent Control Act, NOT Section 138 NI Act
+  employer context → Industrial Disputes Act 1947, Payment of Wages Act 1936
+  recovery agent context → RBI Guidelines on Recovery Agents, Section 504/506 IPC (criminal intimidation)
+  police context → Section 166 IPC (public servant misconduct), Section 154 CrPC (right to FIR)
+- Section 138 NI Act is ONLY for cheque bounce — NEVER use it in landlord/tenant or loan disputes
+- Keep legally safe — no false statements
+
+REQUIRED OUTPUT FORMAT — complete, ready-to-send letter, zero square brackets:
+
+Date: {today}
+
+To,
+[From the notice above, extract and write the actual sender name, designation, firm/bank name — no brackets]
+
+Subject: [Write a specific subject line referencing the notice date and subject — no brackets]
+
+Dear Sir/Madam,
+
+[Write the complete reply: 
+(1) Acknowledge the notice with its exact date and subject.
+(2) State your position clearly using the KEY FACTS provided.
+(3) Assert applicable legal rights with specific law sections.
+(4) Make a firm demand or request.
+Each paragraph complete and substantive — no placeholders.]
+
+Yours sincerely,
+{req.user_name}
+_______________
+(Signature)
+{today}
+"""
+
+    response = await call_with_fallback([{"role": "user", "content": prompt}], system, task="legal_document", language=req.language, use_openai_first=True)
     log_analytics("legal_reply_generated", {"payment_id": req.payment_id})
     return {"content": response, "service": "legal_reply"}
-
 
 # ─── PREMIUM: COMPLAINT DRAFT ─────────────────────────────────────────────────
 @app.post("/api/complaint-draft")
@@ -958,6 +1140,11 @@ async def complaint_draft(req: ComplaintDraftRequest):
 
     today = datetime.utcnow().strftime('%d %B %Y')
     system = get_system_prompt(req.language, "legal")
+
+    relief_text = f"Relief Sought: {req.relief_wanted}" if req.relief_wanted else ""
+    amount_text = f"Amount Involved: Rs. {req.amount_involved}" if req.amount_involved else ""
+    prior_text = f"Prior Complaint: {req.prior_complaint}" if req.prior_complaint else ""
+
     prompt = f"""Generate a complete, ready-to-file formal complaint. Write every section fully — no square brackets, no instructions to fill in later.
 
 DATA — USE EXACTLY:
@@ -967,6 +1154,9 @@ Date of Incident: {req.date}
 Location: {req.location}
 Opposite Party: {req.opponent_name or "Not specified"}
 Facts: {req.issue_description}
+{relief_text}
+{amount_text}
+{prior_text}
 Today: {today}
 Authority: {issue_info['authority']}, {req.location}
 Laws: {issue_info['sections']}
@@ -996,7 +1186,7 @@ F. Jurisdiction:
 Write one complete sentence explaining why this forum has jurisdiction using actual location and issue type.
 
 G. Relief Sought:
-Write numbered specific reliefs using strong prayer language such as "direct", "order", "grant compensation", and "pass appropriate orders".
+Write numbered specific reliefs using strong prayer language such as "direct", "order", "grant compensation", and "pass appropriate orders". Use the user's stated relief if provided: {req.relief_wanted}.
 
 H. Verification:
 I, {req.user_name}, do hereby verify and declare that the contents of this complaint are true and correct to the best of my knowledge and belief. Nothing material has been concealed.
@@ -1010,7 +1200,7 @@ Write numbered annexures based on evidence mentioned in the facts.
 
 {issue_info['copy_to']}"""
 
-    response = await call_ai([{"role": "user", "content": prompt}], system, task="legal_document", language=req.language)
+    response = await call_with_fallback([{"role": "user", "content": prompt}], system, task="legal_document", language=req.language, use_openai_first=True)
     log_analytics("complaint_draft_generated", {"payment_id": req.payment_id})
     return {"content": response, "service": "complaint_draft"}
 
@@ -1026,57 +1216,9 @@ async def priority_answer(req: PriorityAnswerRequest):
                 raise HTTPException(402, "Payment not verified")
 
     system = get_system_prompt(req.language)
-
-    if req.priority_flag:
-        prompt = f"""You are generating a premium Priority Legal Answer for an Indian legal context.
-
-QUESTION:
-{req.question}
-
-STRICT RULES:
-- Answer only based on the facts in the question
-- Do NOT assume missing facts
-- If an important fact is missing, say clearly how the answer may change
-- Give practical, specific, actionable guidance
-- Do NOT give generic or motivational advice
-- Cite exact Indian laws/sections ONLY if clearly applicable
-- If exact section is uncertain, mention only the relevant Act, rule, or legal principle
-- Keep the answer legally safe and realistic
-- Keep paragraphs short
-- No emoji
-- No markdown bold
-- Output must feel premium, professional, and immediately useful
-
-OUTPUT FORMAT:
-
-Situation:
-Write 2-4 lines clearly explaining the legal situation based on the user's question.
-
-Legal Position:
-- Mention the applicable Indian law, act, section, or legal principle
-- If exact section is uncertain, say so and avoid guessing
-- Explain what legal rights or risks exist
-
-What You Should Do:
-1. Give the first practical action
-2. Give the second practical action
-3. Give the third practical action
-4. Add 1-2 more steps if genuinely useful
-
-What You Can Say or Write:
-Write a short ready-to-use message, complaint line, reply text, or spoken statement the user can actually use.
-
-Important Note:
-Mention any deadline, evidence requirement, risk, authority/forum to approach, or when a lawyer should be consulted."""
-        task = "high_accuracy"
-    else:
-        prompt = f"""Answer this Indian legal question clearly and briefly using only the facts given: {req.question}
-Give practical next steps, avoid guessing sections, and end with a short disclaimer."""
-        task = "normal_chat"
-
-    response = await call_ai([{"role": "user", "content": prompt}], system, task=task, language=req.language)
+    prompt = build_priority_answer_prompt(req.question, req.language)
+    response = await call_with_fallback([{"role": "user", "content": prompt}], system, task="high_accuracy", language=req.language, use_openai_first=True)
     return {"content": response, "priority": req.priority_flag, "service": "priority_answer"}
-
 
 @app.post("/api/expert-answer")
 async def expert_answer(req: ExpertAnswerRequest):
@@ -1088,46 +1230,8 @@ async def expert_answer(req: ExpertAnswerRequest):
             raise HTTPException(402, "Payment not verified")
 
     system = get_system_prompt(req.language, "expert")
-    prompt = f"""Generate a ₹7 Expert Legal Answer for an Indian legal question.
-
-QUESTION:
-{req.question}
-
-STRICT RULES:
-- Use only the facts given in the question
-- Do NOT assume missing facts
-- If crucial facts are missing, state what is missing before giving the answer
-- Give specific, practical, and strategy-oriented guidance
-- Cite exact Indian laws/sections ONLY if clearly applicable
-- If exact section is uncertain, mention only the relevant Act, forum, or legal principle
-- No generic filler, no motivational lines, no vague advice
-- Keep it legally safe and realistic
-- Keep headers in plain text only, no emoji
-- Output should feel more valuable than a basic answer but shorter than a full legal notice
-
-OUTPUT FORMAT:
-
-Situation:
-Briefly explain the user's legal situation in 2-4 lines.
-
-Legal Position:
-Explain the key legal rights, risks, and applicable law. Mention exact section only if clearly applicable.
-
-Best Next Steps:
-1. Give the best immediate step.
-2. Give the next strategic step.
-3. Give the third practical step.
-4. Add one evidence or documentation step.
-
-What You Can Say or Write:
-Provide a short ready-to-use line, message, complaint sentence, or response template.
-
-Important Risk or Deadline:
-Mention any major deadline, evidence issue, authority to approach, or why delay may weaken the case.
-
-Final Note:
-Give a short professional caution and remind the user that facts can change the answer."""
-    response = await call_ai([{"role": "user", "content": prompt}], system, task="expert_answer", language=req.language)
+    prompt = build_expert_answer_prompt(req.question, req.language)
+    response = await call_with_fallback([{"role": "user", "content": prompt}], system, task="expert_answer", language=req.language, use_openai_first=True)
     log_analytics("expert_answer_generated", {"payment_id": req.payment_id, "mobile": req.mobile})
     return {"content": response, "service": "expert_answer", "price": 7}
 
@@ -1136,7 +1240,6 @@ import os as _os, logging as _logging
 
 _FREESANS_PATH      = '/usr/share/fonts/truetype/freefont/FreeSans.ttf'
 _FREESANS_BOLD_PATH = '/usr/share/fonts/truetype/freefont/FreeSansBold.ttf'
-
 
 def _register_fonts():
     try:
@@ -1231,7 +1334,6 @@ def _para(text: str, style) -> Paragraph:
 # ─── PDF GENERATION ───────────────────────────────────────────────────────────
 @app.post("/api/generate-pdf")
 async def generate_pdf(req: GeneratePDFRequest):
-    # Replace ₹ with Rs. to avoid font issues in PDF
     content = req.content.replace("₹", "Rs.")
     title   = req.title.replace("₹", "Rs.")
 

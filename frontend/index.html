@@ -200,6 +200,49 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 /* RESULT MODAL */
 .result-content{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:12px;line-height:1.8;color:var(--text2);max-height:280px;overflow-y:auto;white-space:pre-wrap;margin-bottom:12px;}
+
+/* ── RICH DOCUMENT RENDERER ─────────────────────────────────── */
+.doc-render{background:#fafaf8;color:#1a1a1a;border-radius:10px;padding:0;max-height:70vh;overflow-y:auto;margin-bottom:12px;font-family:'Georgia',serif;box-shadow:0 2px 16px rgba(0,0,0,.18);}
+.doc-render .doc-letterhead{background:#fff;border-bottom:2px solid #1a1a1a;padding:18px 22px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.doc-render .doc-sender-name{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:3px;font-family:'Georgia',serif;}
+.doc-render .doc-sender-sub{font-size:11px;color:#555;line-height:1.6;}
+.doc-render .doc-meta{text-align:right;font-size:11px;color:#666;line-height:1.7;font-family:sans-serif;}
+.doc-render .doc-badges{padding:10px 22px 0;display:flex;gap:7px;flex-wrap:wrap;background:#fff;}
+.doc-render .doc-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:3px;font-family:sans-serif;text-transform:uppercase;letter-spacing:.06em;}
+.doc-render .doc-badge.danger{background:#fee2e2;color:#991b1b;}
+.doc-render .doc-badge.warn{background:#fef3c7;color:#92400e;}
+.doc-render .doc-badge.info{background:#dbeafe;color:#1e40af;}
+.doc-render .doc-badge.success{background:#d1fae5;color:#065f46;}
+.doc-render .doc-title{text-align:center;font-size:13px;font-weight:700;font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;border-top:1px solid #ddd;border-bottom:1px solid #ddd;padding:9px 22px;margin:12px 0 0;background:#fff;color:#1a1a1a;}
+.doc-render .doc-body{padding:16px 22px;background:#fafaf8;}
+.doc-render .doc-to{font-size:13px;line-height:1.75;margin-bottom:14px;color:#1a1a1a;}
+.doc-render .doc-section-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888;margin:14px 0 3px;font-family:sans-serif;}
+.doc-render .doc-para{font-size:13px;line-height:1.85;margin-bottom:10px;color:#222;text-align:justify;}
+.doc-render .doc-demand-box{border:1px solid #d0d0d0;border-radius:6px;padding:12px 14px;margin:12px 0;background:#fff;}
+.doc-render .doc-demand-box table{width:100%;font-size:13px;border-collapse:collapse;color:#1a1a1a;}
+.doc-render .doc-demand-box td{padding:4px 0;vertical-align:top;}
+.doc-render .doc-demand-box td:last-child{text-align:right;font-weight:600;}
+.doc-render .doc-demand-box .doc-total td{border-top:1px solid #bbb;padding-top:9px;font-size:15px;}
+.doc-render .doc-highlight{background:#fff8e1;border-left:3px solid #f59e0b;padding:9px 12px;margin:12px 0;font-size:12px;line-height:1.7;color:#5a4000;font-family:sans-serif;}
+.doc-render .doc-danger-box{background:#fef2f2;border-left:3px solid #dc2626;padding:9px 12px;margin:12px 0;font-size:13px;line-height:1.7;color:#7f1d1d;}
+.doc-render .doc-success-box{background:#f0fdf4;border-left:3px solid #16a34a;padding:9px 12px;margin:12px 0;font-size:13px;line-height:1.7;color:#14532d;}
+.doc-render .doc-timeline{border-left:2px solid #d0d0d0;padding-left:14px;margin:10px 0;}
+.doc-render .doc-event{margin-bottom:10px;}
+.doc-render .doc-event-date{font-size:11px;font-weight:700;color:#888;margin-bottom:2px;font-family:sans-serif;}
+.doc-render .doc-event-text{font-size:13px;color:#222;line-height:1.65;}
+.doc-render .doc-prayer{background:#fff;border-radius:6px;padding:10px 14px;margin:12px 0;}
+.doc-render .doc-prayer-item{font-size:13px;padding:5px 0;border-bottom:1px solid #eee;line-height:1.6;color:#1a1a1a;}
+.doc-render .doc-prayer-item:last-child{border-bottom:none;font-weight:700;}
+.doc-render .doc-sign{border-top:1px solid #ddd;padding:14px 22px;background:#fff;font-size:12px;color:#444;}
+.doc-render .doc-sign-name{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:3px;}
+.doc-render .doc-enclosures{font-size:11px;color:#888;border-top:1px solid #eee;padding-top:8px;margin-top:8px;font-family:sans-serif;line-height:1.7;}
+/* Section header within doc body (A. B. C. etc.) */
+.doc-render .doc-section-head{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#555;margin:16px 0 4px;font-family:sans-serif;padding-bottom:3px;border-bottom:1px solid #e0e0e0;}
+/* Checklist / numbered steps */
+.doc-render .doc-steps{margin:8px 0;padding:0;}
+.doc-render .doc-steps li{font-size:13px;color:#222;line-height:1.75;margin-bottom:6px;padding-left:4px;}
+/* Raw fallback for non-doc services */
+.doc-render .doc-raw{padding:16px 22px;font-size:13px;line-height:1.85;color:#222;white-space:pre-wrap;font-family:sans-serif;background:#fafaf8;}
 .result-actions{display:flex;gap:7px;flex-wrap:wrap;}
 .ra{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);border:none;min-width:80px;text-align:center;transition:opacity .15s;}
 .ra:hover{opacity:.85;}
@@ -587,25 +630,20 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 <!-- RESULT MODAL -->
 <div class="modal-overlay" id="resultModal">
-  <div class="modal" style="max-width:600px">
-    <button class="modal-close" onclick="closeModal('resultModal')">✕</button>
-    <h2 id="resultModalTitle">Result</h2>
-    <div class="result-content" id="resultContent" contenteditable="true"></div>
-    <!-- Action buttons row: Copy + PDF only -->
-    <div style="display:flex;gap:8px;margin-top:10px;">
+  <div class="modal" style="max-width:660px;padding:0;overflow:hidden;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--bg2);border-bottom:1px solid var(--border);">
+      <h2 id="resultModalTitle" style="font-size:14px;margin:0;">Result</h2>
+      <button class="modal-close" onclick="closeModal('resultModal')" style="position:static;margin:0;">✕</button>
+    </div>
+    <!-- Rich doc renderer -->
+    <div class="doc-render" id="docRender"></div>
+    <!-- Hidden raw for copy/PDF -->
+    <div id="resultContent" style="display:none;"></div>
+    <!-- Action buttons row -->
+    <div style="display:flex;gap:8px;padding:10px 16px 14px;background:var(--bg2);border-top:1px solid var(--border);">
       <button class="ra ra-copy" onclick="copyResult()" style="flex:1;">📋 Copy</button>
       <button class="ra ra-pdf" onclick="downloadPDF()" style="flex:1;">⬇ PDF</button>
     </div>
-    <!-- Single share card block — auto-shown when share button clicked -->
-    <div id="shareCardWrap" style="display:none;margin-top:14px;text-align:center;">
-      <canvas id="shareCanvas" style="border-radius:10px;max-width:100%;box-shadow:0 4px 20px rgba(0,0,0,.5);display:block;margin:0 auto;"></canvas>
-      <div style="display:flex;gap:8px;margin-top:10px;">
-  <button onclick="shareCard()" style="flex:2;padding:11px;font-size:13px;font-weight:700;background:var(--accent3);color:#000;border:none;border-radius:8px;cursor:pointer;font-family:var(--font);">↗ Share Card</button>
-  <button onclick="downloadShareCard()" style="flex:1;padding:11px;font-size:12px;font-weight:600;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:8px;cursor:pointer;font-family:var(--font);">⬇ Save Image</button>
-</div>
-    </div>
-    <!-- Generate button — shows the card below -->
-    <button onclick="buildShareCard()" style="width:100%;margin-top:10px;padding:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--accent3);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);">🎴 Generate Share Card</button>
   </div>
 </div>
 
@@ -641,52 +679,52 @@ const T = {
 
 const QUICK_Q = {
   msme:{
-    hi:['MSME payment 45 दिन से ज़्यादा देर है, क्या करूं?','Udyam registration कैसे करें?','MSME Samadhaan portal पर complaint कैसे करें?','Cheque bounce हुआ MSME buyer का, कार्रवाई?','MSME को bank loan reject हुआ, क्या options हैं?'],
+    hi:['MSME payment 45 din se zyada der hai, kya karun?','Udyam registration kaise karein?','MSME Samadhaan portal par complaint kaise karein?','Cheque bounce hua MSME buyer ka, kya karein?','MSME ko bank loan reject hua, kya options hain?'],
     te:['MSME చెల్లింపు 45 రోజులు ఆలస్యమైతే ఏం చేయాలి?','Udyam నమోదు ఎలా చేయాలి?','MSME Samadhaan portal లో ఫిర్యాదు ఎలా చేయాలి?','MSME కి బ్యాంక్ లోన్ తిరస్కరిస్తే ఏం చేయాలి?','MSME buyer చెక్కు బౌన్స్ అయితే ఏం చేయాలి?'],
     hinglish:['MSME payment late hai kya karun?','Udyam registration kaise kare?','MSME Samadhaan portal pe complaint kaise?','MSME buyer ka cheque bounce hua kya karun?','MSME loan reject hua options kya hain?']
   },
   banking:{
-    hi:['Cheque bounce होने पर 15 दिन में क्या करें?','Recovery agent घर आकर परेशान कर रहा है?','Bank ने बिना notice loan account freeze किया?','Credit card fraud हुआ, पैसे वापस मिलेंगे?','CIBIL score गलत है, कैसे ठीक करें?'],
+    hi:['Cheque bounce hone par 15 din mein kya karein?','Recovery agent ghar aakar pareshan kar raha hai?','Bank ne bina notice loan account freeze kiya?','Credit card fraud hua, paise wapas milenge?','CIBIL score galat hai, kaise theek karein?'],
     te:['చెక్ బౌన్స్ అయిన తర్వాత 15 రోజులలో ఏం చేయాలి?','రికవరీ ఏజెంట్ ఇంటికి వచ్చి వేధిస్తే ఏం చేయాలి?','బ్యాంక్ నోటీసు లేకుండా ఖాతా ఫ్రీజ్ చేస్తే?','క్రెడిట్ కార్డ్ మోసం జరిగింది పైసలు వస్తాయా?','CIBIL స్కోర్ తప్పుగా ఉంటే ఎలా సరిచేయాలి?'],
     hinglish:['Cheque bounce ke baad 15 din mein kya karun?','Recovery agent ghar aa ke pareshan kar raha hai?','Bank ne bina notice account freeze kiya?','Credit card fraud hua paisa wapas milega?','CIBIL score galat hai kaise theek kare?']
   },
   cyber:{
-    hi:['Online UPI fraud हुआ, पैसे वापस कैसे मिलेंगे?','WhatsApp पर fake job offer scam आया?','Cybercrime portal पर complaint कैसे दर्ज करें?','Social media पर fake profile बनाई, क्या करूं?','OTP share करके fraud हुआ, अब क्या करें?'],
+    hi:['Online UPI fraud hua, paise wapas kaise milenge?','WhatsApp par fake job offer scam aaya?','Cybercrime portal par complaint kaise darj karein?','Social media par fake profile banai, kya karun?','OTP share karke fraud hua, ab kya karein?'],
     te:['ఆన్‌లైన్ UPI మోసం జరిగింది పైసలు తిరిగి వస్తాయా?','WhatsApp లో నకిలీ job offer వచ్చింది ఏం చేయాలి?','Cybercrime portal లో ఫిర్యాదు ఎలా నమోదు చేయాలి?','సోషల్ మీడియాలో నకిలీ ప్రొఫైల్ తయారు చేస్తే ఏం చేయాలి?','OTP చెప్పి మోసం జరిగింది ఏం చేయాలి?'],
     hinglish:['Online UPI fraud hua paisa wapas kaise milega?','WhatsApp pe fake job offer scam aaya kya karun?','Cybercrime portal pe complaint kaise kare?','Social media pe fake profile bani kya karun?','OTP share karke fraud hua ab kya kare?']
   },
   police:{
-    hi:['FIR लिखने से police मना कर रही है, क्या करूं?','Arrest के बाद मेरे क्या अधिकार हैं?','Anticipatory bail कैसे मिलती है?','Police ने बिना warrant घर में घुसे, legal कार्रवाई?','Section 41A notice मिला, क्या करूं?'],
+    hi:['FIR likhne se police mana kar rahi hai, kya karun?','Arrest ke baad mere kya adhikar hain?','Anticipatory bail kaise milti hai?','Police ne bina warrant ghar mein ghuse, legal kya kare?','Section 41A notice mila, kya karun?'],
     te:['FIR రాయడానికి పోలీసులు నిరాకరిస్తే ఏం చేయాలి?','అరెస్టు తర్వాత నా హక్కులు ఏమిటి?','Anticipatory bail ఎలా పొందాలి?','వారెంట్ లేకుండా పోలీసులు ఇంటికి వస్తే ఏం చేయాలి?','Section 41A నోటీస్ వచ్చింది ఏం చేయాలి?'],
     hinglish:['FIR likhne se police mana kar rahi hai kya karun?','Arrest ke baad mere kya rights hain?','Anticipatory bail kaise milti hai?','Police bina warrant ghar mein ghusi legal kya kare?','Section 41A notice mila kya karun?']
   },
   medical:{
-    hi:['Doctor ने गलत treatment दिया, कहाँ complaint करूं?','Hospital ने बिना consent operation किया?','Medical negligence case कैसे file करें?','Hospital bill बहुत ज़्यादा है, क्या कर सकता हूँ?','Pharmacy ने expired medicine दी, क्या करूं?'],
+    hi:['Doctor ne galat treatment diya, kahan complaint karun?','Hospital ne bina consent operation kiya?','Medical negligence case kaise file karein?','Hospital bill bahut zyada hai, kya kar sakta hun?','Pharmacy ne expired medicine di, kya karun?'],
     te:['డాక్టర్ తప్పు చికిత్స చేస్తే ఎక్కడ ఫిర్యాదు చేయాలి?','హాస్పిటల్ అనుమతి లేకుండా ఆపరేషన్ చేస్తే?','Medical negligence కేసు ఎలా వేయాలి?','హాస్పిటల్ బిల్ చాలా ఎక్కువగా ఉంటే ఏం చేయాలి?','Pharmacy expired medicine ఇస్తే ఏం చేయాలి?'],
     hinglish:['Doctor ne galat treatment diya kahan complaint karun?','Hospital ne bina consent operation kiya?','Medical negligence case kaise file kare?','Hospital bill bahut zyada hai kya kar sakta hun?','Pharmacy ne expired medicine di kya karun?']
   },
   consumer:{
-    hi:['Online order नहीं आया, refund कैसे मिलेगा?','Consumer Forum में case कैसे file करें?','Defective product exchange करने से मना कर रहे हैं?','E-commerce company false advertising कर रही है?','Service provider ने payment लेकर काम नहीं किया?'],
+    hi:['Online order nahi aaya, refund kaise milega?','Consumer Forum mein case kaise file karein?','Defective product exchange karne se mana kar rahe hain?','E-commerce company false advertising kar rahi hai?','Service provider ne payment lekar kaam nahi kiya?'],
     te:['ఆన్‌లైన్ ఆర్డర్ రాలేదు refund ఎలా పొందాలి?','Consumer Forum లో కేసు ఎలా వేయాలి?','లోపభూయిష్ట product exchange చేయడానికి నిరాకరిస్తే?','E-commerce company తప్పుడు ప్రకటన చేస్తే?','సేవ చేయకుండా పైసలు తీసుకుంటే ఏం చేయాలి?'],
     hinglish:['Online order nahi aaya refund kaise milega?','Consumer Forum mein case kaise kare?','Defective product exchange nahi kar rahe kya karun?','E-commerce false advertising kar rahi hai kya karun?','Service provider ne payment lekar kaam nahi kiya?']
   },
   labour:{
-    hi:['Salary नहीं दी, कहाँ complaint करूं?','Wrongful termination हुई, क्या legal options हैं?','PF और gratuity कैसे मिलेगी?','Employer ने overtime pay नहीं दिया?','Maternity leave के लिए employer ने मना किया?'],
+    hi:['Salary nahi di, kahan complaint karun?','Wrongful termination hui, kya legal options hain?','PF aur gratuity kaise milegi?','Employer ne overtime pay nahi diya?','Maternity leave ke liye employer ne mana kiya?'],
     te:['జీతం ఇవ్వలేదు ఎక్కడ ఫిర్యాదు చేయాలి?','తప్పుగా తొలగించారు legal options ఏమిటి?','PF మరియు gratuity ఎలా పొందాలి?','Employer overtime pay ఇవ్వలేదు ఏం చేయాలి?','Maternity leave కి employer నిరాకరిస్తే?'],
     hinglish:['Salary nahi di kahan complaint karun?','Wrongful termination hua kya legal options hain?','PF aur gratuity kaise milegi?','Employer ne overtime pay nahi diya?','Maternity leave ke liye employer ne mana kiya?']
   },
   property:{
-    hi:['Landlord security deposit वापस नहीं दे रहा?','Rent agreement बनाने का सही तरीका क्या है?','Property dispute court में कैसे file करें?','Eviction notice मिला, क्या मेरे rights हैं?','Landlord बिना notice किराया बढ़ा रहा है?'],
+    hi:['Landlord security deposit wapas nahi de raha?','Rent agreement banane ka sahi tarika kya hai?','Property dispute court mein kaise file karein?','Eviction notice mila, kya mere rights hain?','Landlord bina notice kiraya badha raha hai?'],
     te:['Landlord security deposit తిరిగి ఇవ్వడం లేదు ఏం చేయాలి?','Rent agreement ఎలా తయారు చేయాలి?','Property dispute court లో ఎలా file చేయాలి?','Eviction notice వచ్చింది నా హక్కులు ఏమిటి?','Landlord నోటీస్ లేకుండా అద్దె పెంచుతే ఏం చేయాలి?'],
     hinglish:['Landlord deposit wapas nahi de raha kya karun?','Rent agreement banane ka sahi tarika kya hai?','Property dispute court mein kaise file kare?','Eviction notice mila kya mere rights hain?','Landlord bina notice kiraya badha raha hai?']
   },
   women:{
-    hi:['Domestic violence complaint कहाँ और कैसे करें?','Workplace sexual harassment के लिए क्या करूं?','Dowry harassment case कैसे file करें?','Maintenance कैसे और कहाँ से मिलती है?','POCSO act क्या है और कब लागू होता है?'],
+    hi:['Domestic violence complaint kahan aur kaise karein?','Workplace sexual harassment ke liye kya karun?','Dowry harassment case kaise file karein?','Maintenance kaise aur kahan se milti hai?','POCSO act kya hai aur kab lagoo hota hai?'],
     te:['గృహ హింస ఫిర్యాదు ఎక్కడ ఎలా చేయాలి?','కార్యాలయంలో లైంగిక వేధింపులకు ఏం చేయాలి?','కట్నం వేధింపు కేసు ఎలా వేయాలి?','Maintenance ఎలా ఎక్కడ నుండి పొందాలి?','POCSO act ఏమిటి ఎప్పుడు వర్తిస్తుంది?'],
     hinglish:['Domestic violence complaint kahan aur kaise karun?','Workplace sexual harassment ke liye kya karun?','Dowry harassment case kaise file kare?','Maintenance kaise aur kahan se milti hai?','POCSO act kya hai kab lagoo hota hai?']
   },
   tax:{
-    hi:['GST notice आया, कैसे reply करूं?','ITR file करने की last date और process क्या है?','Income tax demand notice का क्या करूं?','GST registration कैसे करें small business के लिए?','TDS refund कैसे claim करें?'],
+    hi:['GST notice aaya, kaise reply karun?','ITR file karne ki last date aur process kya hai?','Income tax demand notice ka kya karun?','GST registration kaise karein small business ke liye?','TDS refund kaise claim karein?'],
     te:['GST నోటీస్ వచ్చింది ఎలా reply చేయాలి?','ITR file చేయడానికి last date మరియు process ఏమిటి?','Income tax demand notice కి ఏం చేయాలి?','Small business కి GST registration ఎలా చేయాలి?','TDS refund ఎలా claim చేయాలి?'],
     hinglish:['GST notice aaya kaise reply karun?','ITR file karne ki last date aur process kya hai?','Income tax demand notice ka kya karun?','Small business ke liye GST registration kaise kare?','TDS refund kaise claim kare?']
   },
@@ -1138,10 +1176,7 @@ async function verifyOTP(){
             document.getElementById('pdfOverlay').classList.remove('show');
             recordSuccessfulPurchase(svcKey, svc, paymentResult);
             state.currentResult={title:svc.title,content:output,serviceType:svcKey};
-            document.getElementById('resultModalTitle').textContent=svc.title;
-            document.getElementById('resultContent').textContent=output;
-            document.getElementById('shareCardWrap').style.display='none';
-            openModal('resultModal');
+            showResult(svcKey, output, svc.title);
             toast('Document ready! ✓','success');
           }catch(e){
             document.getElementById('pdfOverlay').classList.remove('show');
@@ -1515,149 +1550,100 @@ function showComingSoon(){
 const SERVICES = {
 
   cheque_notice: {
-
     title: '📄 Cheque Bounce Notice',
-
     desc: 'Legal notice under Section 138 NI Act — ready in 60 seconds.',
-
     price: 149,
-
     fields: [
-
-      {id:'cn_drawer',label:'Drawer Name (who gave cheque)',placeholder:'e.g. Ramesh Kumar'},
-
-      {id:'cn_drawer_addr',label:'Drawer Address',placeholder:'Full address'},
-
+      {id:'cn_payee',label:'Your Name (Payee / Notice Sender)',placeholder:'e.g. Suresh Traders'},
+      {id:'cn_payee_addr',label:'Your Address',placeholder:'Your full address'},
+      {id:'cn_drawer',label:'Drawer Name (who gave the cheque)',placeholder:'e.g. Ramesh Kumar'},
+      {id:'cn_drawer_addr',label:'Drawer Address',placeholder:'Drawer\'s full address'},
       {id:'cn_amount',label:'Cheque Amount (₹)',placeholder:'e.g. 50000'},
-
       {id:'cn_cheque_no',label:'Cheque Number',placeholder:'e.g. 001234'},
-
-      {id:'cn_bank',label:'Bank Name',placeholder:'e.g. HDFC Bank, Malviya Nagar'},
-
-      {id:'cn_bounce_date',label:'Bounce Date',placeholder:'e.g. 12 March 2025'},
-
-      {id:'cn_reason',label:'Bounce Reason (as per memo)',placeholder:'e.g. Insufficient Funds'},
-
-      {id:'cn_payee',label:'Your Name (Payee)',placeholder:'e.g. Suresh Traders'},
-
+      {id:'cn_bank',label:'Bank Name & Branch',placeholder:'e.g. HDFC Bank, Malviya Nagar'},
+      {id:'cn_bounce_date',label:'Date of Dishonour',placeholder:'e.g. 12 March 2025'},
+      {id:'cn_reason',label:'Dishonour Reason (as per bank memo)',placeholder:'e.g. Insufficient Funds'},
+      {id:'cn_liability_desc',label:'What was the cheque issued for? (e.g., goods, loan repayment)',placeholder:'e.g. Purchase of goods vide invoice INV-123', optional:true}
     ],
-
     btnLabel: 'Generate Notice — ₹149',
-
-    generate: async (vals) => {
-
-      const prompt = `Generate a formal legal notice under Section 138 of the Negotiable Instruments Act, 1881 for cheque dishonour. Use these details:\n- Drawer: ${vals.cn_drawer}\n- Drawer Address: ${vals.cn_drawer_addr}\n- Cheque Amount: ₹${vals.cn_amount}\n- Cheque No: ${vals.cn_cheque_no}\n- Bank: ${vals.cn_bank}\n- Bounce Date: ${vals.cn_bounce_date}\n- Reason: ${vals.cn_reason}\n- Payee (sender of notice): ${vals.cn_payee}\n\nWrite a complete, professional legal notice in FORMAL ENGLISH only. Include demand for payment within 15 days. Format it like a formal lawyer's notice.`;
-
-      return prompt;
-
-    }
-
+    generate: async (vals) => { return ''; }
   },
 
   msme_notice: {
-
     title: '⚖️ MSME Payment Recovery Notice',
-
-    desc: 'Formal payment recovery notice under MSMED Act 2006. Includes interest clause.',
-
+    desc: 'Formal payment recovery notice under MSMED Act 2006. Includes auto-calculated interest.',
     price: 269,
-
     fields: [
-
-      {id:'mn_buyer',label:'Buyer / Debtor Name',placeholder:'e.g. ABC Pvt Ltd'},
-
-      {id:'mn_buyer_addr',label:'Buyer Address',placeholder:'Full address'},
-
-      {id:'mn_amount',label:'Outstanding Amount (₹)',placeholder:'e.g. 1,50,000'},
-
-      {id:'mn_invoice_nos',label:'Invoice Numbers',placeholder:'e.g. INV-001, INV-002'},
-
-      {id:'mn_due_date',label:'Payment Due Since',placeholder:'e.g. 1 January 2025'},
-
-      {id:'mn_supplier',label:'Your Business Name (MSME)',placeholder:'e.g. XYZ Enterprises'},
-
+      {id:'mn_supplier',label:'Your Business Name (MSME Supplier)',placeholder:'e.g. XYZ Enterprises'},
       {id:'mn_udyam',label:'Udyam Registration No.',placeholder:'e.g. UDYAM-TS-00-0012345'},
-
+      {id:'mn_buyer',label:'Buyer / Debtor Name',placeholder:'e.g. ABC Pvt Ltd'},
+      {id:'mn_buyer_addr',label:'Buyer Address',placeholder:'Buyer\'s full address'},
+      {id:'mn_amount',label:'Outstanding Amount (₹)',placeholder:'e.g. 1,50,000'},
+      {id:'mn_invoice_nos',label:'Invoice Number(s)',placeholder:'e.g. INV-001, INV-002'},
+      {id:'mn_invoice_date',label:'Invoice Date',placeholder:'e.g. 01/01/2025'},
+      {id:'mn_due_date',label:'Payment Due Date',placeholder:'e.g. 15/02/2025'},
+      {id:'mn_goods_desc',label:'What goods/services were supplied?',placeholder:'e.g. Steel bars as per PO-456', optional:true},
+      {id:'mn_reminders',label:'Have you sent reminders? If yes, details',placeholder:'e.g. Emails on 20 Feb, 10 March', optional:true}
     ],
-
     btnLabel: 'Generate Notice — ₹269',
-
-    generate: async (vals) => {
-
-      const prompt = `Generate a formal payment recovery notice under the Micro, Small and Medium Enterprises Development (MSMED) Act, 2006. Use these details:\n- Buyer/Debtor: ${vals.mn_buyer}\n- Buyer Address: ${vals.mn_buyer_addr}\n- Outstanding Amount: ₹${vals.mn_amount}\n- Invoice Nos: ${vals.mn_invoice_nos}\n- Due Since: ${vals.mn_due_date}\n- MSME Supplier: ${vals.mn_supplier}\n- Udyam No.: ${vals.mn_udyam}\n\nWrite a complete, professional legal notice in FORMAL ENGLISH only. Demand payment within 15 days, mention applicable interest under MSMED Act, and warn of MSME Facilitation Council. Format like a formal legal notice.`;
-
-      return prompt;
-
-    }
-
+    generate: async (vals) => { return ''; }
   },
 
   complaint_draft: {
-
     title: '📝 Complaint Letter Draft',
-
     desc: 'AI-drafted formal complaint for police, consumer forum, or any authority.',
-
     price: 99,
-
     fields: [
-
-      {id:'cd_to',label:'To (Authority)',placeholder:'e.g. SHO, Banjara Hills Police Station'},
-
-      {id:'cd_from',label:'Your Name',placeholder:'e.g. Priya Sharma'},
-
-      {id:'cd_subject',label:'Subject / Type of Complaint',placeholder:'e.g. Online fraud of ₹20,000'},
-
-      {id:'cd_details',label:'Describe the incident in detail',placeholder:'What happened, when, who was involved, amount/loss...'},
-
-      {id:'cd_relief',label:'Relief / Action requested',placeholder:'e.g. File FIR, refund of amount, arrest of accused'},
-
+      {id:'cd_from',label:'Aapka Naam (Complainant)',placeholder:'e.g. Priya Sharma'},
+      {id:'cd_to',label:'Kisko Bhej Rahe Ho (Authority)',placeholder:'e.g. SHO, Banjara Hills Police Station'},
+      {id:'cd_location',label:'Aapka Sheher / Zila',placeholder:'e.g. Hyderabad, Telangana'},
+      {id:'cd_issue_type',label:'Complaint Kis Baare Mein Hai?',placeholder:'— Select Issue Type —', type:'select', options:[
+        {value:'consumer',     label:'🛒 Consumer Complaint — online fraud, defective product, bad service'},
+        {value:'cybercrime',   label:'💻 Cyber Crime — UPI fraud, hacking, fake call, online scam'},
+        {value:'police',       label:'👮 Police Complaint — misbehaviour, FIR refused, illegal detention'},
+        {value:'labour',       label:'👷 Labour / Job Issue — salary not paid, wrongful firing, PF problem'},
+        {value:'medical',      label:'🏥 Medical Negligence — wrong treatment, hospital overcharging'},
+        {value:'other',        label:'📄 Other — koi bhi aur complaint'},
+      ]},
+      {id:'cd_opponent',label:'Dusri Party Ka Naam (Optional)',placeholder:'e.g. Amazon India / Ramesh Kumar', optional:true},
+      {id:'cd_date',label:'Ghatna Ki Tarikh (Date of Incident)',placeholder:'e.g. 10 March 2025'},
+      {id:'cd_details',label:'Kya Hua? Poori Baat Likho',placeholder:'Kya hua, kab hua, kaun involved tha, kitna nuksan hua...', type:'textarea'},
+      {id:'cd_relief',label:'Aap Kya Chahte Ho? (Relief)',placeholder:'e.g. FIR darj ho, refund mile, arrested ho accused', optional:true},
+      {id:'cd_amount',label:'Amount involved (if any)',placeholder:'e.g. 25000', optional:true},
+      {id:'cd_prior_complaint',label:'Have you complained anywhere else?',placeholder:'e.g. Already complained to company, but no action', optional:true}
     ],
-
     btnLabel: 'Generate Complaint — ₹99',
-
-    generate: async (vals) => {
-
-      const prompt = `Write a formal complaint letter in ENGLISH with these details:\n- Addressed To: ${vals.cd_to}\n- From: ${vals.cd_from}\n- Subject: ${vals.cd_subject}\n- Incident Details: ${vals.cd_details}\n- Relief Sought: ${vals.cd_relief}\n\nFormat it as a professional formal complaint letter with date, proper salutation, numbered paragraphs, and a closing prayer/request section.`;
-
-      return prompt;
-
-    }
-
+    generate: async (vals) => { return ''; }
   },
 
   legal_reply: {
-
     title: '✉️ Legal Notice Reply',
-
     desc: 'Professional reply to any legal notice you have received.',
-
     price: 49,
-
     fields: [
-
-      {id:'lr_notice_from',label:'Notice Sender (Opponent)',placeholder:'e.g. ABC Bank / Advocate Ravi Kumar'},
-
-      {id:'lr_notice_date',label:'Date of Notice Received',placeholder:'e.g. 15 March 2025'},
-
-      {id:'lr_subject',label:'Subject of Notice',placeholder:'e.g. Loan recovery / Property dispute / Cheque bounce'},
-
-      {id:'lr_your_name',label:'Your Name',placeholder:'e.g. Mukesh Agarwal'},
-
-      {id:'lr_your_response',label:'Your version / response (in brief)',placeholder:'e.g. Payment was already made on 10 Feb, here is the reference...'},
-
+      {id:'lr_your_name',label:'Aapka Naam (Reply Sender)',placeholder:'e.g. Mukesh Agarwal'},
+      {id:'lr_notice_from',label:'Notice Kisne Bheja? (Sender)',placeholder:'e.g. ABC Bank / Advocate Ravi Kumar'},
+      {id:'lr_notice_date',label:'Notice Ki Tarikh',placeholder:'e.g. 15 March 2025'},
+      {id:'lr_subject',label:'Notice Kis Baare Mein Tha?',placeholder:'— Select Notice Type —', type:'select', options:[
+        {value:'loan_recovery',   label:'🏦 Bank / Loan Recovery Notice — EMI default, loan overdue'},
+        {value:'cheque_bounce',   label:'💳 Cheque Bounce Notice — Section 138 NI Act'},
+        {value:'landlord',        label:'🏠 Landlord Notice — rent, eviction, deposit'},
+        {value:'employer',        label:'💼 Employer Notice — termination, salary dispute'},
+        {value:'recovery_agent',  label:'😤 Recovery Agent / Threats — harassment, intimidation'},
+        {value:'property',        label:'🏗️ Property Dispute — ownership, encroachment'},
+        {value:'consumer',        label:'🛒 Consumer / Company Notice — refund, warranty dispute'},
+        {value:'other',           label:'📄 Other Legal Notice'},
+      ]},
+      {id:'lr_tone',label:'Jawab Ka Tone Kaisa Ho?',placeholder:'— Select Tone —', type:'select', options:[
+        {value:'polite',       label:'🤝 Polite & Cooperative — ready to talk, but firm on facts'},
+        {value:'firm',         label:'⚖️ Firm & Assertive — clear denial, no compromise'},
+        {value:'strict_legal', label:'🔥 Strict Legal — maximum pressure, cite all rights'},
+      ]},
+      {id:'lr_notice_text',label:'Notice Ka Content Paste Karo (ya summary likho)',placeholder:'Actual notice text paste karo ya key claims likho...', type:'textarea'},
+      {id:'lr_your_response',label:'Aapki Baat — Sach Kya Hai?',placeholder:'e.g. Payment 10 Feb ko ho gayi thi, ref no. 123456...', type:'textarea'},
     ],
-
     btnLabel: 'Generate Reply — ₹49',
-
-    generate: async (vals) => {
-
-      const prompt = `Draft a formal legal reply in ENGLISH to a notice with these details:\n- Notice From: ${vals.lr_notice_from}\n- Date of Notice: ${vals.lr_notice_date}\n- Subject: ${vals.lr_subject}\n- Reply By: ${vals.lr_your_name}\n- Our Response: ${vals.lr_your_response}\n\nWrite a professional, legally worded reply denying or clarifying the claims, reserving all legal rights. Format as a formal legal letter.`;
-
-      return prompt;
-
-    }
-
+    generate: async (vals) => { return ''; }
   },
 
   priority_answer: {
@@ -1720,20 +1706,96 @@ const SERVICES = {
 
 
 async function generateServiceOutput(key, svc, vals, paymentResult){
-  let endpoint = `${API}/api/chat`;
-  let payload = null;
+  const pid = paymentResult.razorpay_payment_id || 'admin_free';
+  const mob = state.mobile || '';
+  let endpoint, payload;
 
-  if(key === 'priority_answer'){
+  if(key === 'cheque_notice'){
+    endpoint = `${API}/api/cheque-notice`;
+    payload = {
+      client_name: vals.cn_payee,
+      client_address: vals.cn_payee_addr || vals.cn_payee,
+      drawer_name: vals.cn_drawer,
+      drawer_address: vals.cn_drawer_addr,
+      cheque_number: vals.cn_cheque_no,
+      cheque_date: vals.cn_bounce_date,
+      cheque_amount: vals.cn_amount,
+      bank_name: vals.cn_bank,
+      dishonour_reason: vals.cn_reason,
+      liability_description: vals.cn_liability_desc || '',
+      language: 'en',
+      payment_id: pid,
+      mobile: mob
+    };
+  } else if(key === 'msme_notice'){
+    endpoint = `${API}/api/msme-notice`;
+    payload = {
+      business_name: vals.mn_supplier,
+      buyer_name: vals.mn_buyer,
+      buyer_address: vals.mn_buyer_addr,
+      invoice_number: vals.mn_invoice_nos,
+      invoice_date: vals.mn_invoice_date || vals.mn_due_date,
+      outstanding_amount: vals.mn_amount,
+      due_date: vals.mn_due_date,
+      udyam_number: vals.mn_udyam || '',
+      goods_description: vals.mn_goods_desc || '',
+      reminders_sent: vals.mn_reminders || '',
+      language: 'en',
+      payment_id: pid,
+      mobile: mob
+    };
+  } else if(key === 'complaint_draft'){
+    endpoint = `${API}/api/complaint-draft`;
+    payload = {
+      issue_type: vals.cd_issue_type || 'other',
+      issue_description: vals.cd_details,
+      location: vals.cd_location || vals.cd_to,
+      opponent_name: vals.cd_opponent || '',
+      date: vals.cd_date || new Date().toLocaleDateString('en-IN'),
+      user_name: vals.cd_from,
+      relief_wanted: vals.cd_relief || '',
+      amount_involved: vals.cd_amount || '',
+      prior_complaint: vals.cd_prior_complaint || '',
+      language: 'en',
+      payment_id: pid,
+      mobile: mob
+    };
+  } else if(key === 'legal_reply'){
+    endpoint = `${API}/api/legal-reply`;
+    const noticeTypeMap = {
+      loan_recovery: 'Bank / Loan Recovery Notice',
+      cheque_bounce: 'Cheque Bounce Notice under Section 138 NI Act',
+      landlord: 'Landlord Notice regarding rent / eviction / deposit',
+      employer: 'Employer Notice regarding termination or salary dispute',
+      recovery_agent: 'Recovery Agent harassment / intimidation notice',
+      property: 'Property Dispute Notice',
+      consumer: 'Consumer / Company Notice',
+      other: 'Legal Notice'
+    };
+    const noticeContext = noticeTypeMap[vals.lr_subject] || vals.lr_subject || 'Legal Notice';
+    payload = {
+      received_message: vals.lr_notice_text || noticeContext,
+      context: noticeContext,
+      tone: vals.lr_tone || 'firm',
+      user_name: vals.lr_your_name,
+      your_facts: vals.lr_your_response,
+      language: 'en',
+      payment_id: pid,
+      mobile: mob
+    };
+  } else if(key === 'priority_answer'){
     endpoint = `${API}/api/priority-answer`;
     payload = {
       question: vals.sf_question,
       priority_flag: true,
       language: state.lang,
-      payment_id: paymentResult.razorpay_payment_id || 'paid',
-      mobile: state.userMobile || ''
+      payment_id: pid,
+      mobile: mob
     };
   } else {
+    // fallback: generic chat
     const promptText = await svc.generate(vals);
+    endpoint = `${API}/api/chat`;
     payload = {
       message: promptText,
       language: state.lang,
@@ -1781,12 +1843,27 @@ async function openService(key){
   desc.textContent  = svc.desc;
 
   const priceDisplay = `<div class="priority-price-display">₹${svc.price} — One-time payment</div>`;
-  const fields = svc.fields.map(f =>
-    `<div class="form-group">
+  const fields = svc.fields.map(f => {
+    if(f.type === 'select'){
+      const opts = f.options.map(o =>
+        `<option value="${o.value}">${o.label}</option>`
+      ).join('');
+      return `<div class="form-group">
+        <label>${f.label}</label>
+        <select id="${f.id}"><option value="" disabled selected>${f.placeholder}</option>${opts}</select>
+      </div>`;
+    }
+    if(f.type === 'textarea'){
+      return `<div class="form-group">
+        <label>${f.label}</label>
+        <textarea id="${f.id}" placeholder="${f.placeholder}" style="min-height:80px;resize:vertical;"></textarea>
+      </div>`;
+    }
+    return `<div class="form-group">
       <label>${f.label}</label>
       <input type="text" id="${f.id}" placeholder="${f.placeholder}"/>
-    </div>`
-  ).join('');
+    </div>`;
+  }).join('');
 
   body.innerHTML = priceDisplay + fields +
     `<button class="modal-btn" onclick="submitService('${key}')">💳 ${svc.btnLabel}</button>`;
@@ -1820,10 +1897,7 @@ async function submitService(key){
       document.getElementById('pdfOverlay').classList.remove('show');
       recordSuccessfulPurchase(key, svc, { razorpay_payment_id: 'admin_free' });
       state.currentResult = { title: svc.title, content: output, serviceType: key };
-      document.getElementById('resultModalTitle').textContent = svc.title;
-      document.getElementById('resultContent').textContent = output;
-      document.getElementById('shareCardWrap').style.display = 'none';
-      openModal('resultModal');
+      showResult(key, output, svc.title);
       toast('Document ready! ✓', 'success');
     } catch(e) {
       document.getElementById('pdfOverlay').classList.remove('show');
@@ -1848,12 +1922,8 @@ async function submitService(key){
     const output = await generateServiceOutput(key, svc, vals, paymentResult);
     document.getElementById('pdfOverlay').classList.remove('show');
     recordSuccessfulPurchase(key, svc, paymentResult);
-
     state.currentResult = { title: svc.title, content: output, serviceType: key };
-    document.getElementById('resultModalTitle').textContent = svc.title;
-    document.getElementById('resultContent').textContent = output;
-    document.getElementById('shareCardWrap').style.display = 'none';
-    openModal('resultModal');
+    showResult(key, output, svc.title);
     toast('Document ready! ✓', 'success');
   } catch(e) {
     document.getElementById('pdfOverlay').classList.remove('show');
@@ -1861,9 +1931,188 @@ async function submitService(key){
   }
 }
 
+// ─── RICH DOCUMENT RENDERER ──────────────────────────────────────────────────
+function renderRichDocument(serviceType, content, title){
+  const today = new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const ref = 'LD/'+serviceType.toUpperCase().replace('_','/')+'/'+new Date().getFullYear()+'/'+Math.floor(Math.random()*9000+1000);
+
+  // Section splitter helper
+  function parseSection(text, header){
+    const re = new RegExp(header+'[\\s\\S]*?(?=\\n[A-Z]\\.\\s|$)','i');
+    const m = text.match(re);
+    return m ? m[0].replace(new RegExp(header,'i'),'').trim() : '';
+  }
+
+  // Extract sender/receiver from content using heuristics
+  function extractLine(text, patterns){
+    for(const p of patterns){
+      const m = text.match(p);
+      if(m && m[1] && m[1].trim()) return m[1].trim();
+    }
+    return '';
+  }
+
+  let html = '';
+
+  if(serviceType === 'cheque_notice'){
+    const senderName = extractLine(content,[/Yours faithfully,\s*\n+([^\n]+)/i,/Sd\/-\s*\n+([^\n]+)/i]) || title;
+    const toBlock = extractLine(content,[/To,\s*\n+([^\n]+)/i,/Dear ([^\n,]+)/i]) || 'The Addressee';
+    const toAddr = extractLine(content,[/To,\s*\n+[^\n]+\n([^\n]+)/i]) || '';
+    const secCheck = parseSection(content, 'A\\.\\s*Section 138');
+    const noticeBody = parseSection(content, 'B\\.\\s*Formal Legal Notice');
+    const checklist = parseSection(content, 'C\\.\\s*Document Checklist');
+    const nextSteps = parseSection(content, 'D\\.\\s*Next Steps');
+
+    html = `
+    <div class="doc-letterhead">
+      <div>
+        <div class="doc-sender-name">${esc(senderName)}</div>
+        <div class="doc-sender-sub">Complainant / Notice Sender</div>
+      </div>
+      <div class="doc-meta">Date: ${today}<br>Ref: ${ref}<br>Via Speed Post + Email</div>
+    </div>
+    <div class="doc-badges">
+      <span class="doc-badge danger">Notice u/s 138 NI Act 1881</span>
+      <span class="doc-badge warn">15-day demand window</span>
+    </div>
+    <div class="doc-title">Statutory Notice under Section 138, Negotiable Instruments Act, 1881</div>
+    <div class="doc-body">
+      <div class="doc-section-head">A. Section 138 Suitability Check</div>
+      <div class="doc-para">${esc(secCheck || 'See full notice below.').replace(/\n/g,'<br>')}</div>
+      <div class="doc-section-head">B. Formal Legal Notice</div>
+      <div class="doc-to"><strong>To,</strong><br>${esc(toBlock)}<br>${esc(toAddr)}</div>
+      <div class="doc-para">${esc(noticeBody || content).replace(/\n/g,'<br>')}</div>
+      ${checklist ? `<div class="doc-section-head">C. Document Checklist</div><ol class="doc-steps">${checklist.split('\n').filter(l=>l.trim()).map(l=>`<li>${esc(l.replace(/^\d+\.\s*/,''))}</li>`).join('')}</ol>` : ''}
+      ${nextSteps ? `<div class="doc-section-head">D. Next Steps</div><ol class="doc-steps">${nextSteps.split('\n').filter(l=>l.trim()).map(l=>`<li>${esc(l.replace(/^\d+\.\s*/,''))}</li>`).join('')}</ol>` : ''}
+    </div>
+    <div class="doc-sign">
+      <div class="doc-sign-name">${esc(senderName)}</div>
+      <div>Authorised Signatory | ${today}</div>
+      <div class="doc-enclosures">Enclosures: Copy of cheque · Bank return memo · Original invoice</div>
+    </div>`;
+
+  } else if(serviceType === 'msme_notice'){
+    const supplierName = extractLine(content,[/^([^\n]+)\s*\nUdyam/m,/FROM\s+([^\n]+)/i]) || title;
+    const buyerName = extractLine(content,[/To,\s*\n+([^\n]+)/i]) || 'The Buyer';
+    const buyerAddr = extractLine(content,[/To,\s*\n+[^\n]+\n([^\n]+)/i]) || '';
+    const eligibility = parseSection(content,'A\\.\\s*MSME Eligibility');
+    const demandBody = parseSection(content,'B\\.\\s*Formal Demand Notice');
+    const nextSteps = parseSection(content,'C\\.\\s*Next Steps');
+    const checklist = parseSection(content,'D\\.\\s*Evidence Checklist');
+
+    // Extract total from content
+    const totalMatch = content.match(/TOTAL AMOUNT DEMANDED\s*:\s*(Rs\.[\s\d,]+)/i);
+    const total = totalMatch ? totalMatch[1] : '';
+
+    html = `
+    <div class="doc-letterhead">
+      <div>
+        <div class="doc-sender-name">${esc(supplierName)}</div>
+        <div class="doc-sender-sub">MSME Supplier / Claimant</div>
+      </div>
+      <div class="doc-meta">Date: ${today}<br>Ref: ${ref}<br>Via Registered Post AD</div>
+    </div>
+    <div class="doc-badges">
+      <span class="doc-badge info">MSMED Act 2006 — Sec 15, 16, 17, 18</span>
+      <span class="doc-badge warn">15-day payment demand</span>
+    </div>
+    <div class="doc-title">Demand Notice under the Micro, Small and Medium Enterprises Development Act, 2006</div>
+    <div class="doc-body">
+      <div class="doc-section-head">A. MSME Eligibility Check</div>
+      <div class="doc-para">${esc(eligibility || '').replace(/\n/g,'<br>')}</div>
+      <div class="doc-section-head">B. Formal Demand Notice</div>
+      <div class="doc-to"><strong>To,</strong><br>${esc(buyerName)}<br>${esc(buyerAddr)}</div>
+      <div class="doc-para">${esc(demandBody || content).replace(/\n/g,'<br>')}</div>
+      ${total ? `<div class="doc-danger-box"><strong>Total Amount Demanded: ${esc(total)}</strong><br>Payment due within 15 days of receipt of this notice.</div>` : ''}
+      ${nextSteps ? `<div class="doc-section-head">C. Next Steps</div><ol class="doc-steps">${nextSteps.split('\n').filter(l=>l.trim()).map(l=>`<li>${esc(l.replace(/^\d+\.\s*/,''))}</li>`).join('')}</ol>` : ''}
+      ${checklist ? `<div class="doc-section-head">D. Evidence Checklist</div><ol class="doc-steps">${checklist.split('\n').filter(l=>l.trim()).map(l=>`<li>${esc(l.replace(/^\d+\.\s*/,''))}</li>`).join('')}</ol>` : ''}
+    </div>
+    <div class="doc-sign">
+      <div class="doc-sign-name">${esc(supplierName)}</div>
+      <div>Authorised Signatory | ${today}</div>
+      <div class="doc-enclosures">Enclosures: Udyam certificate · Invoice copies · Delivery proofs · Bank statement</div>
+    </div>`;
+
+  } else if(serviceType === 'complaint_draft'){
+    const complainantName = extractLine(content,[/Complainant[:\s]+([^\n]+)/i,/^([^\n]+)\s*\n.*?[Dd]istrict/m]) || 'The Complainant';
+    const courtLine = extractLine(content,[/Before\s+([^\n]+)/i,/To[,:\s]*\n([^\n]+)/i]) || 'District Commission';
+    const bodyText = content.replace(/^[\s\S]*?Complaint\s*under/i,'Complaint under');
+
+    html = `
+    <div class="doc-letterhead">
+      <div>
+        <div class="doc-sender-name">${esc(complainantName)}</div>
+        <div class="doc-sender-sub">Complainant</div>
+      </div>
+      <div class="doc-meta">Date: ${today}<br>Ref: ${ref}<br>Complaint No.: (to be assigned)</div>
+    </div>
+    <div class="doc-badges">
+      <span class="doc-badge info">Consumer Protection Act 2019 / Relevant Law</span>
+      <span class="doc-badge success">Formal Filing Draft</span>
+    </div>
+    <div class="doc-title">${esc(courtLine)}</div>
+    <div class="doc-body">
+      <div class="doc-para">${esc(bodyText).replace(/\n\n/g,'</div><div class="doc-para">').replace(/\n/g,'<br>')}</div>
+    </div>
+    <div class="doc-sign">
+      <div class="doc-sign-name">${esc(complainantName)}</div>
+      <div>Complainant | ${today}</div>
+      <div class="doc-enclosures">Attach: All supporting documents, bills, correspondence, photographs as applicable.</div>
+    </div>`;
+
+  } else if(serviceType === 'legal_reply'){
+    const replyBy = extractLine(content,[/Yours sincerely,\s*\n+([^\n]+)/i,/Yours faithfully,\s*\n+([^\n]+)/i]) || 'The Respondent';
+    const subjectLine = extractLine(content,[/Subject:\s*([^\n]+)/i,/Sub:\s*([^\n]+)/i]) || 'Reply to Legal Notice';
+    const bodyText = content;
+
+    html = `
+    <div class="doc-letterhead">
+      <div>
+        <div class="doc-sender-name">${esc(replyBy)}</div>
+        <div class="doc-sender-sub">Reply Sender / Respondent</div>
+      </div>
+      <div class="doc-meta">Date: ${today}<br>Ref: ${ref}<br>Via Speed Post + Email</div>
+    </div>
+    <div class="doc-badges">
+      <span class="doc-badge success">Reply Notice — Denying Liability</span>
+      <span class="doc-badge warn">Without Prejudice</span>
+    </div>
+    <div class="doc-title">${esc(subjectLine)}</div>
+    <div class="doc-body">
+      <div class="doc-success-box">This reply is issued without prejudice to all rights and remedies available in law.</div>
+      <div class="doc-para">${esc(bodyText).replace(/\n\n/g,'</div><div class="doc-para">').replace(/\n/g,'<br>')}</div>
+    </div>
+    <div class="doc-sign">
+      <div class="doc-sign-name">${esc(replyBy)}</div>
+      <div>Reply Sender | ${today}</div>
+      <div class="doc-enclosures">Attach: All supporting documents and correspondence referenced above.</div>
+    </div>`;
+
+  } else {
+    // Generic fallback
+    html = `<div class="doc-raw">${esc(content)}</div>`;
+  }
+
+  // Add AI disclaimer footer
+  html += `<div style="background:#f5f5f0;border-top:1px solid #ddd;padding:8px 22px;font-size:10px;color:#999;font-family:sans-serif;line-height:1.6;">
+    ⚠️ AI-generated document. Verify all details before sending. Consult a qualified lawyer for complex matters. — BKLChai / Legal Dost
+  </div>`;
+
+  return html;
+}
+
 // ─── RESULT MODAL ACTIONS ──────────────────────────────────────────────────
+function showResult(serviceType, content, title){
+  document.getElementById('resultModalTitle').textContent = title;
+  // Store raw for copy/PDF
+  document.getElementById('resultContent').textContent = content;
+  // Render rich doc
+  document.getElementById('docRender').innerHTML = renderRichDocument(serviceType, content, title);
+  document.getElementById('shareCardWrap') && (document.getElementById('shareCardWrap').style.display = 'none');
+  openModal('resultModal');
+}
 function copyResult() {
-  const content = document.getElementById('resultContent').innerText;
+  const content = document.getElementById('resultContent').textContent;
   if (!content) {
     toast('No content to copy', 'error');
     return;
