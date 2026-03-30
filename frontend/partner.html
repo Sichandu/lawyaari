@@ -495,40 +495,58 @@
     <div class="section card">
         <div class="card-title">📊 Earning Potential</div>
         <div class="earn-table-container">
-            <table class="earn-table">
-                <thead>
-                    <tr>
-                        <th>Service</th>
-                        <th>Price</th>
-                        <th>Your Cut</th>
-                        <th>20 Sales/mo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Cheque Bounce Notice</td>
-                        <td>₹149</td>
-                        <td class="earn-num">₹29.80</td>
-                        <td class="earn-num">₹596</td>
-                    </tr>
-                    <tr>
-                        <td>MSME Recovery</td>
-                        <td>₹269</td>
-                        <td class="earn-num">₹53.80</td>
-                        <td class="earn-num">₹1,076</td>
-                    </tr>
-                    <tr>
-                        <td>Complaint Draft</td>
-                        <td>₹99</td>
-                        <td class="earn-num">₹19.80</td>
-                        <td class="earn-num">₹396</td>
-                    </tr>
-                    <tr class="highlight">
-                        <td colspan="3" style="text-align:right; font-weight:700;">Realistic Target</td>
-                        <td class="earn-num" style="font-size:17px;">₹5,000+</td>
-                    </tr>
-                </tbody>
-            </table>
+        <table class="earn-table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Price</th>
+              <th>Your Cut (20%)</th>
+              <th>If 5 people/week buy</th>
+              <th>Monthly Earn</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>📄 Cheque Bounce Notice</td>
+              <td class="earn-num">₹149</td>
+              <td class="earn-num">₹29.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹596</td>
+            </tr>
+            <tr>
+              <td>⚖️ MSME Recovery Notice</td>
+              <td class="earn-num">₹269</td>
+              <td class="earn-num">₹53.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹1,076</td>
+            </tr>
+            <tr>
+              <td>📝 Complaint Draft</td>
+              <td class="earn-num">₹99</td>
+              <td class="earn-num">₹19.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹396</td>
+            </tr>
+            <tr>
+              <td>✉️ Legal Reply</td>
+              <td class="earn-num">₹49</td>
+              <td class="earn-num">₹9.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹196</td>
+            </tr>
+            <tr>
+              <td>⚡ Priority Answer</td>
+              <td class="earn-num">₹19</td>
+              <td class="earn-num">₹3.80</td>
+              <td style="color:var(--text2)">20 sales</td>
+              <td class="earn-num">₹76</td>
+            </tr>
+            <tr class="highlight">
+              <td colspan="4" style="font-weight:700;color:var(--text)">🎯 Mixed (refer 2 people/day who each buy anything)</td>
+              <td class="earn-num" style="font-size:15px;">₹5,000+</td>
+            </tr>
+          </tbody>
+        </table>
         </div>
     </div>
 
@@ -618,8 +636,7 @@
 </div>
 
 <script>
-    // const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
-    const API = window.BACKEND_URL || 'http://127.0.0.1:8001';
+    const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
     let myRefCode = '';
     let myData = {};
 
