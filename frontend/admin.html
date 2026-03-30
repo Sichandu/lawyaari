@@ -183,6 +183,7 @@ tr:hover td{background:rgba(255,255,255,.015);}
       <div class="tab" onclick="switchTab('users',this)">👥 Users</div>
       <div class="tab" onclick="switchTab('payments',this)">💳 Payments</div>
       <div class="tab" onclick="switchTab('breakdown',this)">📊 Breakdown</div>
+      <div class="tab" onclick="switchTab('partners',this);loadPartners()">🤝 Partners</div>
     </div>
 
     <!-- CHATS TAB -->
@@ -259,14 +260,69 @@ tr:hover td{background:rgba(255,255,255,.015);}
         </div>
       </div>
     </div>
-  </div>
-</div>
+
+    <!-- PARTNERS TAB -->
+    <div id="tab-partners" class="tab-content" style="display:none">
+      <div class="section-body">
+
+        <!-- Summary stats row -->
+        <div id="partnerSummary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px;"></div>
+
+        <!-- Pending Payouts block -->
+        <div style="margin-bottom:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div class="section-title">💸 Pending Payouts</div>
+            <button class="btn-sm" onclick="loadPartners()">↻ Refresh</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Partner Name</th><th>Mobile</th><th>UPI ID</th><th>Ref Code</th><th>Pending (₹)</th><th>Action</th>
+              </tr></thead>
+              <tbody id="payoutsTable"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- All Partners block -->
+        <div style="margin-bottom:20px;">
+          <div class="section-title" style="margin-bottom:10px;">👥 All Registered Partners</div>
+          <div class="search-bar">
+            <input class="search-input" id="partnerSearch" placeholder="Search by name, mobile, or ref code..." onkeydown="if(event.key==='Enter')filterPartners()"/>
+            <button class="search-btn" onclick="filterPartners()">🔍 Search</button>
+            <button class="clear-btn" onclick="clearPartnerFilter()">Clear</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Name</th><th>Mobile</th><th>Email</th><th>UPI ID</th><th>Ref Code</th><th>Total Earned</th><th>Status</th><th>Joined</th>
+              </tr></thead>
+              <tbody id="partnersTable"><tr><td colspan="8" class="empty">Click the Partners tab to load</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Referral Activity block -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div class="section-title">🔗 Referral Activity — Drill Down</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+            <input class="search-input" id="refCodeInput" placeholder="Enter ref code to see their referrals..." style="max-width:280px;"/>
+            <button class="search-btn" onclick="loadReferralDetail()">Load</button>
+          </div>
+          <div id="referralDetail" style="color:var(--text3);font-size:13px;padding:12px 0;">Enter a ref code above to see their referral list and earnings.</div>
+        </div>
+
+      </div>
+    </div>
 
 <script>
-const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
-// const API = window.BACKEND_URL || 'http://127.0.0.1:8001';
+// const API = window.BACKEND_URL || 'https://lawyaari.onrender.com';
+const API = window.BACKEND_URL || 'http://127.0.0.1:8001';
 let adminKey = '';
 let allChats = [], allUsers = [], allPayments = [];
+let allPartners = [], allPayoutsDue = [];
 
 // ── HELPERS ─────────────────────────────────────────────────────────────────
 function toIST(utcStr){
@@ -443,6 +499,187 @@ async function loadPayments(headers){
     allPayments = d.items || [];
     renderPayments(allPayments);
   }catch(e){ document.getElementById('paymentsTable').innerHTML='<tr><td colspan="6" class="empty">Failed to load</td></tr>'; }
+}
+
+// ── PARTNERS ─────────────────────────────────────────────────────────────────
+async function loadPartners(){
+  if(!adminKey){ toast('Enter admin key first'); return; }
+  const headers = {'x-admin-key': adminKey};
+
+  // Reset UI
+  document.getElementById('partnersTable').innerHTML = '<tr><td colspan="8" class="empty"><div class="loading"><div class="spinner"></div> Loading partners...</div></td></tr>';
+  document.getElementById('payoutsTable').innerHTML  = '<tr><td colspan="6" class="empty"><div class="loading"><div class="spinner"></div> Loading payouts...</div></td></tr>';
+
+  try {
+    const [pRes, poRes] = await Promise.all([
+      fetch(`${API}/api/admin/partners`, {headers}),
+      fetch(`${API}/api/admin/partner-payouts`, {headers})
+    ]);
+    const pData  = await pRes.json();
+    const poData = await poRes.json();
+
+    allPartners   = pData.items || [];
+    allPayoutsDue = poData.payouts_due || [];
+    const totalPayoutDue = poData.total || 0;
+
+    // Summary stats
+    const totalEarned = allPartners.reduce((s,p)=>s+(p.total_earned||0),0);
+    document.getElementById('partnerSummary').innerHTML = `
+      <div class="stat-card"><div class="stat-label">Total Partners</div><div class="stat-value accent">${allPartners.length}</div></div>
+      <div class="stat-card"><div class="stat-label">Pending Payouts</div><div class="stat-value" style="color:var(--red)">₹${totalPayoutDue.toFixed(2)}</div><div class="stat-sub">${allPayoutsDue.length} partners awaiting</div></div>
+      <div class="stat-card"><div class="stat-label">Total Commissions</div><div class="stat-value green">₹${totalEarned.toFixed(2)}</div><div class="stat-sub">All time earned</div></div>
+    `;
+
+    renderPayoutsDue(allPayoutsDue);
+    renderPartners(allPartners);
+
+  } catch(e) {
+    document.getElementById('partnersTable').innerHTML = `<tr><td colspan="8" class="empty">Error: ${esc(e.message)}</td></tr>`;
+    document.getElementById('payoutsTable').innerHTML  = `<tr><td colspan="6" class="empty">Error: ${esc(e.message)}</td></tr>`;
+  }
+}
+
+function renderPayoutsDue(items){
+  const tb = document.getElementById('payoutsTable');
+  if(!items.length){
+    tb.innerHTML = '<tr><td colspan="6" class="empty" style="color:var(--green)">✓ No pending payouts — all clear!</td></tr>';
+    return;
+  }
+  tb.innerHTML = items.map(p=>`<tr>
+    <td class="cell-name">${esc(p.name||'—')}</td>
+    <td class="cell-mono">${maskMobile(p.mobile)}</td>
+    <td class="cell-mono" style="color:var(--text)">${esc(p.upi_id||'—')}</td>
+    <td><span class="badge b-intent">${esc(p.ref_code||'—')}</span></td>
+    <td style="color:var(--accent);font-weight:700;font-family:var(--mono)">₹${(p.pending_payout||0).toFixed(2)}</td>
+    <td>
+      <button class="btn-sm btn-accent" onclick="markPayout('${esc(p.ref_code)}','${(p.pending_payout||0).toFixed(2)}','${esc(p.upi_id||'')}')">
+        ✓ Mark Paid
+      </button>
+    </td>
+  </tr>`).join('');
+}
+
+function renderPartners(items){
+  const tb = document.getElementById('partnersTable');
+  if(!items.length){
+    tb.innerHTML = '<tr><td colspan="8" class="empty">No partners registered yet.</td></tr>';
+    return;
+  }
+  tb.innerHTML = items.map(p=>`<tr>
+    <td class="cell-name">${esc(p.name||'—')}</td>
+    <td class="cell-mono">${maskMobile(p.mobile)}</td>
+    <td class="cell-truncate" style="max-width:160px;" title="${esc(p.email||'')}">${esc(p.email||'—')}</td>
+    <td class="cell-mono" style="color:var(--text)">${esc(p.upi_id||'—')}</td>
+    <td>
+      <span class="badge b-intent" style="cursor:pointer" onclick="drillRef('${esc(p.ref_code||'')}')">
+        ${esc(p.ref_code||'—')}
+      </span>
+    </td>
+    <td style="color:var(--green);font-weight:700;font-family:var(--mono)">₹${(p.total_earned||0).toFixed(2)}</td>
+    <td><span class="badge ${p.status==='active'?'b-verified':'b-pending'}">${esc(p.status||'active')}</span></td>
+    <td class="ist-time">${toIST(p.created_at)}</td>
+  </tr>`).join('');
+}
+
+function filterPartners(){
+  const q = document.getElementById('partnerSearch').value.trim().toLowerCase();
+  const filtered = q ? allPartners.filter(p=>
+    (p.name||'').toLowerCase().includes(q) ||
+    (p.mobile||'').includes(q) ||
+    (p.ref_code||'').toLowerCase().includes(q) ||
+    (p.email||'').toLowerCase().includes(q)
+  ) : allPartners;
+  renderPartners(filtered);
+}
+
+function clearPartnerFilter(){
+  document.getElementById('partnerSearch').value = '';
+  renderPartners(allPartners);
+}
+
+function drillRef(code){
+  document.getElementById('refCodeInput').value = code;
+  loadReferralDetail();
+}
+
+async function loadReferralDetail(){
+  const code = document.getElementById('refCodeInput').value.trim();
+  if(!code){ toast('Enter a ref code'); return; }
+  const el = document.getElementById('referralDetail');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div> Loading referrals...</div>';
+  try{
+    const res = await fetch(`${API}/api/partner/earnings/${encodeURIComponent(code)}`);
+    const d = await res.json();
+    if(!res.ok) throw new Error(d.detail||'Not found');
+
+    const refs = d.referrals || [];
+    const refRows = refs.length
+      ? refs.map(r=>`<tr>
+          <td class="cell-name">${esc(r.name||'—')}</td>
+          <td class="cell-mono">${r.mobile ? r.mobile.slice(0,2)+'****'+r.mobile.slice(-2) : '—'}</td>
+          <td>${r.paid
+            ? `<span class="badge b-verified">Paid</span>`
+            : `<span class="badge b-pending">Pending</span>`}
+          </td>
+          <td style="font-family:var(--mono);color:${r.paid?'var(--green)':'var(--text3)'}">
+            ${r.paid ? '₹'+r.commission.toFixed(2) : '—'}
+          </td>
+          <td class="ist-time">${esc(r.date||'—')}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="5" class="empty">No referrals yet for this code.</td></tr>';
+
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px;">
+        <div class="stat-card" style="padding:12px"><div class="stat-label">Partner</div><div style="font-weight:700;font-size:14px;color:var(--text)">${esc(d.partner_name||code)}</div></div>
+        <div class="stat-card" style="padding:12px"><div class="stat-label">Total Referrals</div><div class="stat-value" style="font-size:20px;color:var(--blue)">${d.total_referrals||0}</div></div>
+        <div class="stat-card" style="padding:12px"><div class="stat-label">Paid Referrals</div><div class="stat-value" style="font-size:20px;color:var(--green)">${d.paid_referrals||0}</div></div>
+        <div class="stat-card" style="padding:12px"><div class="stat-label">Total Earned</div><div class="stat-value" style="font-size:20px;color:var(--accent)">₹${(d.total_earned||0).toFixed(2)}</div></div>
+        <div class="stat-card" style="padding:12px"><div class="stat-label">Pending Payout</div><div class="stat-value" style="font-size:20px;color:var(--red)">₹${(d.pending_payout||0).toFixed(2)}</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Referred Name</th><th>Mobile</th><th>Status</th><th>Commission</th><th>Date</th>
+          </tr></thead>
+          <tbody>${refRows}</tbody>
+        </table>
+      </div>
+      ${d.pending_payout > 0 ? `
+      <div style="margin-top:12px;">
+        <button class="btn-sm btn-accent" onclick="markPayout('${esc(code)}','${(d.pending_payout||0).toFixed(2)}','${esc(d.upi_id||'')}')">
+          ✓ Mark Payout — ₹${(d.pending_payout||0).toFixed(2)} to ${esc(d.upi_id||'UPI')}
+        </button>
+      </div>` : ''}
+    `;
+  }catch(e){
+    el.innerHTML = `<div style="color:var(--red);font-size:13px;padding:12px 0;">Error: ${esc(e.message)}</div>`;
+  }
+}
+
+async function markPayout(refCode, amount, upiId){
+  if(!adminKey){ toast('Enter admin key first'); return; }
+  const confirmed = confirm(`Mark payout of ₹${amount} to ${upiId||refCode}?\n\nEnter UTR / transaction reference in the next prompt.`);
+  if(!confirmed) return;
+  const utr = prompt('Enter UTR / transaction reference (optional):') || '';
+  const headers = {'x-admin-key': adminKey, 'Content-Type': 'application/json'};
+  try{
+    const res = await fetch(`${API}/api/admin/mark-payout`, {
+      method:'POST',
+      headers,
+      body: JSON.stringify({ref_code: refCode, amount: parseFloat(amount), utr})
+    });
+    const d = await res.json();
+    if(!res.ok) throw new Error(d.detail||'Failed');
+    toast(`✓ Payout marked for ${refCode}`);
+    // Reload partners data to reflect updated state
+    await loadPartners();
+    // Also refresh drill-down if same code is open
+    if(document.getElementById('refCodeInput').value.trim() === refCode){
+      await loadReferralDetail();
+    }
+  }catch(e){
+    toast(`Error: ${e.message}`);
+  }
 }
 
 // ── CSV EXPORT ───────────────────────────────────────────────────────────────

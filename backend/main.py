@@ -65,9 +65,9 @@ chats_col       = db["chats"]
 payments_col    = db["payments"]
 analytics_col   = db["analytics"]
 triggers_col    = db["triggers"]
-partners_col    = db["partners"]       # ✅ fixed
-referrals_col   = db["referrals"]      # ✅ fixed
-payouts_col     = db["payouts"]        # ✅ fixed
+partners_col    = db["partners"]
+referrals_col   = db["referrals"]
+payouts_col     = db["payouts"]
 
 # ─── API KEYS ─────────────────────────────────────────────────────────────────
 GROQ_API_KEY     = os.getenv("GROQ_API_KEY", "")
@@ -447,22 +447,6 @@ Priority Legal Answer
 Note: This is AI-generated guidance, not legal advice.
 """
 
-def build_cheque_notice_prompt(vals: dict, today: str) -> str:
-    # Use the existing strong prompt but with added seriousness and personalisation
-    # We'll reuse the existing prompt from the route with enhancements
-    # Actually we'll inline it in the route to avoid duplication, but we'll ensure the prompt is robust.
-    # For clarity, we'll keep the prompt building inside the route.
-    pass
-
-def build_msme_notice_prompt(vals: dict, today: str) -> str:
-    pass
-
-def build_complaint_draft_prompt(vals: dict, today: str) -> str:
-    pass
-
-def build_legal_reply_prompt(vals: dict, today: str) -> str:
-    pass
-
 # ─── MODELS ──────────────────────────────────────────────────────────────────
 class SendOTPRequest(BaseModel):
     mobile: str
@@ -488,7 +472,7 @@ class ChequeNoticeRequest(BaseModel):
     cheque_amount: str
     bank_name: str
     dishonour_reason: str
-    liability_description: Optional[str] = ""  # new field
+    liability_description: Optional[str] = ""
     language: str = "hi"
     payment_id: str
     mobile: Optional[str] = None
@@ -502,8 +486,8 @@ class MSMENoticeRequest(BaseModel):
     outstanding_amount: str
     due_date: str
     udyam_number: Optional[str] = ""
-    goods_description: Optional[str] = ""   # new field
-    reminders_sent: Optional[str] = ""      # new field
+    goods_description: Optional[str] = ""
+    reminders_sent: Optional[str] = ""
     language: str = "hi"
     payment_id: str
     mobile: Optional[str] = None
@@ -517,6 +501,8 @@ class LegalReplyRequest(BaseModel):
     payment_id: str
     mobile: Optional[str] = None
     your_facts: Optional[str] = ""
+    sender_name: Optional[str] = ""
+    notice_date: Optional[str] = ""
 
 class ComplaintDraftRequest(BaseModel):
     issue_type: str
@@ -525,9 +511,9 @@ class ComplaintDraftRequest(BaseModel):
     opponent_name: Optional[str] = ""
     date: str
     user_name: str
-    relief_wanted: Optional[str] = ""      # new field
-    amount_involved: Optional[str] = ""    # new field
-    prior_complaint: Optional[str] = ""    # new field
+    relief_wanted: Optional[str] = ""
+    amount_involved: Optional[str] = ""
+    prior_complaint: Optional[str] = ""
     language: str = "hi"
     payment_id: str
     mobile: Optional[str] = None
@@ -1042,6 +1028,11 @@ async def legal_reply(req: LegalReplyRequest):
 
     today = datetime.utcnow().strftime('%d %B %Y')
     system = get_system_prompt(req.language, "legal")
+
+    # Use provided sender name and notice date; fallback to defaults if empty
+    sender_display = req.sender_name.strip() if req.sender_name else "the sender as per the notice"
+    notice_date_display = req.notice_date.strip() if req.notice_date else "the date mentioned in the notice"
+
     prompt = f"""
 Generate a professional legal reply letter for an Indian legal context.
 
@@ -1052,6 +1043,8 @@ The recipient received this notice:
 
 Reply sender: {req.user_name}
 Context: {req.context}
+Notice sent by: {sender_display}
+Notice date: {notice_date_display}
 {f"KEY FACTS TO ASSERT (user-provided — the reply MUST be built around these):\n{req.your_facts}\n\n" if req.your_facts and req.your_facts.strip() else ""}
 Tone: {req.tone} (polite=cooperative but firm; firm=assertive; strict_legal=maximum legal pressure)
 Today's date: {today}
@@ -1060,6 +1053,8 @@ STRICT RULES:
 - Write in formal English only
 - Do NOT assume facts not in the notice
 - Always use today's date {today} — never leave [date] as placeholder
+- For sender name, use: {sender_display} — do NOT write [Bank Name] or any brackets
+- For notice date, use: {notice_date_display} — do NOT write [Notice Date]
 - CONTEXT-SPECIFIC LAW MAPPING — cite ONLY from the correct context:
   bank/loan context → RBI Fair Practice Code, Banking Ombudsman Scheme 2006, RBI Circular on loan recovery
   landlord/tenant context → Transfer of Property Act 1882, relevant State Rent Control Act, NOT Section 138 NI Act
@@ -1074,9 +1069,9 @@ REQUIRED OUTPUT FORMAT — complete, ready-to-send letter, zero square brackets:
 Date: {today}
 
 To,
-[From the notice above, extract and write the actual sender name, designation, firm/bank name — no brackets]
+{sender_display}  (use exactly as provided, no brackets)
 
-Subject: [Write a specific subject line referencing the notice date and subject — no brackets]
+Subject: Re: {req.context} Notice dated {notice_date_display} — [add brief specific description]
 
 Dear Sir/Madam,
 
