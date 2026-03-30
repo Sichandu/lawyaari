@@ -19,7 +19,13 @@
             --mono: 'DM Mono', monospace;
             --radius: 12px;
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background: var(--bg);
             color: var(--text);
@@ -27,6 +33,7 @@
             line-height: 1.6;
             min-height: 100vh;
         }
+
         nav {
             position: sticky;
             top: 0;
@@ -34,46 +41,55 @@
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
-            padding: 16px 20px;
+            padding: 14px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
+
         .nav-logo {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             color: var(--text);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
+
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+        }
+
         .back-btn, .register-top-btn {
-            padding: 10px 18px;
+            padding: 9px 16px;
             border-radius: 8px;
             font-weight: 600;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13.5px;
             transition: all 0.2s;
+            white-space: nowrap;
         }
+
         .back-btn {
             background: #f1f5f9;
             color: var(--text2);
             border: 1px solid var(--border);
         }
-        .back-btn:hover { background: #e2e8f0; }
+
         .register-top-btn {
             background: var(--accent);
             color: #000;
             border: none;
         }
-        .register-top-btn:hover { opacity: 0.92; }
 
         .hero {
             text-align: center;
-            padding: 80px 20px 60px;
+            padding: 60px 20px 50px;
             background: linear-gradient(135deg, #fff7ed 0%, #fefce8 100%);
         }
+
         .hero-badge {
             display: inline-flex;
             align-items: center;
@@ -81,79 +97,91 @@
             background: rgba(245,158,11,0.1);
             border: 1px solid rgba(245,158,11,0.3);
             color: var(--accent);
-            padding: 8px 20px;
+            padding: 8px 18px;
             border-radius: 9999px;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
+
         .hero h1 {
-            font-size: clamp(32px, 6vw, 52px);
+            font-size: clamp(28px, 7vw, 48px);
             font-weight: 700;
-            line-height: 1.1;
+            line-height: 1.15;
             margin-bottom: 16px;
-            color: var(--text);
         }
-        .hero h1 em { color: var(--accent); font-style: normal; }
+
+        .hero h1 em {
+            color: var(--accent);
+            font-style: normal;
+        }
+
         .hero p {
-            font-size: 18px;
+            font-size: 16.5px;
             color: var(--text2);
             max-width: 620px;
-            margin: 0 auto 32px;
+            margin: 0 auto 28px;
         }
+
         .hero-badges {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
         }
+
         .hb {
             background: white;
             border: 1px solid var(--border);
-            padding: 10px 20px;
+            padding: 9px 16px;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text2);
             box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
-        .hb strong { color: var(--text); }
 
         .container {
             max-width: 780px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 16px;
         }
+
         .section {
-            margin-bottom: 48px;
+            margin-bottom: 40px;
         }
+
         .card {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 32px;
+            padding: 28px 24px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.04);
         }
+
         .card-title {
             font-size: 18px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             display: flex;
             align-items: center;
             gap: 10px;
             color: var(--text);
         }
+
         .steps {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 22px;
         }
+
         .step {
             display: flex;
-            gap: 20px;
+            gap: 16px;
         }
+
         .step-num {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             background: rgba(245,158,11,0.12);
             color: var(--accent);
             border-radius: 50%;
@@ -161,165 +189,246 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
+            font-size: 15px;
             flex-shrink: 0;
         }
+
         .step-content h4 {
             font-size: 16px;
             margin-bottom: 6px;
         }
+
         .step-content p {
             color: var(--text2);
             font-size: 15px;
         }
 
+        /* Table */
+        .earn-table-container {
+            overflow-x: auto;
+            margin: 0 -4px;
+        }
+
         .earn-table {
             width: 100%;
+            min-width: 520px;
             border-collapse: collapse;
-            font-size: 15px;
+            font-size: 14.5px;
         }
+
         .earn-table th {
             text-align: left;
-            padding: 14px 16px;
+            padding: 14px 12px;
             background: #f8fafc;
             color: var(--text3);
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12.5px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
         }
+
         .earn-table td {
-            padding: 16px;
+            padding: 14px 12px;
             border-bottom: 1px solid var(--border);
         }
+
         .earn-num {
             font-family: var(--mono);
             color: var(--accent2);
             font-weight: 600;
         }
+
         .highlight td {
             background: #fefce8;
             font-weight: 600;
         }
 
+        /* Form */
         .form-group {
             margin-bottom: 20px;
         }
+
         label {
             display: block;
             font-size: 13px;
             font-weight: 600;
             color: var(--text3);
-            margin-bottom: 6px;
+            margin-bottom: 7px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        input, select {
+
+        input {
             width: 100%;
             padding: 14px 16px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            font-size: 15px;
+            font-size: 15.5px;
             background: white;
         }
+
         input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
         }
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 18px;
         }
-        @media (max-width: 520px) {
-            .form-row { grid-template-columns: 1fr; }
-        }
+
         .btn-primary {
             background: var(--accent);
             color: #000;
-            padding: 16px 32px;
+            padding: 16px 24px;
             border: none;
             border-radius: var(--radius);
             font-size: 16px;
             font-weight: 700;
             width: 100%;
             cursor: pointer;
-            margin-top: 12px;
+            margin-top: 10px;
         }
-        .btn-primary:hover { opacity: 0.95; }
 
-        /* Success & Tracker Styles */
+        /* Success & Tracker */
         .success-card {
             background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02));
             border: 1px solid rgba(16,185,129,0.25);
             border-radius: var(--radius);
-            padding: 40px 32px;
+            padding: 36px 24px;
             text-align: center;
         }
-        .success-icon { font-size: 52px; margin-bottom: 16px; }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
         .ref-link-box {
             background: #f8fafc;
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 16px;
+            padding: 14px;
             display: flex;
             align-items: center;
             gap: 12px;
             margin: 16px 0;
+            flex-wrap: wrap;
         }
+
         .ref-link-text {
             flex: 1;
             font-family: var(--mono);
             font-size: 14px;
             color: var(--accent);
             word-break: break-all;
+            min-width: 0;
         }
+
         .copy-btn {
             background: var(--accent);
             color: #000;
             border: none;
-            padding: 10px 18px;
+            padding: 10px 16px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
+            font-size: 13.5px;
             white-space: nowrap;
         }
+
         .track-btn {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             background: white;
             border: 1px solid var(--border);
             border-radius: 10px;
             font-weight: 600;
             margin-top: 12px;
             cursor: pointer;
+            font-size: 15px;
         }
+
         .tracker-stat {
             display: flex;
             justify-content: space-between;
             padding: 14px 0;
             border-bottom: 1px solid var(--border);
+            font-size: 15px;
         }
-        .tracker-stat:last-child { border-bottom: none; }
-        .tracker-value { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--accent); }
-        .tracker-value.green { color: var(--accent2); }
+
+        .tracker-stat:last-child {
+            border-bottom: none;
+        }
+
+        .tracker-value {
+            font-family: var(--mono);
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .tracker-value.green {
+            color: var(--accent2);
+        }
 
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
             background: #1e2937;
             color: white;
             padding: 14px 24px;
             border-radius: 10px;
-            font-size: 14px;
+            font-size: 14.5px;
             z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             animation: toastIn 0.3s ease;
+            max-width: 90%;
+            text-align: center;
         }
+
         @keyframes toastIn {
             from { opacity: 0; transform: translateX(-50%) translateY(20px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px 18px;
+            }
+            .hero {
+                padding: 50px 16px 40px;
+            }
+            .nav-actions {
+                gap: 8px;
+            }
+            .back-btn, .register-top-btn {
+                padding: 8px 12px;
+                font-size: 12.5px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .step {
+                gap: 14px;
+            }
+            .earn-table th, .earn-table td {
+                padding: 12px 8px;
+                font-size: 13.5px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .hero h1 {
+                font-size: 26px;
+            }
         }
     </style>
 </head>
@@ -327,20 +436,21 @@
 
 <nav>
     <a class="nav-logo" href="index.html">⚖️ BKLChai</a>
-    <div>
-        <a href="index.html" class="back-btn">← Back to App</a>
-        <a href="#registerForm" class="register-top-btn">Register as Partner</a>
+    <div class="nav-actions">
+        <a href="index.html" class="back-btn">← Back</a>
+        <a href="#registerForm" class="register-top-btn">Become Partner</a>
     </div>
 </nav>
 
 <div class="hero">
     <div class="hero-badge">💰 Partner Program</div>
     <h1>Refer Friends.<br/>Earn <em>Real Money.</em></h1>
-    <p>Share BKLChai with people who need simple legal help in Hindi. Earn <strong>20% flat commission</strong> on every paid service — with weekly UPI payouts.</p>
+    <p>Share BKLChai with people who need simple legal help in Hindi. Earn <strong>20% flat commission</strong> on every paid service with weekly UPI payouts.</p>
+    
     <div class="hero-badges">
         <div class="hb">💸 <strong>20% Commission</strong></div>
-        <div class="hb">📅 <strong>Weekly UPI Payouts</strong></div>
-        <div class="hb">🔗 <strong>Unique Referral Link</strong></div>
+        <div class="hb">📅 <strong>Weekly UPI</strong></div>
+        <div class="hb">🔗 <strong>Unique Link</strong></div>
     </div>
 </div>
 
@@ -354,28 +464,28 @@
                 <div class="step-num">1</div>
                 <div class="step-content">
                     <h4>Register as Partner</h4>
-                    <p>Fill the simple form below. Get your unique referral link instantly.</p>
+                    <p>Fill the simple form. Get your unique referral link instantly.</p>
                 </div>
             </div>
             <div class="step">
                 <div class="step-num">2</div>
                 <div class="step-content">
                     <h4>Share Your Link</h4>
-                    <p>Send it via WhatsApp, family groups, or to anyone facing legal issues.</p>
+                    <p>Send via WhatsApp, family groups, or to anyone with legal needs.</p>
                 </div>
             </div>
             <div class="step">
                 <div class="step-num">3</div>
                 <div class="step-content">
                     <h4>They Pay → You Earn</h4>
-                    <p>Every time someone signs up through your link and buys a service, you earn 20% automatically.</p>
+                    <p>20% commission credited automatically when they buy any paid service.</p>
                 </div>
             </div>
             <div class="step">
                 <div class="step-num">4</div>
                 <div class="step-content">
                     <h4>Get Paid Weekly</h4>
-                    <p>Earnings transferred every Monday directly to your UPI ID. No minimum payout.</p>
+                    <p>Earnings transferred every Monday to your UPI ID. No minimum.</p>
                 </div>
             </div>
         </div>
@@ -384,46 +494,48 @@
     <!-- Earning Potential -->
     <div class="section card">
         <div class="card-title">📊 Earning Potential</div>
-        <table class="earn-table">
-            <thead>
-                <tr>
-                    <th>Service</th>
-                    <th>Price</th>
-                    <th>Your 20% Cut</th>
-                    <th>Monthly (if 20 sales)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Cheque Bounce Notice</td>
-                    <td>₹149</td>
-                    <td class="earn-num">₹29.80</td>
-                    <td class="earn-num">₹596</td>
-                </tr>
-                <tr>
-                    <td>MSME Recovery Notice</td>
-                    <td>₹269</td>
-                    <td class="earn-num">₹53.80</td>
-                    <td class="earn-num">₹1,076</td>
-                </tr>
-                <tr>
-                    <td>Complaint Draft</td>
-                    <td>₹99</td>
-                    <td class="earn-num">₹19.80</td>
-                    <td class="earn-num">₹396</td>
-                </tr>
-                <tr class="highlight">
-                    <td colspan="3" style="text-align:right; font-weight:700;">Realistic Target (2 referrals/day)</td>
-                    <td class="earn-num" style="font-size:18px;">₹5,000+</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="earn-table-container">
+            <table class="earn-table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Price</th>
+                        <th>Your Cut</th>
+                        <th>20 Sales/mo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cheque Bounce Notice</td>
+                        <td>₹149</td>
+                        <td class="earn-num">₹29.80</td>
+                        <td class="earn-num">₹596</td>
+                    </tr>
+                    <tr>
+                        <td>MSME Recovery</td>
+                        <td>₹269</td>
+                        <td class="earn-num">₹53.80</td>
+                        <td class="earn-num">₹1,076</td>
+                    </tr>
+                    <tr>
+                        <td>Complaint Draft</td>
+                        <td>₹99</td>
+                        <td class="earn-num">₹19.80</td>
+                        <td class="earn-num">₹396</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td colspan="3" style="text-align:right; font-weight:700;">Realistic Target</td>
+                        <td class="earn-num" style="font-size:17px;">₹5,000+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Registration Form -->
     <div id="registerForm" class="section card">
         <div class="card-title">📝 Register as Partner</div>
-        <p style="margin-bottom:24px; color:var(--text2);">Your details for commission tracking & weekly UPI payouts.</p>
+        <p style="margin-bottom:24px; color:var(--text2);">Fill your details for commission tracking and UPI payouts.</p>
 
         <div class="form-row">
             <div class="form-group">
@@ -442,7 +554,7 @@
                 <input type="email" id="p_email" placeholder="yourname@gmail.com">
             </div>
             <div class="form-group">
-                <label>UPI ID for Payouts *</label>
+                <label>UPI ID *</label>
                 <input type="text" id="p_upi" placeholder="9876543210@upi">
             </div>
         </div>
@@ -452,48 +564,46 @@
             <input type="text" id="p_address" placeholder="Hyderabad, Telangana">
         </div>
 
-        <button class="btn-primary" id="registerBtn" onclick="registerPartner()">🚀 Register & Get My Referral Link</button>
+        <button class="btn-primary" id="registerBtn" onclick="registerPartner()">🚀 Register & Get My Link</button>
     </div>
 
-    <!-- SUCCESS SECTION (Hidden by default) -->
+    <!-- SUCCESS SECTION -->
     <div id="successSection" style="display: none;">
         <div class="section card success-card">
             <div class="success-icon">🎉</div>
-            <h2 style="margin-bottom:12px;">You're Now a BKLChai Partner!</h2>
-            <p style="color:var(--text2); max-width:520px; margin:0 auto 24px;">
-                Share your unique link and start earning 20% commission on every paid service.
-            </p>
+            <h2 style="margin-bottom:12px;">You're a BKLChai Partner!</h2>
+            <p style="color:var(--text2); margin-bottom:24px;">Share your link and earn 20% on every paid service.</p>
 
-            <div style="text-align:left; font-size:13px; color:var(--text3); margin-bottom:8px;">Your Referral Link:</div>
+            <div style="text-align:left; font-size:13.5px; color:var(--text3); margin-bottom:6px;">Your Referral Link</div>
             <div class="ref-link-box">
                 <div class="ref-link-text" id="refLinkDisplay">https://bklchai.com/index.html?ref=XXXX</div>
                 <button class="copy-btn" onclick="copyLink()">Copy</button>
             </div>
 
-            <div style="text-align:left; font-size:13px; color:var(--text3); margin-bottom:8px;">Ready WhatsApp Message:</div>
+            <div style="text-align:left; font-size:13.5px; color:var(--text3); margin-bottom:6px;">WhatsApp Message</div>
             <div class="ref-link-box">
                 <div class="ref-link-text" id="waText" style="color:var(--text2); font-family:var(--font);">—</div>
                 <button class="copy-btn" onclick="copyWA()">Copy</button>
             </div>
 
-            <button class="track-btn" onclick="loadTracker()">📊 Check My Earnings & Referrals</button>
+            <button class="track-btn" onclick="loadTracker()">📊 View My Earnings</button>
             <button class="track-btn" onclick="shareWhatsApp()" style="background:var(--accent2); color:white;">💬 Share on WhatsApp</button>
         </div>
 
-        <!-- Tracker Section -->
+        <!-- Tracker -->
         <div id="trackerSection" class="section card" style="display:none;">
             <div class="card-title">📈 Your Earnings Dashboard</div>
             
             <div class="tracker-stat">
-                <div>Total Referrals Who Paid</div>
+                <div>Total Paid Referrals</div>
                 <div class="tracker-value" id="trk_paid_count">0</div>
             </div>
             <div class="tracker-stat">
-                <div>Total Commission Earned</div>
+                <div>Total Earned</div>
                 <div class="tracker-value green" id="trk_earned">₹0.00</div>
             </div>
             <div class="tracker-stat">
-                <div>Pending Payout (Next Monday)</div>
+                <div>Pending Payout</div>
                 <div class="tracker-value" id="trk_pending">₹0.00</div>
             </div>
             <div class="tracker-stat">
@@ -501,12 +611,7 @@
                 <div class="tracker-value green" id="trk_paid_out">₹0.00</div>
             </div>
 
-            <div id="referralList" style="margin-top:24px;"></div>
-
-            <div style="margin-top:24px; padding:16px; background:#fefce8; border-radius:10px; font-size:14px; color:var(--text2);">
-                💳 Weekly UPI payout every Monday to <strong id="trk_upi">—</strong><br>
-                Any questions? WhatsApp us at <strong>+91 81858 43878</strong>
-            </div>
+            <div id="referralList" style="margin-top:24px; font-size:14px;"></div>
         </div>
     </div>
 
@@ -521,31 +626,23 @@
     function toast(msg, color = '#10b981') {
         const el = document.createElement('div');
         el.className = 'toast';
-        el.style.background = color;
+        if (color) el.style.backgroundColor = color;
         el.textContent = msg;
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 2800);
     }
 
-    // Smooth scroll to register form
-    function scrollToRegister() {
-        document.getElementById('registerForm').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Build referral link
     function buildRefLink(code) {
         return `${window.location.origin}/index.html?ref=${code}`;
     }
 
-    // Update WhatsApp text
     function updateWAText(code) {
         const link = buildRefLink(code);
-        const txt = `Bhai, ek bahut kaam ki cheez share kar raha hoon! 🙏\n\nBKLChai - AI Legal Dost jo Hindi mein help karta hai:\n✅ Free Legal Advice\n✅ Cheque Bounce Notice ₹149 mein\n✅ MSME Recovery, Complaint Draft etc.\n\nLink: ${link}\n\nBookmark kar lo — kabhi bhi kaam aa sakta hai! ⚖️☕`;
+        const txt = `Bhai, ek bahut useful cheez share kar raha hoon!\n\nBKLChai - Simple Hindi Legal Help:\n✅ Free Advice\n✅ Cheque Bounce Notice ₹149\n✅ MSME Recovery & more\n\nLink: ${link}\n\nBookmark kar lo. Kabhi bhi kaam aa sakta hai! ⚖️☕`;
         document.getElementById('waText').textContent = txt;
         window._waText = txt;
     }
 
-    // Show success screen
     function showSuccess() {
         document.getElementById('registerForm').style.display = 'none';
         document.getElementById('successSection').style.display = 'block';
@@ -554,10 +651,9 @@
         updateWAText(myRefCode);
     }
 
-    // Copy functions
     function copyLink() {
         navigator.clipboard.writeText(buildRefLink(myRefCode));
-        toast('Referral link copied!');
+        toast('Link copied to clipboard!');
     }
 
     function copyWA() {
@@ -570,7 +666,6 @@
         window.open(`https://wa.me/?text=${txt}`, '_blank');
     }
 
-    // Main registration function
     async function registerPartner() {
         const name = document.getElementById('p_name').value.trim();
         const mobile = document.getElementById('p_mobile').value.trim();
@@ -579,15 +674,11 @@
         const address = document.getElementById('p_address').value.trim();
 
         if (!name || !mobile || !email || !upi || !address) {
-            toast('Please fill all required fields', '#ef4444');
+            toast('Please fill all fields', '#ef4444');
             return;
         }
-        if (!/^\d{10}$/.test(mobile)) {
-            toast('Enter valid 10-digit mobile number', '#ef4444');
-            return;
-        }
-        if (!email.includes('@')) {
-            toast('Enter valid email address', '#ef4444');
+        if (mobile.length !== 10 || isNaN(mobile)) {
+            toast('Enter valid 10-digit mobile', '#ef4444');
             return;
         }
 
@@ -598,73 +689,44 @@
         try {
             const res = await fetch(`${API}/api/partner/register`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name, 
-                    mobile, 
-                    email, 
-                    upi_id: upi, 
-                    address
-                })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name, mobile, email, upi_id: upi, address})
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.detail || 'Registration failed');
+            if (!res.ok) throw new Error(data.detail || 'Failed');
 
             myRefCode = data.ref_code;
-            myData = { ref_code: myRefCode, name, mobile, email, upi_id: upi, address };
+            myData = {ref_code: myRefCode, name, mobile, email, upi_id: upi, address};
             localStorage.setItem('bkl_partner', JSON.stringify(myData));
 
             showSuccess();
-            toast('Successfully registered as Partner! 🎉');
+            toast('Registered successfully! 🎉');
 
         } catch (e) {
             // Demo fallback
-            myRefCode = 'demo_' + mobile.slice(-4);
-            myData = { ref_code: myRefCode, name, mobile, email, upi_id: upi, address };
+            myRefCode = 'demo_' + Date.now().toString().slice(-6);
+            myData = {ref_code: myRefCode, name, mobile, email, upi_id: upi, address};
             localStorage.setItem('bkl_partner', JSON.stringify(myData));
             showSuccess();
-            toast('Demo mode: Link generated successfully!', '#f59e0b');
+            toast('Demo: Partner link ready!', '#f59e0b');
         }
 
         btn.disabled = false;
-        btn.textContent = '🚀 Register & Get My Referral Link';
+        btn.textContent = '🚀 Register & Get My Link';
     }
 
-    // Load tracker data
     async function loadTracker() {
-        if (!myRefCode) {
-            toast('No referral code found', '#ef4444');
-            return;
-        }
-
         document.getElementById('trackerSection').style.display = 'block';
-
-        try {
-            const res = await fetch(`${API}/api/partner/earnings/${myRefCode}`);
-            const d = await res.json();
-
-            document.getElementById('trk_paid_count').textContent = d.paid_referrals || 0;
-            document.getElementById('trk_earned').textContent = '₹' + (d.total_earned || 0).toFixed(2);
-            document.getElementById('trk_pending').textContent = '₹' + (d.pending_payout || 0).toFixed(2);
-            document.getElementById('trk_paid_out').textContent = '₹' + (d.total_paid_out || 0).toFixed(2);
-
-            // Referral list (demo for now)
-            const list = document.getElementById('referralList');
-            list.innerHTML = `<div style="color:var(--text3); text-align:center; padding:20px;">
-                Share your link to see live referral activity here.
+        // Add your real API call here if backend is ready
+        // For now showing demo message
+        document.getElementById('referralList').innerHTML = `
+            <div style="padding:20px; text-align:center; color:var(--text3); background:#f8fafc; border-radius:10px;">
+                Start sharing your referral link to see live earnings and referrals here.
             </div>`;
-
-        } catch (e) {
-            // Demo fallback
-            document.getElementById('trk_paid_count').textContent = '0';
-            document.getElementById('trk_earned').textContent = '₹0.00';
-            document.getElementById('trk_pending').textContent = '₹0.00';
-            document.getElementById('trk_paid_out').textContent = '₹0.00';
-        }
     }
 
-    // Check if user is already registered
+    // Check if already registered
     window.addEventListener('DOMContentLoaded', () => {
         const saved = localStorage.getItem('bkl_partner');
         if (saved) {
@@ -672,7 +734,7 @@
                 myData = JSON.parse(saved);
                 myRefCode = myData.ref_code;
                 showSuccess();
-            } catch (e) {}
+            } catch(e) {}
         }
     });
 </script>
