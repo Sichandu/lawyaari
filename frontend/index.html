@@ -31,7 +31,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
 .menu-toggle{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;padding:2px;flex-shrink:0;line-height:1;}
 
-/* Language DROPDOWN (#3 fix) */
+/* Language DROPDOWN */
 .lang-dropdown{position:relative;}
 .lang-dd-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:5px 9px;border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font);font-weight:600;display:flex;align-items:center;gap:4px;transition:border-color .15s;white-space:nowrap;}
 .lang-dd-btn:hover{border-color:var(--accent);}
@@ -89,7 +89,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .msg-action-btn:hover{color:var(--text);border-color:var(--border2);}
 .msg-action-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
 
-/* NEXT STEP HOOKS (#5 fix) */
+/* NEXT STEP HOOKS */
 .next-steps{margin-top:10px;border-top:1px solid var(--border);padding-top:8px;}
 .next-steps-label{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase;}
 .next-step-q{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:7px;cursor:pointer;transition:all .15s;font-size:12px;color:var(--text2);border:1px solid transparent;margin-bottom:3px;}
@@ -102,7 +102,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .intent-cta-text strong{color:var(--accent);}
 .intent-cta-btn{background:var(--accent);color:#000;border:none;padding:7px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;}
 
-/* USAGE BAR — above input, centered (#6 fix) */
+/* USAGE BAR — above input, centered */
 .usage-bar{padding:8px 14px 4px;text-align:center;flex-shrink:0;}
 .usage-inner{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;}
 .usage-count{color:var(--accent);font-weight:700;}
@@ -182,7 +182,58 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .modal-btn.secondary{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);margin-top:6px;}
 .otp-display{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;font-size:26px;font-weight:700;color:var(--accent);letter-spacing:8px;font-family:var(--mono);margin:10px 0;}
 
-/* USER PROFILE MODAL (#2 fix) */
+/* OTP GROUP STYLES */
+.otp-group {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px 0 20px;
+  animation: fadeInUp 0.4s ease;
+}
+.otp-input {
+  width: 52px;
+  height: 56px;
+  border: 2px solid var(--border2);
+  border-radius: 12px;
+  background: var(--bg3);
+  color: var(--text);
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  font-family: var(--font);
+  transition: all 0.2s ease;
+  outline: none;
+}
+.otp-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(245,158,11,0.3);
+  transform: scale(1.02);
+}
+.otp-input:not(:placeholder-shown) {
+  border-color: var(--accent3);
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* USER PROFILE MODAL */
 .user-hero{text-align:center;padding:14px 0 18px;border-bottom:1px solid var(--border);margin-bottom:16px;}
 .user-sigma{font-size:54px;margin-bottom:6px;line-height:1;}
 .user-name-big{font-size:20px;font-weight:700;margin-bottom:4px;}
@@ -253,10 +304,10 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 #shareCanvas{border-radius:10px;max-width:100%;box-shadow:var(--shadow);}
 .share-dl-btn{display:inline-block;margin-top:8px;background:var(--accent3);color:#000;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);}
 
-/* PRIORITY PRICE DISPLAY (#7 fix) */
+/* PRIORITY PRICE DISPLAY */
 .priority-price-display{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:10px;text-align:center;font-size:14px;font-weight:700;color:var(--accent);margin-bottom:10px;transition:all .2s;}
 
-/* CUSTOM SERVICE MODAL (#8 fix) */
+/* CUSTOM SERVICE MODAL */
 .custom-field-row{display:flex;gap:6px;align-items:center;margin-bottom:6px;}
 .custom-field-row input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;padding:7px 10px;color:var(--text);font-size:12px;font-family:var(--font);outline:none;}
 .custom-field-row input:focus{border-color:var(--accent);}
@@ -276,7 +327,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .toast.warn{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.1);}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
-/* MOBILE (#1 fix) */
+/* MOBILE */
 .sidebar-overlay{display:none;position:fixed;inset:0;top:52px;background:rgba(0,0,0,.55);z-index:140;}
 .sidebar-overlay.open{display:block;}
 @media(max-width:680px){
@@ -295,10 +346,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
   .modal{padding:18px;}
   .logo-badge{display:none;}
   .logo-icon{display:none;}
-  /* 1A: Hide auth btn and footer on mobile — replaced by 3-dots */
   .auth-btn{display:none;}
   footer{display:none;}
-  /* 3-dots menu */
   .dots-btn{display:flex !important;}
 }
 /* 3-dots button — hidden on desktop, shown on mobile */
@@ -406,7 +455,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 </nav>
 
 <div class="app-container">
-  <!-- SIDEBAR (#4 fix — no admin icon here) -->
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">📂 Topics</div>
     <div class="sidebar-scroll">
@@ -469,7 +518,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       </div>
     </div>
 
-    <!-- Usage bar above input, centered (#6 fix) -->
+    <!-- Usage bar above input, centered -->
     <div class="usage-bar" id="usageBarWrap">
       <div class="usage-inner" id="usageInner">
         <span class="usage-count" id="usageCount">5/5</span>
@@ -548,19 +597,33 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       <button class="modal-btn" onclick="sendOTP()">Send OTP →</button>
     </div>
     <div id="authStep2" style="display:none">
-      <p style="font-size:12px;color:var(--text2);margin-bottom:6px">Here is Your OTP:</p>
-      <div class="otp-display" id="otpDisplay">------</div>
-      <div class="form-group" style="margin-top:12px">
-        <label>Enter OTP</label>
-        <input type="text" id="otpInput" placeholder="6-digit OTP" maxlength="6" inputmode="numeric"/>
+      <!-- OTP notification banner (shown after OTP sent) -->
+      <div id="otpNotification" style="display: none; background: rgba(16,185,129,0.1); border: 1px solid var(--accent3); border-radius: 12px; padding: 12px; margin-bottom: 20px; text-align: center; animation: slideDown 0.3s ease;">
+        <span style="font-size: 14px; font-weight: 500;">📱 OTP sent to </span>
+        <strong id="otpMobileDisplay"></strong>
+        <div style="font-size: 11px; color: var(--text3); margin-top: 4px;">Enter the 6-digit code below</div>
+        <div id="otpCodeDisplay" style="font-size: 20px; font-weight: bold; letter-spacing: 4px; margin-top: 6px; font-family: monospace;"></div>
       </div>
-      <button class="modal-btn" onclick="verifyOTP()">Verify & Login ✓</button>
+
+      <div class="form-group" style="text-align: center;">
+        <label style="display: block; margin-bottom: 10px;">Enter OTP</label>
+        <div class="otp-group" id="otpGroup">
+          <input type="text" class="otp-input" maxlength="1" pattern="\d" inputmode="numeric" autocomplete="off" />
+          <input type="text" class="otp-input" maxlength="1" pattern="\d" inputmode="numeric" autocomplete="off" />
+          <input type="text" class="otp-input" maxlength="1" pattern="\d" inputmode="numeric" autocomplete="off" />
+          <input type="text" class="otp-input" maxlength="1" pattern="\d" inputmode="numeric" autocomplete="off" />
+          <input type="text" class="otp-input" maxlength="1" pattern="\d" inputmode="numeric" autocomplete="off" />
+          <input type="text" class="otp-input" maxlength="1" pattern="\d" inputmode="numeric" autocomplete="off" />
+        </div>
+      </div>
+
+      <button class="modal-btn" id="otpVerifyBtn" onclick="verifyOTP()">Verify & Login ✓</button>
       <button class="modal-btn secondary" onclick="showStep1()">← Change Number</button>
     </div>
   </div>
 </div>
 
-<!-- USER PROFILE MODAL (#2 fix) -->
+<!-- USER PROFILE MODAL -->
 <div class="modal-overlay" id="profileModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
@@ -854,7 +917,7 @@ function renderQuickCards(){
 }
 function fillAndSend(t){document.getElementById('chatInput').value=t;sendMessage();}
 
-// USAGE BAR (#6 fix — above input, centered, funny CTA)
+// USAGE BAR
 function getLimit(){
   // Admin mobile gets unlimited
   const adminMob = localStorage.getItem('ld_admin_mobile');
@@ -1109,78 +1172,154 @@ function showPaywallInChat(data){
 function scrollBottom(){const c=document.getElementById('chatMessages');c.scrollTop=c.scrollHeight;}
 
 // AUTH
+let otpTimeout = null; // for the 2-second delay
+
 function handleAuthClick(){if(state.token)openProfileModal();else openAuth();}
 function openAuth(){openModal('authModal');}
 function pickSigma(el){document.querySelectorAll('.sigma-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');state.selectedSigma=el.dataset.emoji;}
 
 async function sendOTP(){
-  const name=document.getElementById('nameInput').value.trim();
-  const mobile=document.getElementById('mobileInput').value.trim();
-  if(!name) return toast('Enter your name','error');
-  if(!/^\d{10}$/.test(mobile)) return toast('Enter valid 10-digit mobile','error');
-  state.pendingName=name;
-  const btn=document.querySelector('#authStep1 .modal-btn');
-  if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending OTP...';}
-  try{
-    const res=await fetch(`${API}/api/auth/send-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile})});
-    const data=await res.json();
-    if(!res.ok){if(btn){btn.disabled=false;btn.textContent='Send OTP →';}return toast(data.detail||'Error','error');}
-    document.getElementById('otpDisplay').textContent=data.otp;
-    document.getElementById('authStep1').style.display='none';
-    document.getElementById('authStep2').style.display='block';
-  }catch(e){if(btn){btn.disabled=false;btn.textContent='Send OTP →';}toast('Network error','error');}
+  const name = document.getElementById('nameInput').value.trim();
+  const mobile = document.getElementById('mobileInput').value.trim();
+  if (!name) return toast('Enter your name', 'error');
+  if (!/^\d{10}$/.test(mobile)) return toast('Enter valid 10-digit mobile', 'error');
+  state.pendingName = name;
+  const btn = document.querySelector('#authStep1 .modal-btn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Sending OTP...'; }
+  try {
+    const res = await fetch(`${API}/api/auth/send-otp`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile }) });
+    const data = await res.json();
+    if (!res.ok) { if (btn) { btn.disabled = false; btn.textContent = 'Send OTP →'; } return toast(data.detail || 'Error', 'error'); }
+
+    // Show OTP notification with masked mobile, clear OTP display
+    document.getElementById('otpMobileDisplay').textContent = mobile.slice(0, 2) + 'XXXX' + mobile.slice(-2);
+    const otpCodeDisplay = document.getElementById('otpCodeDisplay');
+    otpCodeDisplay.textContent = ''; // initially empty
+    document.getElementById('otpNotification').style.display = 'block';
+
+    // Clear and focus first OTP input
+    const inputs = document.querySelectorAll('.otp-input');
+    inputs.forEach(input => { input.value = ''; });
+    inputs[0].focus();
+
+    // Store the OTP (for demo, we still have it in data.otp – but don't display it)
+    window._demoOTP = data.otp;
+
+    // Schedule display of OTP after 2 seconds
+    if (otpTimeout) clearTimeout(otpTimeout);
+    otpTimeout = setTimeout(() => {
+      otpCodeDisplay.textContent = data.otp;
+      // optional: add a small fade-in effect
+    }, 2000);
+
+    document.getElementById('authStep1').style.display = 'none';
+    document.getElementById('authStep2').style.display = 'block';
+    // Setup auto‑tab after OTP boxes are visible
+    setupOTPInputs();
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Send OTP →'; }
+    toast('Network error', 'error');
+  }
+}
+
+function setupOTPInputs() {
+  const inputs = document.querySelectorAll('.otp-input');
+  inputs.forEach((input, idx) => {
+    input.removeEventListener('input', input._otpInputHandler);
+    input.removeEventListener('keydown', input._otpKeyHandler);
+    const inputHandler = (e) => {
+      if (e.target.value.length === 1 && idx < inputs.length - 1) {
+        inputs[idx + 1].focus();
+      }
+      // auto‑verify when all fields filled
+      const allFilled = [...inputs].every(i => i.value.length === 1);
+      if (allFilled) {
+        document.getElementById('otpVerifyBtn').click();
+      }
+    };
+    const keyHandler = (e) => {
+      if (e.key === 'Backspace' && idx > 0 && e.target.value === '') {
+        inputs[idx - 1].focus();
+      }
+    };
+    input.addEventListener('input', inputHandler);
+    input.addEventListener('keydown', keyHandler);
+    input._otpInputHandler = inputHandler;
+    input._otpKeyHandler = keyHandler;
+  });
+}
+
+function resetOTPInputs() {
+  const inputs = document.querySelectorAll('.otp-input');
+  inputs.forEach(i => i.value = '');
+  if (inputs.length) inputs[0].focus();
+  document.getElementById('otpNotification').style.display = 'none';
+  document.getElementById('otpCodeDisplay').textContent = '';
+  if (otpTimeout) clearTimeout(otpTimeout);
+  otpTimeout = null;
 }
 
 async function verifyOTP(){
-  const mobile=document.getElementById('mobileInput').value.trim();
-  const otp=document.getElementById('otpInput').value.trim();
-  const gender=document.getElementById('genderInput')?document.getElementById('genderInput').value:'other';
-  try{
-    const res=await fetch(`${API}/api/auth/verify-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,otp,name: state.pendingName})});
-    const data=await res.json();
-    if(!res.ok) return toast(data.detail||'Invalid OTP','error');
-    state.token=data.token;state.mobile=data.mobile;
-    state.userName=state.pendingName||'User';state.userEmoji=state.selectedSigma;
-    localStorage.setItem('ld_token',data.token);
-    localStorage.setItem('ld_mobile',data.mobile);
-    localStorage.setItem('ld_name',state.userName);
-    localStorage.setItem('ld_emoji',state.userEmoji);
-    localStorage.setItem('ld_gender',gender);
-    fetch(`${API}/api/auth/me`,{headers:{Authorization:'Bearer '+data.token}})
-      .then(r=>r.json()).then(u=>{if(u.is_admin)localStorage.setItem('ld_admin_mobile',data.mobile);}).catch(()=>{});
-    closeModal('authModal');updateAuthBtn();updateUsageBar();
-    toast('Welcome '+state.userName+'! 🎉','success');
-    const g=localStorage.getItem('ld_gender')||'other';
-    playCommand(g==='female'?'welcome-maam':'welcome-sir');
+  const mobile = document.getElementById('mobileInput').value.trim();
+  const inputs = document.querySelectorAll('.otp-input');
+  const otp = Array.from(inputs).map(i => i.value).join('');
+  if (otp.length !== 6) return toast('Enter 6‑digit OTP', 'error');
+
+  const gender = document.getElementById('genderInput') ? document.getElementById('genderInput').value : 'other';
+  try {
+    const res = await fetch(`${API}/api/auth/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mobile, otp, name: state.pendingName })
+    });
+    const data = await res.json();
+    if (!res.ok) return toast(data.detail || 'Invalid OTP', 'error');
+    state.token = data.token;
+    state.mobile = data.mobile;
+    state.userName = state.pendingName || 'User';
+    state.userEmoji = state.selectedSigma;
+    localStorage.setItem('ld_token', data.token);
+    localStorage.setItem('ld_mobile', data.mobile);
+    localStorage.setItem('ld_name', state.userName);
+    localStorage.setItem('ld_emoji', state.userEmoji);
+    localStorage.setItem('ld_gender', gender);
+    fetch(`${API}/api/auth/me`, { headers: { Authorization: 'Bearer ' + data.token } })
+      .then(r => r.json()).then(u => { if (u.is_admin) localStorage.setItem('ld_admin_mobile', data.mobile); }).catch(() => { });
+    closeModal('authModal');
+    updateAuthBtn();
+    updateUsageBar();
+    toast('Welcome ' + state.userName + '! 🎉', 'success');
+    const g = localStorage.getItem('ld_gender') || 'other';
+    playCommand(g === 'female' ? 'welcome-maam' : 'welcome-sir');
 
     // ── Resume pending payment if login was triggered by a payment attempt ──
-    if(state.pendingPaymentService && state.pendingPaymentAmount){
+    if (state.pendingPaymentService && state.pendingPaymentAmount) {
       const svcKey = state.pendingPaymentService;
-      const amount  = state.pendingPaymentAmount;
-      const vals    = state.pendingServiceData;
+      const amount = state.pendingPaymentAmount;
+      const vals = state.pendingServiceData;
       // Clear pending flags before resuming so they don't re-fire
       state.pendingPaymentService = null;
-      state.pendingPaymentAmount  = null;
+      state.pendingPaymentAmount = null;
       // Give Razorpay a moment to be ready after modal close
-      setTimeout(async ()=>{
+      setTimeout(async () => {
         const paymentResult = await initiatePayment(svcKey, amount);
-        if(!paymentResult) return;
+        if (!paymentResult) return;
         // Payment success — generate first, then record purchase
         const svc = SERVICES[svcKey];
-        if(svc && vals){
+        if (svc && vals) {
           closeModal('serviceModal');
-          toast('Generating your document...','info');
+          toast('Generating your document...', 'info');
           document.getElementById('pdfOverlay').classList.add('show');
-          try{
+          try {
             const output = await generateServiceOutput(svcKey, svc, vals, paymentResult);
             document.getElementById('pdfOverlay').classList.remove('show');
             recordSuccessfulPurchase(svcKey, svc, paymentResult);
-            state.currentResult={title:svc.title,content:output,serviceType:svcKey};
+            state.currentResult = { title: svc.title, content: output, serviceType: svcKey };
             showResult(svcKey, output, svc.title);
-            toast('Document ready! ✓','success');
-          }catch(e){
+            toast('Document ready! ✓', 'success');
+          } catch (e) {
             document.getElementById('pdfOverlay').classList.remove('show');
-            toast(e.message || 'Generation failed. Please try again.','error');
+            toast(e.message || 'Generation failed. Please try again.', 'error');
           }
         }
       }, 600);
@@ -1188,15 +1327,19 @@ async function verifyOTP(){
     }
 
     // Resume Telugu pending message if login was triggered by 3rd question gate
-    if(state.pendingTeluguMsg){
-      const msg=state.pendingTeluguMsg;
-      state.pendingTeluguMsg=null;
-      setTimeout(()=>{document.getElementById('chatInput').value=msg;sendMessage();},700);
+    if (state.pendingTeluguMsg) {
+      const msg = state.pendingTeluguMsg;
+      state.pendingTeluguMsg = null;
+      setTimeout(() => { document.getElementById('chatInput').value = msg; sendMessage(); }, 700);
     }
-  }catch(e){toast('Network error','error');}
+  } catch (e) { toast('Network error', 'error'); }
 }
 
-function showStep1(){document.getElementById('authStep1').style.display='block';document.getElementById('authStep2').style.display='none';}
+function showStep1(){
+  document.getElementById('authStep1').style.display='block';
+  document.getElementById('authStep2').style.display='none';
+  resetOTPInputs();
+}
 
 function updateAuthBtn(){
   const btn=document.getElementById('authBtn');
@@ -1477,7 +1620,7 @@ function shareBubble(btn) {
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){
   document.getElementById(id).classList.remove('open');
-  if(id==='authModal'){document.getElementById('authStep1').style.display='block';document.getElementById('authStep2').style.display='none';}
+  if(id==='authModal'){document.getElementById('authStep1').style.display='block';document.getElementById('authStep2').style.display='none'; resetOTPInputs();}
 }
 document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)closeModal(el.id);});});
 
@@ -1689,7 +1832,7 @@ async function generateServiceOutput(key, svc, vals, paymentResult){
       cheque_amount: vals.cn_amount,
       bank_name: vals.cn_bank,
       dishonour_reason: vals.cn_reason,
-      debt_description: vals.cn_debt_desc || '',
+      liability_description: vals.cn_debt_desc || '',
       language: 'en',
       payment_id: pid,
       mobile: mob
@@ -1705,7 +1848,7 @@ async function generateServiceOutput(key, svc, vals, paymentResult){
       outstanding_amount: vals.mn_amount,
       due_date: vals.mn_due_date,
       udyam_number: vals.mn_udyam || '',
-      goods_services: vals.mn_goods_services || '',
+      goods_description: vals.mn_goods_services || '',
       reminders_sent: vals.mn_reminders_sent || '',
       language: 'en',
       payment_id: pid,
@@ -1722,7 +1865,7 @@ async function generateServiceOutput(key, svc, vals, paymentResult){
       user_name: vals.cd_from,
       relief_wanted: vals.cd_relief || '',
       amount_involved: vals.cd_amount || '',
-      already_complained: vals.cd_already_complained || 'No',
+      prior_complaint: vals.cd_already_complained || 'No',
       language: 'en',
       payment_id: pid,
       mobile: mob
