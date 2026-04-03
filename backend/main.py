@@ -53,6 +53,57 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ─── TENANT MIDDLEWARE (white-label subdomain support) ────────────────────────
+import threading
+_tenant_cache: dict = {}
+_tenant_cache_lock = threading.Lock()
+_TENANT_CACHE_TTL = 300  # seconds
+
+def _get_tenant_from_cache(slug: str) -> Optional[dict]:
+    with _tenant_cache_lock:
+        entry = _tenant_cache.get(slug)
+        if entry and (datetime.utcnow() - entry["cached_at"]).seconds < _TENANT_CACHE_TTL:
+            return entry["data"]
+    return None
+
+def _set_tenant_cache(slug: str, data: Optional[dict]):
+    with _tenant_cache_lock:
+        _tenant_cache[slug] = {"data": data, "cached_at": datetime.utcnow()}
+
+def _extract_slug(host: str) -> Optional[str]:
+    """Extract subdomain slug from host header.
+    sharma.bklchai.com → 'sharma'
+    bklchai.com / www.bklchai.com → None
+    localhost / 127.0.0.1 → None
+    """
+    host = host.split(":")[0].lower()  # strip port
+    parts = host.split(".")
+    if len(parts) >= 3 and parts[0] not in ("www", "api", ""):
+        return parts[0]
+    return None
+
+from starlette.middleware.base import BaseHTTPMiddleware
+
+class TenantMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        host = request.headers.get("host", "")
+        slug = _extract_slug(host)
+
+        if slug:
+            tenant = _get_tenant_from_cache(slug)
+            if tenant is None:
+                # Not in cache — query MongoDB
+                doc = tenants_col.find_one({"slug": slug, "active": True})
+                tenant = doc if doc else {}
+                _set_tenant_cache(slug, tenant)
+            request.state.tenant = tenant if tenant else None
+        else:
+            request.state.tenant = None  # main bklchai.com — no white-label
+
+        return await call_next(request)
+
+app.add_middleware(TenantMiddleware)
+
 # ─── DB ──────────────────────────────────────────────────────────────────────
 MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
 client = MongoClient(MONGO_URL)
@@ -68,6 +119,10 @@ triggers_col    = db["triggers"]
 partners_col    = db["partners"]
 referrals_col   = db["referrals"]
 payouts_col     = db["payouts"]
+tenants_col     = db["tenants"]
+
+# Ensure slug index exists (runs once, harmless if already exists)
+tenants_col.create_index("slug", unique=True, background=True)
 
 # ─── API KEYS ─────────────────────────────────────────────────────────────────
 GROQ_API_KEY     = os.getenv("GROQ_API_KEY", "")
@@ -237,9 +292,9 @@ def log_analytics(event: str, data: dict):
 def generate_token(length=32):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
-def get_system_prompt(language: str, category: str = "general") -> str:
+def get_system_prompt(language: str, category: str = "general", firm_name: str = "BKLChai") -> str:
     if category == "legal":
-        return """You are BKLChai — a professional Indian legal document drafting assistant.
+        return f"""You are {firm_name} — a professional Indian legal document drafting assistant.
 
 LANGUAGE:
 - Write ALL documents in formal, professional legal English
@@ -306,42 +361,8 @@ ENDING (MANDATORY):
         "hinglish": "Yeh kanooni salah nahi hai. Zarurat ho to kisi vakil se salah lein.",
     }.get(language, "यह कानूनी सलाह नहीं है। किसी वकील से सलाह लें।")
 
-    if category == "general":
-        return f"""You are BKLChai — a sharp, practical Indian legal Q&A assistant for the General Q&A section.
-
-LANGUAGE RULE:
-{lang_instruction}
-
-PURPOSE:
-- This section answers the most common legal questions Indian users ask in daily life
-- Focus on broad awareness topics like FIR, bail, free legal aid, limitation period, court status, certified copies, PIL, and lawyer complaints
-- Give answers that are beginner-friendly but legally careful
-
-STRICT RULES:
-- Answer the user directly in a simple question-answer style
-- Start with the direct answer in the first 1-2 lines
-- Then explain the process step by step
-- Mention the correct forum, office, portal, or authority wherever useful
-- Mention Indian law, court procedure, or sections ONLY when clearly applicable
-- If the process differs by state or facts, say so clearly
-- Do NOT assume facts that the user has not given
-- Do NOT give complex lawyer-style drafting unless the user asks for it
-- Do NOT use heavy theory, Latin terms, or confusing jargon
-- Always keep the response practical, common-man friendly, and action-oriented
-
-OUTPUT STYLE:
-- 4 short sections maximum when useful:
-  1. Direct Answer
-  2. What You Should Do
-  3. Where to Go / Where to File
-  4. Important Note
-- Use bullets or numbered steps only when they improve clarity
-- Keep tone confident, clean, and helpful
-- End with this disclaimer exactly: {disclaimer}
-"""
-
     if category == "expert":
-        return f"""You are BKLChai — a premium Indian legal assistant for paid expert answers.
+        return f"""You are {firm_name} — a premium Indian legal assistant for paid expert answers.
 
 LANGUAGE RULE:
 {lang_instruction}
@@ -359,7 +380,7 @@ STRICT RULES:
 - End with this disclaimer exactly: {disclaimer}
 """
 
-    return f"""You are BKLChai — a professional AI legal assistant for Indian citizens (MSMEs, workers, and common people).
+    return f"""You are {firm_name} — a professional AI legal assistant for Indian citizens (MSMEs, workers, and common people).
 
 LANGUAGE RULE:
 {lang_instruction}
@@ -493,7 +514,6 @@ class VerifyOTPRequest(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     language: str = "hi"
-    category: str = "general"
     session_token: Optional[str] = None
     conversation_history: Optional[List[dict]] = []
 
@@ -582,6 +602,8 @@ class GeneratePDFRequest(BaseModel):
     content: str
     title: str
     service_type: str
+    firm_name: Optional[str] = None   # white-label override
+    logo_url: Optional[str] = None    # white-label override (future use)
 
 class PartnerRegisterRequest(BaseModel):
     name: str
@@ -724,7 +746,7 @@ async def chat(req: ChatRequest, request: Request):
     history = req.conversation_history or []
     messages = history + [{"role": "user", "content": req.message}]
 
-    system = get_system_prompt(language, req.category or "general")
+    system = get_system_prompt(language)
     response_text = await call_with_fallback(messages, system, task="normal_chat", language=language, use_openai_first=False)
 
     if mobile:
@@ -763,13 +785,15 @@ async def chat(req: ChatRequest, request: Request):
 
 # ─── PREMIUM: CHEQUE BOUNCE ───────────────────────────────────────────────────
 @app.post("/api/cheque-notice")
-async def cheque_notice(req: ChequeNoticeRequest):
+async def cheque_notice(req: ChequeNoticeRequest, request: Request):
     mobile = getattr(req, "mobile", None)
     if not check_payment(req.payment_id, "cheque_notice", mobile):
         raise HTTPException(402, "Payment required or not verified")
 
+    tenant = getattr(request.state, "tenant", None)
+    firm_name = (tenant.get("firm_name") if tenant else None) or "BKLChai"
     today = datetime.utcnow().strftime('%d %B %Y')
-    system = get_system_prompt(req.language, "legal")
+    system = get_system_prompt(req.language, "legal", firm_name=firm_name)
 
     # Build prompt with new optional fields
     liability_note = ""
@@ -835,7 +859,7 @@ Numbered steps with timelines: send by Speed Post / Registered Post AD within 30
 
 # ─── PREMIUM: MSME NOTICE ─────────────────────────────────────────────────────
 @app.post("/api/msme-notice")
-async def msme_notice(req: MSMENoticeRequest):
+async def msme_notice(req: MSMENoticeRequest, request: Request):
     mobile = getattr(req, "mobile", None)
     if not check_payment(req.payment_id, "msme_notice", mobile):
         raise HTTPException(402, "Payment required or not verified")
@@ -965,7 +989,9 @@ async def msme_notice(req: MSMENoticeRequest):
         f"7. Purchase order / work order from {req.buyer_name} (if available)"
     )
 
-    system = get_system_prompt(req.language, "legal")
+    system = get_system_prompt(req.language, "legal", firm_name=(
+        (request.state.tenant.get("firm_name") if getattr(request.state, "tenant", None) else None) or "BKLChai"
+    ))
     prompt = f"""You are drafting a production-grade MSME payment recovery notice for a real business.
 Use ONLY the data provided. Zero placeholders. Zero soft language. Every word must be print-ready.
 
@@ -1036,7 +1062,7 @@ Use the pre-written checklist below verbatim:
 
 # ─── PREMIUM: LEGAL REPLY ─────────────────────────────────────────────────────
 @app.post("/api/legal-reply")
-async def legal_reply(req: LegalReplyRequest):
+async def legal_reply(req: LegalReplyRequest, request: Request):
     if not check_payment(req.payment_id, "legal_reply", getattr(req, "mobile", None)):
         raise HTTPException(402, "Payment required or not verified")
 
@@ -1062,7 +1088,9 @@ async def legal_reply(req: LegalReplyRequest):
         }
 
     today = datetime.utcnow().strftime('%d %B %Y')
-    system = get_system_prompt(req.language, "legal")
+    _lr_tenant = getattr(request.state, "tenant", None)
+    _lr_firm = (_lr_tenant.get("firm_name") if _lr_tenant else None) or "BKLChai"
+    system = get_system_prompt(req.language, "legal", firm_name=_lr_firm)
 
     # Use provided sender name and notice date; fallback to defaults if empty
     sender_display = req.sender_name.strip() if req.sender_name else "the sender as per the notice"
@@ -1130,7 +1158,7 @@ _______________
 
 # ─── PREMIUM: COMPLAINT DRAFT ─────────────────────────────────────────────────
 @app.post("/api/complaint-draft")
-async def complaint_draft(req: ComplaintDraftRequest):
+async def complaint_draft(req: ComplaintDraftRequest, request: Request):
     if not check_payment(req.payment_id, "complaint_draft", getattr(req, "mobile", None)):
         raise HTTPException(402, "Payment required or not verified")
 
@@ -1169,7 +1197,9 @@ async def complaint_draft(req: ComplaintDraftRequest):
     issue_info = ISSUE_MAP.get(req.issue_type, ISSUE_MAP["other"])
 
     today = datetime.utcnow().strftime('%d %B %Y')
-    system = get_system_prompt(req.language, "legal")
+    tenant = getattr(request.state, "tenant", None)
+    firm_name = (tenant.get("firm_name") if tenant else None) or "BKLChai"
+    system = get_system_prompt(req.language, "legal", firm_name=firm_name)
 
     relief_text = f"Relief Sought: {req.relief_wanted}" if req.relief_wanted else ""
     amount_text = f"Amount Involved: Rs. {req.amount_involved}" if req.amount_involved else ""
@@ -1363,9 +1393,19 @@ def _para(text: str, style) -> Paragraph:
 
 # ─── PDF GENERATION ───────────────────────────────────────────────────────────
 @app.post("/api/generate-pdf")
-async def generate_pdf(req: GeneratePDFRequest):
+async def generate_pdf(req: GeneratePDFRequest, request: Request):
     content = req.content.replace("₹", "Rs.")
     title   = req.title.replace("₹", "Rs.")
+
+    # Resolve white-label brand: request body > tenant middleware > default
+    tenant = getattr(request.state, "tenant", None)
+    firm_name = (
+        req.firm_name
+        or (tenant.get("firm_name") if tenant else None)
+        or "Bklchai"
+    )
+    firm_tagline = (tenant.get("tagline") if tenant else None) or "Your legal rights, explained."
+    firm_domain  = (tenant.get("domain")   if tenant else None) or "bklchai.com"
 
     try:
         buffer = io.BytesIO()
@@ -1393,8 +1433,8 @@ async def generate_pdf(req: GeneratePDFRequest):
 
         els = []
 
-        els.append(_para("Bklchai  |  bklchai.com", s_header))
-        els.append(_para("Your legal rights, explained.", s_sub))
+        els.append(_para(f"{firm_name}  |  {firm_domain}", s_header))
+        els.append(_para(firm_tagline, s_sub))
         els.append(HRFlowable(width="100%", thickness=1.5,
             color=colors.HexColor("#f59e0b"), spaceAfter=10))
         els.append(_para(_strip_emoji(title), s_title))
@@ -1954,6 +1994,129 @@ async def mark_payout(req: MarkPayoutRequest, x_admin_key: Optional[str] = Heade
 @app.get("/health")
 async def health():
     return {"status": "ok", "version": "2.0.0", "service": "bklchai"}
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TENANT (WHITE-LABEL) ROUTES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class TenantCreateRequest(BaseModel):
+    slug: str                           # subdomain slug e.g. "sharma"
+    firm_name: str                      # "Sharma & Associates"
+    logo_url: Optional[str] = ""        # https://... (Cloudinary / S3)
+    tagline: Optional[str] = ""         # "Your CA, your legal team"
+    domain: Optional[str] = ""          # "sharma.bklchai.com" or custom
+    ca_name: Optional[str] = ""         # "CA Rajesh Sharma"
+    ca_mobile: Optional[str] = ""
+    ca_email: Optional[str] = ""
+    plan: str = "starter"               # starter | partner | enterprise
+    doc_limit: int = 30                 # -1 = unlimited
+    primary_color: Optional[str] = "#f59e0b"
+
+class TenantUpdateRequest(BaseModel):
+    firm_name: Optional[str] = None
+    logo_url: Optional[str] = None
+    tagline: Optional[str] = None
+    primary_color: Optional[str] = None
+    plan: Optional[str] = None
+    doc_limit: Optional[int] = None
+    active: Optional[bool] = None
+
+@app.get("/api/tenant/context")
+async def tenant_context(request: Request):
+    """Frontend calls this on load to get white-label branding for the current subdomain."""
+    tenant = getattr(request.state, "tenant", None)
+    if not tenant:
+        return {
+            "is_whitelabel": False,
+            "firm_name": "Bklchai",
+            "logo_url": "",
+            "tagline": "Your legal rights, explained.",
+            "primary_color": "#f59e0b",
+            "domain": "bklchai.com"
+        }
+    return {
+        "is_whitelabel": True,
+        "firm_name": tenant.get("firm_name", "Bklchai"),
+        "logo_url": tenant.get("logo_url", ""),
+        "tagline": tenant.get("tagline", "Your legal rights, explained."),
+        "primary_color": tenant.get("primary_color", "#f59e0b"),
+        "domain": tenant.get("domain", "bklchai.com"),
+        "ca_name": tenant.get("ca_name", ""),
+        "plan": tenant.get("plan", "starter")
+    }
+
+@app.post("/api/admin/tenants")
+async def admin_create_tenant(req: TenantCreateRequest, x_admin_key: Optional[str] = Header(None)):
+    check_admin_key(x_admin_key)
+    slug = req.slug.strip().lower().replace(" ", "-")
+
+    if tenants_col.find_one({"slug": slug}):
+        raise HTTPException(400, f"Slug '{slug}' already taken. Choose another.")
+
+    domain = req.domain.strip() if req.domain else f"{slug}.bklchai.com"
+
+    doc = {
+        "slug": slug,
+        "firm_name": req.firm_name.strip(),
+        "logo_url": req.logo_url or "",
+        "tagline": req.tagline or "Your legal rights, explained.",
+        "domain": domain,
+        "ca_name": req.ca_name or "",
+        "ca_mobile": req.ca_mobile or "",
+        "ca_email": req.ca_email or "",
+        "plan": req.plan,
+        "doc_limit": req.doc_limit,
+        "doc_count_month": 0,
+        "primary_color": req.primary_color or "#f59e0b",
+        "active": True,
+        "created_at": datetime.utcnow()
+    }
+    tenants_col.insert_one(doc)
+
+    # Invalidate cache for this slug
+    with _tenant_cache_lock:
+        _tenant_cache.pop(slug, None)
+
+    log_analytics("tenant_created", {"slug": slug, "firm_name": req.firm_name})
+    return {
+        "success": True,
+        "subdomain": f"https://{domain}",
+        "slug": slug,
+        "message": f"Tenant '{req.firm_name}' created. Visit {domain} to verify."
+    }
+
+@app.get("/api/admin/tenants")
+async def admin_list_tenants(x_admin_key: Optional[str] = Header(None)):
+    check_admin_key(x_admin_key)
+    docs = list(tenants_col.find({}, {"_id": 0}).sort("created_at", -1))
+    for d in docs:
+        d["created_at"] = safe_iso(d.get("created_at"))
+    return {"items": docs, "total": len(docs)}
+
+@app.patch("/api/admin/tenants/{slug}")
+async def admin_update_tenant(slug: str, req: TenantUpdateRequest, x_admin_key: Optional[str] = Header(None)):
+    check_admin_key(x_admin_key)
+    updates = {k: v for k, v in req.dict().items() if v is not None}
+    if not updates:
+        raise HTTPException(400, "No fields to update")
+
+    result = tenants_col.update_one({"slug": slug}, {"$set": updates})
+    if result.matched_count == 0:
+        raise HTTPException(404, f"Tenant '{slug}' not found")
+
+    # Invalidate cache
+    with _tenant_cache_lock:
+        _tenant_cache.pop(slug, None)
+
+    return {"success": True, "slug": slug, "updated": list(updates.keys())}
+
+@app.delete("/api/admin/tenants/{slug}")
+async def admin_deactivate_tenant(slug: str, x_admin_key: Optional[str] = Header(None)):
+    check_admin_key(x_admin_key)
+    tenants_col.update_one({"slug": slug}, {"$set": {"active": False}})
+    with _tenant_cache_lock:
+        _tenant_cache.pop(slug, None)
+    return {"success": True, "slug": slug, "status": "deactivated"}
 
 # ─── STATIC FILES (serve HTML) ───────────────────────────────────────────────
 # This MUST be the last route so it doesn't override API endpoints
