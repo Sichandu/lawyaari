@@ -2136,6 +2136,50 @@ async def serve_config():
 @app.get("/", include_in_schema=False)
 async def serve_index():
     return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+
+@app.get("/about.html", include_in_schema=False)
+async def serve_about():
+    return FileResponse(os.path.join(FRONTEND_DIR, "about.html"))
+
+@app.get("/admin.html", include_in_schema=False)
+async def serve_admin():
+    return FileResponse(os.path.join(FRONTEND_DIR, "admin.html"))
+
+@app.get("/audio.html", include_in_schema=False)
+async def serve_audio():
+    return FileResponse(os.path.join(FRONTEND_DIR, "audio.html"))
+
+@app.get("/auth.html", include_in_schema=False)
+async def serve_auth():
+    return FileResponse(os.path.join(FRONTEND_DIR, "auth.html"))
+
+@app.get("/contact.html", include_in_schema=False)
+async def serve_contact():
+    return FileResponse(os.path.join(FRONTEND_DIR, "contact.html"))
+
+@app.get("/disclaimer.html", include_in_schema=False)
+async def serve_disclaimer():
+    return FileResponse(os.path.join(FRONTEND_DIR, "disclaimer.html"))
+
+@app.get("/faq.html", include_in_schema=False)
+async def serve_faq():
+    return FileResponse(os.path.join(FRONTEND_DIR, "faq.html"))
+
+@app.get("/partner.html", include_in_schema=False)
+async def serve_partner():
+    return FileResponse(os.path.join(FRONTEND_DIR, "partner.html"))
+
+@app.get("/privacy.html", include_in_schema=False)
+async def serve_privacy():
+    return FileResponse(os.path.join(FRONTEND_DIR, "privacy.html"))
+
+@app.get("/terms.html", include_in_schema=False)
+async def serve_terms():
+    return FileResponse(os.path.join(FRONTEND_DIR, "terms.html"))
+
+@app.get("/timepass.html", include_in_schema=False)
+async def serve_timepass():
+    return FileResponse(os.path.join(FRONTEND_DIR, "timepass.html"))
 # ─── STATIC FILES (serve HTML) ───────────────────────────────────────────────
 # This MUST be the last route so it doesn't override API endpoints
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
