@@ -22,6 +22,9 @@ import razorpay
 import os
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+import os
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FONT_DIR = os.path.join(BASE_DIR, "fonts")
@@ -52,6 +55,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "frontend"))
+
+app.mount("/audio", StaticFiles(directory=os.path.join(FRONTEND_DIR, "audio")), name="audio")
 
 # ─── TENANT MIDDLEWARE (white-label subdomain support) ────────────────────────
 import threading
@@ -2118,6 +2126,16 @@ async def admin_deactivate_tenant(slug: str, x_admin_key: Optional[str] = Header
         _tenant_cache.pop(slug, None)
     return {"success": True, "slug": slug, "status": "deactivated"}
 
+@app.get("/config.js", include_in_schema=False)
+async def serve_config():
+    return FileResponse(
+        os.path.join(FRONTEND_DIR, "config.js"),
+        media_type="application/javascript"
+    )
+
+@app.get("/", include_in_schema=False)
+async def serve_index():
+    return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 # ─── STATIC FILES (serve HTML) ───────────────────────────────────────────────
 # This MUST be the last route so it doesn't override API endpoints
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
