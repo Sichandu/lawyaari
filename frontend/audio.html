@@ -46,6 +46,13 @@
 <audio id="pdf-generating"   src="audio/pdf_generating.mp3"   preload="auto"></audio>
 <audio id="payment-success"  src="audio/payment_success.mp3"  preload="auto"></audio>
 
+<audio id="welcome-sir-te"     src="audio/welcome_sir_te.mp3"     preload="auto"></audio>
+<audio id="welcome-maam-te"    src="audio/welcome_maam_te.mp3"    preload="auto"></audio>
+<audio id="last-chat-sir-te"   src="audio/last_chat_sir_te.mp3"   preload="auto"></audio>
+<audio id="last-chat-maam-te"  src="audio/last_chat_maam_te.mp3"  preload="auto"></audio>
+<audio id="quota-over-sir-te"  src="audio/quota_over_sir_te.mp3"  preload="auto"></audio>
+<audio id="quota-over-maam-te" src="audio/quota_over_maam_te.mp3" preload="auto"></audio>
+
 <!-- ═══ ADD MORE CLIPS BELOW THIS LINE ═══ -->
 <!-- <audio id="my-command" src="audio/my_recording.mp3" preload="auto"></audio> -->
 
@@ -53,11 +60,21 @@
 window.addEventListener('message', function(e) {
   const cmd = e.data;
   if (!cmd || typeof cmd !== 'string') return;
-  // Stop all playing audio first
-  document.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
-  // Play the matching one
+
+  console.log('audio.html received:', cmd);
+
+  document.querySelectorAll('audio').forEach(a => {
+    a.pause();
+    a.currentTime = 0;
+  });
+
   const audio = document.getElementById(cmd);
-  if (audio) audio.play().catch(() => {});
+  if (audio) {
+    console.log('playing audio id:', cmd, 'src:', audio.getAttribute('src'));
+    audio.play().catch(err => console.log('play failed:', err));
+  } else {
+    console.log('audio id not found:', cmd);
+  }
 });
 </script>
 

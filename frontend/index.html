@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -460,10 +461,12 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
     <div class="sidebar-header">📂 Topics</div>
     <div class="sidebar-scroll">
       <!-- 3 default topics -->
-      <div class="category-item active" onclick="selectCategory('msme',this)"><span class="icon">🏭</span><span class="label" data-key="cat_msme">MSME Rights</span></div>
+      <div class="category-item active" onclick="selectCategory('general',this)"><span class="icon">💬</span><span class="label" data-key="cat_general">General Q&A</span></div>
+      <div class="category-item" onclick="selectCategory('msme',this)"><span class="icon">🏭</span><span class="label" data-key="cat_msme">MSME Rights</span></div>
       <div class="category-item" onclick="selectCategory('banking',this)"><span class="icon">🏦</span><span class="label" data-key="cat_banking">Banking Rights</span></div>
-      <div class="category-item" onclick="selectCategory('police',this)"><span class="icon">🚔</span><span class="label" data-key="cat_police">Police Rights</span></div>
+
       <!-- Hidden topics — shown on "View All" -->
+      <div class="category-item" onclick="selectCategory('police',this)"><span class="icon">🚔</span><span class="label" data-key="cat_police">Police Rights</span></div>
       <div id="extraTopics" style="display:none">
         <div class="category-item" onclick="selectCategory('cyber',this)"><span class="icon">💻</span><span class="label" data-key="cat_cyber">Cyber Crime</span></div>
         <div class="category-item" onclick="selectCategory('medical',this)"><span class="icon">🏥</span><span class="label" data-key="cat_medical">Medical Rights</span></div>
@@ -472,6 +475,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
         <div class="category-item" onclick="selectCategory('property',this)"><span class="icon">🏠</span><span class="label" data-key="cat_property">Property & Tenant</span></div>
         <div class="category-item" onclick="selectCategory('women',this)"><span class="icon">👩‍⚖️</span><span class="label" data-key="cat_women">Women Rights</span></div>
         <div class="category-item" onclick="selectCategory('tax',this)"><span class="icon">📋</span><span class="label" data-key="cat_tax">Tax & GST</span></div>
+
       </div>
       <div style="padding:6px 10px;">
         <button onclick="toggleExtraTopics(this)" id="viewAllTopicsBtn"
@@ -726,7 +730,7 @@ let state = {
   mobile:localStorage.getItem('ld_mobile')||null,
   userName:localStorage.getItem('ld_name')||null,
   userEmoji:localStorage.getItem('ld_emoji')||'😤',
-  category:'msme', chatHistory:[],
+  category:'general', chatHistory:[],
   usedChats:parseInt(localStorage.getItem('ld_chats_'+new Date().toDateString())||'0'),
   currentResult:null, pendingPaymentService:null, pendingServiceData:null, pendingTeluguMsg:null, askedQuestions:{},
   purchases:JSON.parse(localStorage.getItem('ld_purchases')||'[]'),
@@ -735,9 +739,9 @@ let state = {
 
 // TRANSLATIONS
 const T = {
-  hi:{placeholder:'अपना क़ानूनी सवाल यहाँ लिखें...',emptyTitle:'आपका क़ानूनी दोस्त',emptyDesc:'कोई भी क़ानूनी सवाल पूछें — MSME, बैंकिंग, साइबर क्राइम, पुलिस राइट्स और बहुत कुछ।',quickTitle:'जल्दी सवाल',nextLabel:'आगे क्या पूछें?',cat_msme:'MSME अधिकार',cat_banking:'बैंकिंग अधिकार',cat_cyber:'साइबर क्राइम',cat_police:'पुलिस अधिकार',cat_medical:'मेडिकल अधिकार',cat_consumer:'उपभोक्ता अधिकार',cat_labour:'श्रम क़ानून',cat_property:'संपत्ति & किरायेदार',cat_women:'महिला अधिकार',cat_tax:'टैक्स & GST'},
-  te:{placeholder:'మీ న్యాయ సందేహం ఇక్కడ టైప్ చేయండి...',emptyTitle:'మీ న్యాయ స్నేహితుడు',emptyDesc:'MSME, బ్యాంకింగ్, సైబర్ క్రైమ్, పోలీస్ హక్కులు గురించి అడగండి.',quickTitle:'త్వరిత ప్రశ్నలు',nextLabel:'తర్వాత ఏమి అడగాలి?',cat_msme:'MSME హక్కులు',cat_banking:'బ్యాంకింగ్ హక్కులు',cat_cyber:'సైబర్ క్రైమ్',cat_police:'పోలీస్ హక్కులు',cat_medical:'వైద్య హక్కులు',cat_consumer:'వినియోగదారు హక్కులు',cat_labour:'కార్మిక చట్టం',cat_property:'ఆస్తి & అద్దె',cat_women:'మహిళా హక్కులు',cat_tax:'పన్ను & GST'},
-  hinglish:{placeholder:'Apna legal sawaal yahan likho...',emptyTitle:'Aapka Legal Dost',emptyDesc:'Koi bhi legal sawaal pucho — MSME, Banking, Cyber Crime, Police Rights aur bahut kuch.',quickTitle:'Quick Questions',nextLabel:'Aage kya poochho?',cat_msme:'MSME Rights',cat_banking:'Banking Rights',cat_cyber:'Cyber Crime',cat_police:'Police Rights',cat_medical:'Medical Rights',cat_consumer:'Consumer Rights',cat_labour:'Labour Law',cat_property:'Property & Tenant',cat_women:'Women Rights',cat_tax:'Tax & GST'},
+  hi:{placeholder:'अपना क़ानूनी सवाल यहाँ लिखें...',emptyTitle:'आपका क़ानूनी दोस्त',emptyDesc:'कोई भी क़ानूनी सवाल पूछें — MSME, बैंकिंग, साइबर क्राइम, पुलिस राइट्स और बहुत कुछ।',quickTitle:'जल्दी सवाल',nextLabel:'आगे क्या पूछें?',cat_msme:'MSME अधिकार',cat_banking:'बैंकिंग अधिकार',cat_cyber:'साइबर क्राइम',cat_police:'पुलिस अधिकार',cat_medical:'मेडिकल अधिकार',cat_consumer:'उपभोक्ता अधिकार',cat_labour:'श्रम क़ानून',cat_property:'संपत्ति & किरायेदार',cat_women:'महिला अधिकार',cat_tax:'टैक्स & GST',cat_general:'सामान्य प्रश्न'},
+  te:{placeholder:'మీ న్యాయ సందేహం ఇక్కడ టైప్ చేయండి...',emptyTitle:'మీ న్యాయ స్నేహితుడు',emptyDesc:'MSME, బ్యాంకింగ్, సైబర్ క్రైమ్, పోలీస్ హక్కులు గురించి అడగండి.',quickTitle:'త్వరిత ప్రశ్నలు',nextLabel:'తర్వాత ఏమి అడగాలి?',cat_msme:'MSME హక్కులు',cat_banking:'బ్యాంకింగ్ హక్కులు',cat_cyber:'సైబర్ క్రైమ్',cat_police:'పోలీస్ హక్కులు',cat_medical:'వైద్య హక్కులు',cat_consumer:'వినియోగదారు హక్కులు',cat_labour:'కార్మిక చట్టం',cat_property:'ఆస్తి & అద్దె',cat_women:'మహిళా హక్కులు',cat_tax:'పన్ను & GST',cat_general:'సాధారణ ప్రశ్నలు'},
+  hinglish:{placeholder:'Apna legal sawaal yahan likho...',emptyTitle:'Aapka Legal Dost',emptyDesc:'Koi bhi legal sawaal pucho — MSME, Banking, Cyber Crime, Police Rights aur bahut kuch.',quickTitle:'Quick Questions',nextLabel:'Aage kya poochho?',cat_msme:'MSME Rights',cat_banking:'Banking Rights',cat_cyber:'Cyber Crime',cat_police:'Police Rights',cat_medical:'Medical Rights',cat_consumer:'Consumer Rights',cat_labour:'Labour Law',cat_property:'Property & Tenant',cat_women:'Women Rights',cat_tax:'Tax & GST',cat_general:'General Q&A'},
 };
 
 const QUICK_Q = {
@@ -791,6 +795,45 @@ const QUICK_Q = {
     te:['GST నోటీస్ వచ్చింది ఎలా reply చేయాలి?','ITR file చేయడానికి last date మరియు process ఏమిటి?','Income tax demand notice కి ఏం చేయాలి?','Small business కి GST registration ఎలా చేయాలి?','TDS refund ఎలా claim చేయాలి?'],
     hinglish:['GST notice aaya kaise reply karun?','ITR file karne ki last date aur process kya hai?','Income tax demand notice ka kya karun?','Small business ke liye GST registration kaise kare?','TDS refund kaise claim kare?']
   },
+  // NEW: General Q&A with 10 common questions
+  general:{
+    hi: [
+      'पुलिस FIR लिखने से मना करे तो क्या करें?',
+      'सिविल और आपराधिक मामले में क्या अंतर है?',
+      'मुफ्त कानूनी सहायता कैसे प्राप्त करें?',
+      'केस दायर करने की समय सीमा (limitation period) क्या है?',
+      'कोर्ट केस की स्थिति ऑनलाइन कैसे चेक करें?',
+      'PIL (जनहित याचिका) दायर करने की प्रक्रिया क्या है?',
+      'FIR की डुप्लीकेट कॉपी कैसे प्राप्त करें?',
+      'गिरफ्तारी के बाद जमानत की प्रक्रिया क्या है?',
+      'वकील के खिलाफ शिकायत कहाँ और कैसे करें?',
+      'कोर्ट ऑर्डर की प्रमाणित प्रति कैसे प्राप्त करें?'
+    ],
+    te: [
+      'పోలీసు FIR రాయడానికి నిరాకరిస్తే ఏం చేయాలి?',
+      'సివిల్ మరియు క్రిమినల్ కేసుల మధ్య తేడా ఏమిటి?',
+      'ఉచిత న్యాయ సహాయం ఎలా పొందాలి?',
+      'కేసు దాఖలు చేయడానికి పరిమితి కాలం (limitation period) ఎంత?',
+      'కోర్టు కేసు స్థితిని ఆన్‌లైన్‌లో ఎలా తెలుసుకోవాలి?',
+      'PIL (ప్రజా ప్రయోజన వ్యాజ్యం) దాఖలు చేసే విధానం ఏమిటి?',
+      'FIR యొక్క నకలు ఎలా పొందాలి?',
+      'అరెస్ట్ తర్వాత బెయిల్ ప్రక్రియ ఏమిటి?',
+      'న్యాయవాదిపై ఫిర్యాదు ఎక్కడ మరియు ఎలా చేయాలి?',
+      'కోర్టు ఉత్తర్వు యొక్క ధృవీకరించబడిన నకలు ఎలా పొందాలి?'
+    ],
+    hinglish: [
+      'Police FIR likhne se mana kare to kya kare?',
+      'Civil aur criminal case mein kya antar hai?',
+      'Muft legal sahayata kaise praapt karein?',
+      'Case dene ki time limit (limitation period) kya hai?',
+      'Court case ki status online kaise check karein?',
+      'PIL (Public Interest Litigation) file karne ki process kya hai?',
+      'FIR ki duplicate copy kaise praapt karein?',
+      'Arrest ke baad bail ki process kya hai?',
+      'Vakeel ke khilaf complaint kahan aur kaise karein?',
+      'Court order ki certified copy kaise praapt karein?'
+    ]
+  }
 };
 
 const NEXT_STEPS = {
@@ -818,12 +861,23 @@ function detectIntent(text){
 
 // LANG
 function setLang(lang){
-  state.lang=lang;
-  document.querySelectorAll('.lang-option').forEach(o=>o.classList.toggle('active',o.dataset.lang===lang));
-  const labels={hi:'🌐 हिंदी ▾',te:'🌐 తెలుగు ▾',hinglish:'🌐 Hinglish ▾'};
-  document.getElementById('langDdBtn').textContent=labels[lang]||'🌐 ▾';
+  state.lang = lang;
+  localStorage.setItem('ld_lang', lang);
+
+  document.querySelectorAll('.lang-option').forEach(o =>
+    o.classList.toggle('active', o.dataset.lang === lang)
+  );
+
+  const labels = {
+    hi:'🌐 हिंदी ▾',
+    te:'🌐 తెలుగు ▾',
+    hinglish:'🌐 Hinglish ▾'
+  };
+
+  document.getElementById('langDdBtn').textContent = labels[lang] || '🌐 ▾';
   document.getElementById('langDdMenu').classList.remove('open');
-  updateUI();renderQuickCards();
+  updateUI();
+  renderQuickCards();
 }
 function toggleLangMenu(){document.getElementById('langDdMenu').classList.toggle('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('.lang-dropdown')) document.getElementById('langDdMenu').classList.remove('open');});
@@ -856,7 +910,7 @@ function toggleExtraServices(btn){
   const el=document.getElementById('extraServices');
   const show=el.style.display==='none';
   el.style.display=show?'block':'none';
-  btn.textContent=show?'− Show less':'+ View all 5 services';
+  btn.textContent=show?'− Show less':'+ View all 6 services';
 }
 // Update dots menu auth label
 function updateDotsAuth(){
@@ -888,7 +942,7 @@ function selectCategory(cat,el){
     if(qs.length>0){
       const catNames={msme:'MSME Rights',banking:'Banking Rights',police:'Police Rights',
         cyber:'Cyber Crime',medical:'Medical Rights',consumer:'Consumer Rights',
-        labour:'Labour Law',property:'Property & Tenant',women:'Women Rights',tax:'Tax & GST'};
+        labour:'Labour Law',property:'Property & Tenant',women:'Women Rights',tax:'Tax & GST',general:'General Q&A'};
       const catName=catNames[cat]||cat;
       const label={hi:`${catName} ke sawaal:`,te:`${catName} ప్రశ్నలు:`,hinglish:`${catName} questions:`}[state.lang]||`${catName} questions:`;
       const wrap=document.createElement('div');
@@ -1045,7 +1099,7 @@ async function sendMessage(){
   document.getElementById('sendBtn').disabled=true;
   const tid=appendTyping();
   try{
-    const res=await fetch(`${API}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,language:state.lang,session_token:state.token,conversation_history:state.chatHistory.slice(-8)})});
+    const res=await fetch(`${API}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,language:state.lang,category:state.category,session_token:state.token,conversation_history:state.chatHistory.slice(-8)})});
     const data=await res.json();removeTyping(tid);
     if(data.paywall){showPaywallInChat(data);}
     else{
@@ -1678,8 +1732,27 @@ function submitFeedback(){
 // ── AUDIO COMMAND SENDER ───────────────────────────────────────
 // ── AUDIO: send command to audio.html iframe ──────────────────
 function playCommand(cmd){
-  var frame=document.getElementById('audioFrame');
-  if(frame&&frame.contentWindow) frame.contentWindow.postMessage(cmd,'*');
+  var frame = document.getElementById('audioFrame');
+  if (!frame || !frame.contentWindow) return;
+
+  const teluguCommands = [
+    'welcome-sir',
+    'welcome-maam',
+    'last-chat-sir',
+    'last-chat-maam',
+    'quota-over-sir',
+    'quota-over-maam'
+  ];
+
+  let finalCmd = cmd;
+
+  if (state.lang === 'te' && teluguCommands.includes(cmd)) {
+    finalCmd = cmd + '-te';
+  }
+
+  console.log('LANG =', state.lang, '| AUDIO CMD =', finalCmd);
+
+  frame.contentWindow.postMessage(finalCmd, '*');
 }
 
 // showComingSoon kept as fallback for any truly future features
@@ -2302,6 +2375,10 @@ function init(){
     adminBadge.textContent='⚙️ ADMIN MODE';
     document.body.appendChild(adminBadge);
   }
+  const savedLang = localStorage.getItem('ld_lang');
+if (savedLang && ['hi','te','hinglish'].includes(savedLang)) {
+  state.lang = savedLang;
+}
 
   updateUI();renderQuickCards();updateAuthBtn();updateUsageBar();
 }
@@ -2441,6 +2518,7 @@ const res = await fetch(`${API}/api/chat`, {
   body: JSON.stringify({
     message: prompt,
     language: state.lang,
+    category: state.category,
     session_token: state.token,
     conversation_history: state.chatHistory.slice(-8)
   })
