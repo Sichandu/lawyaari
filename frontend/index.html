@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -382,7 +383,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 }
 
 /* Mic and upload buttons */
-.mic-btn, .upload-btn {
+.mic-btn, .upload-btn, .doc-analyzer-btn {
   background: var(--bg3);
   border: 1px solid var(--border2);
   color: var(--text2);
@@ -397,9 +398,14 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
   transition: all 0.15s;
   flex-shrink: 0;
 }
-.mic-btn:hover, .upload-btn:hover {
+.mic-btn:hover, .upload-btn:hover, .doc-analyzer-btn:hover {
   background: var(--border2);
   color: var(--text);
+  border-color: var(--accent);
+}
+.doc-analyzer-btn.active {
+  background: var(--accent);
+  color: #000;
   border-color: var(--accent);
 }
 .mic-btn.active {
@@ -407,6 +413,16 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
   color: #000;
   border-color: var(--accent);
 }
+
+
+/* DOC ANALYZER OUTPUT */
+.da-wrap{display:flex;flex-direction:column;gap:10px;}
+.da-sec{border:1px solid var(--border);background:rgba(255,255,255,.02);border-radius:10px;padding:10px 12px;}
+.da-sec.highlight{background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(245,158,11,.05));border-color:rgba(245,158,11,.35);}
+.da-head{font-weight:700;color:var(--text);margin-bottom:6px;display:block;}
+.da-body{color:var(--text2);line-height:1.75;font-size:13px;}
+.da-foot{margin-top:4px;color:var(--text3);font-size:11px;}
+
 </style>
 </head>
 <body>
@@ -461,11 +477,13 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
     <div class="sidebar-header">📂 Topics</div>
     <div class="sidebar-scroll">
       <!-- 3 default topics -->
-      <div class="category-item active" onclick="selectCategory('msme',this)"><span class="icon">🏭</span><span class="label" data-key="cat_msme">MSME Rights</span></div>
-      <div class="category-item" onclick="selectCategory('banking',this)"><span class="icon">🏦</span><span class="label" data-key="cat_banking">Banking Rights</span></div>
-      <div class="category-item" onclick="selectCategory('police',this)"><span class="icon">🚔</span><span class="label" data-key="cat_police">Police Rights</span></div>
+      <div class="category-item active" onclick="selectCategory('general',this)"><span class="icon">💬</span><span class="label" data-key="cat_general">General Q&A</span></div>
+      <div class="category-item" onclick="selectCategory('msme',this)"><span class="icon">🏭</span><span class="label" data-key="cat_msme">MSME Rights</span></div>
+      <div class="category-item" onclick="selectCategory('cheque',this)"><span class="icon">📄</span><span class="label" data-key="cat_cheque">Cheque Bounce</span></div>
       <!-- Hidden topics — shown on "View All" -->
       <div id="extraTopics" style="display:none">
+        <div class="category-item" onclick="selectCategory('banking',this)"><span class="icon">🏦</span><span class="label" data-key="cat_banking">Banking Rights</span></div>
+        <div class="category-item" onclick="selectCategory('police',this)"><span class="icon">🚔</span><span class="label" data-key="cat_police">Police Rights</span></div>
         <div class="category-item" onclick="selectCategory('cyber',this)"><span class="icon">💻</span><span class="label" data-key="cat_cyber">Cyber Crime</span></div>
         <div class="category-item" onclick="selectCategory('medical',this)"><span class="icon">🏥</span><span class="label" data-key="cat_medical">Medical Rights</span></div>
         <div class="category-item" onclick="selectCategory('consumer',this)"><span class="icon">🛒</span><span class="label" data-key="cat_consumer">Consumer Rights</span></div>
@@ -477,7 +495,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       <div style="padding:6px 10px;">
         <button onclick="toggleExtraTopics(this)" id="viewAllTopicsBtn"
           style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;font-family:var(--font);font-weight:600;padding:2px 0;">
-          + View all 10 topics
+          + View all 11 topics
         </button>
       </div>
 
@@ -490,7 +508,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
       <div id="extraServices" style="display:none">
         <div class="service-item" onclick="openService('legal_reply')"><span class="sname">✉️ Legal Reply</span><span class="sprice">₹49</span></div>
         <div class="service-item" onclick="openService('priority_answer')"><span class="sname">⚡ Priority Answer</span><span class="sprice">₹19</span></div>
-        <div class="service-item" onclick="openService('expert_answer')"><span class="sname">⭐ Expert Answer</span><span class="sprice">₹7</span></div>
+        <div class="service-item" onclick="triggerDocAnalyzerUpload()"><span class="sname">📄 Doc Analyzer</span><span class="sprice">₹25</span></div>
       </div>
       <div style="padding:6px 10px;">
         <button onclick="toggleExtraServices(this)" id="viewAllServicesBtn"
@@ -498,6 +516,9 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
           + View all 6 services
         </button>
       </div>
+
+      <div class="sidebar-section">🧰 Free Tools</div>
+      <div class="service-item" onclick="openService('gst_invoice')"><span class="sname">🧾 GST Invoice Generator</span><span class="sprice" style="background:rgba(16,185,129,.1);color:var(--accent3)">Free</span></div>
 
       <div class="sidebar-section">💬 Support</div>
       <div class="service-item" onclick="window.location.href='timepass.html'"><span class="sname">⚡ Timepass Zone</span><span class="sprice" style="background:rgba(245,158,11,.1);color:var(--accent)">Free</span></div>
@@ -530,7 +551,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
 <div class="input-wrap" style="display: flex; align-items: center; gap: 8px;">
   <button class="mic-btn" id="micBtn" onclick="startVoiceInput()" title="Voice input">🎙️</button>
-  <button class="upload-btn" id="uploadBtn" onclick="triggerFileUpload()" title="Upload PDF/Image">+</button>
+  <button class="upload-btn" id="uploadBtn" onclick="triggerFileUpload()" title="Attach file">+</button>
+  <button class="doc-analyzer-btn" id="docAnalyzerBtn" onclick="triggerDocAnalyzerUpload()" title="Doc Analyzer">📄</button>
   <textarea id="chatInput" rows="1" placeholder="अपना क़ानूनी सवाल यहाँ लिखें..." onkeydown="handleKey(event)" oninput="autoResize(this)" style="flex: 1;"></textarea>
   <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
   <input type="file" id="fileUploadInput" accept="image/jpeg,image/png,image/webp,application/pdf" style="display:none">
@@ -776,25 +798,52 @@ let state = {
   mobile:localStorage.getItem('ld_mobile')||null,
   userName:localStorage.getItem('ld_name')||null,
   userEmoji:localStorage.getItem('ld_emoji')||'😤',
-  category:'msme', chatHistory:[],
+  category:'general', chatHistory:[],
+  deviceId:localStorage.getItem('ld_device_id')||null,
   usedChats:parseInt(localStorage.getItem('ld_chats_'+new Date().toDateString())||'0'),
   currentResult:null, pendingPaymentService:null, pendingServiceData:null, pendingTeluguMsg:null, askedQuestions:{},
   purchases:JSON.parse(localStorage.getItem('ld_purchases')||'[]'),
   selectedSigma:'😤', warnedLastChat:false,
 };
 
+function ensureDeviceId(){
+  if(!state.deviceId){
+    state.deviceId='dev_'+Math.random().toString(36).slice(2)+Date.now().toString(36);
+    localStorage.setItem('ld_device_id', state.deviceId);
+  }
+  return state.deviceId;
+}
+ensureDeviceId();
+
+function hasUsedFreeDocAnalysis(){
+  return localStorage.getItem('ld_free_doc_used')==='1';
+}
+function markFreeDocAnalysisUsed(){
+  localStorage.setItem('ld_free_doc_used','1');
+}
+
 // TRANSLATIONS
 const T = {
-  hi:{placeholder:'अपना क़ानूनी सवाल यहाँ लिखें...',emptyTitle:'आपका क़ानूनी दोस्त',emptyDesc:'कोई भी क़ानूनी सवाल पूछें — MSME, बैंकिंग, साइबर क्राइम, पुलिस राइट्स और बहुत कुछ।',quickTitle:'जल्दी सवाल',nextLabel:'आगे क्या पूछें?',cat_msme:'MSME अधिकार',cat_banking:'बैंकिंग अधिकार',cat_cyber:'साइबर क्राइम',cat_police:'पुलिस अधिकार',cat_medical:'मेडिकल अधिकार',cat_consumer:'उपभोक्ता अधिकार',cat_labour:'श्रम क़ानून',cat_property:'संपत्ति & किरायेदार',cat_women:'महिला अधिकार',cat_tax:'टैक्स & GST'},
-  te:{placeholder:'మీ న్యాయ సందేహం ఇక్కడ టైప్ చేయండి...',emptyTitle:'మీ న్యాయ స్నేహితుడు',emptyDesc:'MSME, బ్యాంకింగ్, సైబర్ క్రైమ్, పోలీస్ హక్కులు గురించి అడగండి.',quickTitle:'త్వరిత ప్రశ్నలు',nextLabel:'తర్వాత ఏమి అడగాలి?',cat_msme:'MSME హక్కులు',cat_banking:'బ్యాంకింగ్ హక్కులు',cat_cyber:'సైబర్ క్రైమ్',cat_police:'పోలీస్ హక్కులు',cat_medical:'వైద్య హక్కులు',cat_consumer:'వినియోగదారు హక్కులు',cat_labour:'కార్మిక చట్టం',cat_property:'ఆస్తి & అద్దె',cat_women:'మహిళా హక్కులు',cat_tax:'పన్ను & GST'},
-  hinglish:{placeholder:'Apna legal sawaal yahan likho...',emptyTitle:'Aapka Legal Dost',emptyDesc:'Koi bhi legal sawaal pucho — MSME, Banking, Cyber Crime, Police Rights aur bahut kuch.',quickTitle:'Quick Questions',nextLabel:'Aage kya poochho?',cat_msme:'MSME Rights',cat_banking:'Banking Rights',cat_cyber:'Cyber Crime',cat_police:'Police Rights',cat_medical:'Medical Rights',cat_consumer:'Consumer Rights',cat_labour:'Labour Law',cat_property:'Property & Tenant',cat_women:'Women Rights',cat_tax:'Tax & GST'},
+  hi:{placeholder:'अपना क़ानूनी सवाल यहाँ लिखें...',emptyTitle:'आपका क़ानूनी दोस्त',emptyDesc:'कोई भी क़ानूनी सवाल पूछें — General Q&A, MSME, Cheque Bounce, GST, साइबर क्राइम और बहुत कुछ।',quickTitle:'जल्दी सवाल',nextLabel:'आगे क्या पूछें?',cat_general:'जनरल Q&A',cat_msme:'MSME अधिकार',cat_cheque:'चेक बाउंस',cat_banking:'बैंकिंग अधिकार',cat_cyber:'साइबर क्राइम',cat_police:'पुलिस अधिकार',cat_medical:'मेडिकल अधिकार',cat_consumer:'उपभोक्ता अधिकार',cat_labour:'श्रम क़ानून',cat_property:'संपत्ति & किरायेदार',cat_women:'महिला अधिकार',cat_tax:'टैक्स & GST'},
+  te:{placeholder:'మీ న్యాయ సందేహం ఇక్కడ టైప్ చేయండి...',emptyTitle:'మీ న్యాయ స్నేహితుడు',emptyDesc:'General Q&A, MSME, Cheque Bounce, GST, సైబర్ క్రైమ్ గురించి అడగండి.',quickTitle:'త్వరిత ప్రశ్నలు',nextLabel:'తర్వాత ఏమి అడగాలి?',cat_general:'జనరల్ Q&A',cat_msme:'MSME హక్కులు',cat_cheque:'చెక్ బౌన్స్',cat_banking:'బ్యాంకింగ్ హక్కులు',cat_cyber:'సైబర్ క్రైమ్',cat_police:'పోలీస్ హక్కులు',cat_medical:'వైద్య హక్కులు',cat_consumer:'వినియోగదారు హక్కులు',cat_labour:'కార్మిక చట్టం',cat_property:'ఆస్తి & అద్దె',cat_women:'మహిళా హక్కులు',cat_tax:'పన్ను & GST'},
+  hinglish:{placeholder:'Apna legal sawaal yahan likho...',emptyTitle:'Aapka Legal Dost',emptyDesc:'Koi bhi legal sawaal pucho — General Q&A, MSME, Cheque Bounce, GST, Cyber Crime aur bahut kuch.',quickTitle:'Quick Questions',nextLabel:'Aage kya poochho?',cat_general:'General Q&A',cat_msme:'MSME Rights',cat_cheque:'Cheque Bounce',cat_banking:'Banking Rights',cat_cyber:'Cyber Crime',cat_police:'Police Rights',cat_medical:'Medical Rights',cat_consumer:'Consumer Rights',cat_labour:'Labour Law',cat_property:'Property & Tenant',cat_women:'Women Rights',cat_tax:'Tax & GST'},
 };
 
 const QUICK_Q = {
+  general:{
+    hi:['Mujhe legal notice mila hai, pehle kya karun?','Police FIR nahi le rahi, mera next step kya hai?','Online fraud ho gaya, paisa wapas kaise milega?','Bank recovery agent pareshan kar raha hai, kya karun?','Landlord deposit wapas nahi de raha, mere rights kya hain?','Salary nahi mili, kahan complaint karun?','GST notice aaya hai, simple mein samjhao.','Consumer complaint kaise file karun?','Cheque bounce ho gaya, ab kya process hai?','Court jaane se pehle kaunse documents rakhun?'],
+    te:['నాకు legal notice వచ్చింది, ముందు ఏం చేయాలి?','Police FIR తీసుకోవడం లేదు, next step ఏమిటి?','Online fraud జరిగింది, డబ్బు తిరిగి ఎలా పొందాలి?','Bank recovery agent వేధిస్తే ఏం చేయాలి?','Landlord deposit తిరిగి ఇవ్వడం లేదు, నా హక్కులు ఏమిటి?','జీతం రాలేదు, ఎక్కడ ఫిర్యాదు చేయాలి?','GST notice వచ్చింది, simple గా చెప్పండి.','Consumer complaint ఎలా file చేయాలి?','Cheque bounce అయితే process ఏమిటి?','Court కి వెళ్లే ముందు ఏ documents పెట్టుకోవాలి?'],
+    hinglish:['Mujhe legal notice mila hai pehle kya karun?','Police FIR nahi le rahi mera next step kya hai?','Online fraud ho gaya paisa wapas kaise milega?','Bank recovery agent pareshan kar raha hai kya karun?','Landlord deposit wapas nahi de raha mere rights kya hain?','Salary nahi mili kahan complaint karun?','GST notice aaya hai simple mein samjhao.','Consumer complaint kaise file karun?','Cheque bounce ho gaya ab kya process hai?','Court jaane se pehle kaunse documents rakhun?']
+  },
   msme:{
     hi:['MSME payment 45 दिन से ज़्यादा देर है, क्या करूं?','Udyam registration कैसे करें?','MSME Samadhaan portal पर complaint कैसे करें?','Cheque bounce हुआ MSME buyer का, कार्रवाई?','MSME को bank loan reject हुआ, क्या options हैं?'],
     te:['MSME చెల్లింపు 45 రోజులు ఆలస్యమైతే ఏం చేయాలి?','Udyam నమోదు ఎలా చేయాలి?','MSME Samadhaan portal లో ఫిర్యాదు ఎలా చేయాలి?','MSME కి బ్యాంక్ లోన్ తిరస్కరిస్తే ఏం చేయాలి?','MSME buyer చెక్కు బౌన్స్ అయితే ఏం చేయాలి?'],
     hinglish:['MSME payment late hai kya karun?','Udyam registration kaise kare?','MSME Samadhaan portal pe complaint kaise?','MSME buyer ka cheque bounce hua kya karun?','MSME loan reject hua options kya hain?']
+  },
+  cheque:{
+    hi:['Cheque bounce hone ke baad 15 din mein kya karna hota hai?','Section 138 notice ka reply kaise diya jata hai?','Bank return memo ka kya use hota hai?','Cheque security ke liye diya tha, case banega kya?','Part payment ke baad cheque bounce ho gaya, kya hoga?'],
+    te:['Cheque bounce అయిన తర్వాత 15 రోజుల్లో ఏం చేయాలి?','Section 138 notice కి reply ఎలా ఇవ్వాలి?','Bank return memo ఉపయోగం ఏమిటి?','Security కోసం ఇచ్చిన cheque bounce అయితే case అవుతుందా?','Part payment తర్వాత cheque bounce అయితే ఏం జరుగుతుంది?'],
+    hinglish:['Cheque bounce hone ke baad 15 din mein kya karna hota hai?','Section 138 notice ka reply kaise diya jata hai?','Bank return memo ka kya use hota hai?','Cheque security ke liye diya tha case banega kya?','Part payment ke baad cheque bounce ho gaya kya hoga?']
   },
   banking:{
     hi:['Cheque bounce होने पर 15 दिन में क्या करें?','Recovery agent घर आकर परेशान कर रहा है?','Bank ने बिना notice loan account freeze किया?','Credit card fraud हुआ, पैसे वापस मिलेंगे?','CIBIL score गलत है, कैसे ठीक करें?'],
@@ -844,7 +893,13 @@ const QUICK_Q = {
 };
 
 const NEXT_STEPS = {
+  general:{hi:['Legal notice kaise bhejein?','Lawyer hire kaise karein?','Important documents kaise organize karein?'],te:['లీగల్ నోటీస్ ఎలా పంపాలి?','లాయర్ ఎలా hire చేయాలి?','డాక్యుమెంట్స్ ఎలా ready పెట్టుకోవాలి?'],hinglish:['Legal notice kaise bhejein?','Lawyer hire kaise karein?','Documents kaise ready rakhein?']},
   msme:{hi:['MSME court case kaise karein?','Samadhaan portal complaint?','Udyam certificate ke fayde?'],te:['MSME కోర్టు కేసు?','Samadhaan complaint?'],hinglish:['MSME court case kaise?','Samadhaan complaint?']},
+  cheque:{
+    hi:['Cheque bounce hone ke baad 15 din mein kya karna hota hai?','Section 138 notice ka reply kaise diya jata hai?','Bank return memo ka kya use hota hai?','Cheque security ke liye diya tha, case banega kya?','Part payment ke baad cheque bounce ho gaya, kya hoga?'],
+    te:['Cheque bounce అయిన తర్వాత 15 రోజుల్లో ఏం చేయాలి?','Section 138 notice కి reply ఎలా ఇవ్వాలి?','Bank return memo ఉపయోగం ఏమిటి?','Security కోసం ఇచ్చిన cheque bounce అయితే case అవుతుందా?','Part payment తర్వాత cheque bounce అయితే ఏం జరుగుతుంది?'],
+    hinglish:['Cheque bounce hone ke baad 15 din mein kya karna hota hai?','Section 138 notice ka reply kaise diya jata hai?','Bank return memo ka kya use hota hai?','Cheque security ke liye diya tha case banega kya?','Part payment ke baad cheque bounce ho gaya kya hoga?']
+  },
   banking:{hi:['Bank ombudsman complaint kaise?','Cheque bounce case file kaise?','CIBIL score fix kaise karein?'],te:['ఒంబుడ్స్మాన్ complaint?','CIBIL score fix?'],hinglish:['Bank ombudsman complaint?','CIBIL score fix?']},
   cyber:{hi:['Cybercrime portal pe complaint kaise?','Bank refund kaise milega?','Evidence collect kaise karein?'],te:['Cybercrime portal?','Bank refund?'],hinglish:['Cybercrime portal complaint?','Bank refund kaise?']},
   police:{hi:['Bail application kaise likhein?','Magistrate complaint kaise?','Lawyer hire kaise karein?'],te:['బెయిల్ application?','Magistrate complaint?'],hinglish:['Bail application kaise?','Magistrate complaint?']},
@@ -900,7 +955,7 @@ function toggleExtraTopics(btn){
   const el=document.getElementById('extraTopics');
   const show=el.style.display==='none';
   el.style.display=show?'block':'none';
-  btn.textContent=show?'− Show less':'+ View all 10 topics';
+  btn.textContent=show?'− Show less':'+ View all 11 topics';
 }
 function toggleExtraServices(btn){
   const el=document.getElementById('extraServices');
@@ -933,10 +988,10 @@ function selectCategory(cat,el){
     if(qa) qa.style.display='none'; // keep top hidden
     // Remove any previous injected topic switch cards
     document.querySelectorAll('.topic-switch-cards').forEach(e=>e.remove());
-    const qs=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]
-            ||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
+    const qs=(QUICK_Q[state.category]||QUICK_Q.general)[state.lang]
+            ||(QUICK_Q[state.category]||QUICK_Q.general).hi||[];
     if(qs.length>0){
-      const catNames={msme:'MSME Rights',banking:'Banking Rights',police:'Police Rights',
+      const catNames={general:'General Q&A',msme:'MSME Rights',cheque:'Cheque Bounce',banking:'Banking Rights',police:'Police Rights',
         cyber:'Cyber Crime',medical:'Medical Rights',consumer:'Consumer Rights',
         labour:'Labour Law',property:'Property & Tenant',women:'Women Rights',tax:'Tax & GST'};
       const catName=catNames[cat]||cat;
@@ -962,7 +1017,7 @@ function selectCategory(cat,el){
   if(window.innerWidth<=680) closeSidebar();
 }
 function renderQuickCards(){
-  const qs=(QUICK_Q[state.category]||QUICK_Q.msme)[state.lang]||(QUICK_Q[state.category]||QUICK_Q.msme).hi||[];
+  const qs=(QUICK_Q[state.category]||QUICK_Q.general)[state.lang]||(QUICK_Q[state.category]||QUICK_Q.general).hi||[];
   document.getElementById('quickCards').innerHTML=qs.map(q=>`<div class="quick-card" onclick="fillAndSend(this.textContent)">${q}</div>`).join('');
 }
 function fillAndSend(t){document.getElementById('chatInput').value=t;sendMessage();}
@@ -1144,53 +1199,80 @@ function getNextQuestions(asked){
   return remaining.slice(0,4); // max 4 shown
 }
 
-function appendAiMsg(text,intent,askedQuestion){
+function formatDocAnalyzerOutput(text){
+  const clean=(text||'').replace(/\r/g,'').trim();
+  const headingMap=[
+    'From where the doc came',
+    'What type of document this is',
+    'Urgency level',
+    'Deadline',
+    'What this means in simple language',
+    'What you should do right now',
+    'What can happen if you ignore it',
+    'BKLChai smart move'
+  ];
+  const highlightSet=new Set(['Urgency level','Deadline','What you should do right now','BKLChai smart move']);
+  const lines=clean.split('\n');
+  const sections=[];
+  let current=null;
+  const findHeading=(line)=>{
+    const stripped=line.replace(/^\s*\d+\.\s*/, '').replace(/:$/,'').trim().toLowerCase();
+    return headingMap.find(h=>h.toLowerCase()===stripped) || null;
+  };
+  for(const rawLine of lines){
+    const line=rawLine.trim();
+    const heading=findHeading(line);
+    if(heading){
+      if(current) sections.push(current);
+      current={heading, body:[]};
+      continue;
+    }
+    if(!current){
+      current={heading:'Summary', body:[]};
+    }
+    current.body.push(rawLine);
+  }
+  if(current) sections.push(current);
+
+  return `<div class="da-wrap">${sections.map(sec=>{
+    let body=sec.body.join('\n').trim();
+    body=body.replace(/^[-•]\s*/gm,'');
+    body=esc(body).replace(/\n/g,'<br>');
+    if(sec.heading==='Summary') return `<div class="da-sec"><div class="da-body">${body}</div></div>`;
+    return `<div class="da-sec ${highlightSet.has(sec.heading)?'highlight':''}"><strong class="da-head">${esc(sec.heading)}</strong><div class="da-body">${body||'—'}</div></div>`;
+  }).join('')}<div class="da-foot">This is practical guidance, not formal legal advice.</div></div>`;
+}
+
+function appendAiMsg(text,intent,askedQuestion,opts={}){
   const c=document.getElementById('chatMessages');
   const d=document.createElement('div');d.className='msg ai';
+  const isDocAnalyzer=!!opts.isDocAnalyzer;
   let intentHtml='';
-  if(intent){
+  if(intent && !isDocAnalyzer){
     const cta=intent.cta||'';
     const svcKey=intent.service||'priority_answer';
     intentHtml=`<div class="intent-cta"><div class="intent-cta-text">💡 <strong>${cta}</strong></div><button class="intent-cta-btn" onclick="openService('${svcKey}')">⚡ Generate Now</button></div>`;
   }
 
-  // Build next questions — remaining from current topic
-  const nextQs=getNextQuestions(askedQuestion||'');
   let nextHtml='';
-  if(nextQs.length>0){
-    const label={hi:'Aur puchho:',te:'ఇంకా అడగండి:',hinglish:'Aur puchho:'}[state.lang]||'Aur puchho:';
-    const cards=nextQs.map(q=>
-      `<div onclick="fillAndSend(this.dataset.q)" data-q="${q.replace(/"/g,'&quot;')}"
-        style="cursor:pointer;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);transition:all .15s;line-height:1.4;display:inline-block;"
-        onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'"
-        onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'"
-      >→ ${q}</div>`
-    ).join('');
-    nextHtml=`<div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
-      <div style="font-size:10px;color:var(--text3);font-weight:700;margin-bottom:6px;letter-spacing:.4px">${label}</div>
-      <div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;">${cards}</div>
-    </div>`;
-  } else {
-    // Fallback nudge if no more questions in this topic
-    const nudge={hi:'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>',
-                 te:'<em style="color:var(--text3);font-size:12px">Inkaa adagaalantaa? 🤔</em>',
-                 hinglish:'<em style="color:var(--text3);font-size:12px">Aur kuch puchho? 🤔</em>'}[state.lang]
-              ||'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>';
-    nextHtml=`<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:7px">${nudge}</div>`;
+  if(!isDocAnalyzer){
+    const nextQs=getNextQuestions(askedQuestion||'');
+    if(nextQs.length>0){
+      const label={hi:'Aur puchho:',te:'ఇంకా అడగండి:',hinglish:'Aur puchho:'}[state.lang]||'Aur puchho:';
+      const cards=nextQs.map(q=>`<div onclick="fillAndSend(this.dataset.q)" data-q="${q.replace(/"/g,'&quot;')}" style="cursor:pointer;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);transition:all .15s;line-height:1.4;display:inline-block;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">→ ${q}</div>`).join('');
+      nextHtml=`<div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px"><div style="font-size:10px;color:var(--text3);font-weight:700;margin-bottom:6px;letter-spacing:.4px">${label}</div><div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;">${cards}</div></div>`;
+    } else {
+      const nudge={hi:'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>',te:'<em style="color:var(--text3);font-size:12px">Inkaa adagaalantaa? 🤔</em>',hinglish:'<em style="color:var(--text3);font-size:12px">Aur kuch puchho? 🤔</em>'}[state.lang]||'<em style="color:var(--text3);font-size:12px">Aur kuch puchhna hai? 🤔</em>';
+      nextHtml=`<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:7px">${nudge}</div>`;
+    }
   }
 
-  d.innerHTML=`<div class="msg-avatar">⚖️</div><div>
-    <div class="msg-bubble">${esc(text).replace(/\n/g,'<br>')}${intentHtml}${nextHtml}</div>
-    <div class="msg-actions">
-      <button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button>
-      <button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>
-      <div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px">
-        <button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" title="Get detailed expert answer">⚡ Expert ₹7</button>
-        <span style="font-size:9px;color:var(--text3);font-style:italic;opacity:.7">Thala for a reason!</span>
-      </div>
-    </div></div>`;
+  const bubbleHtml=isDocAnalyzer ? formatDocAnalyzerOutput(text) : `${esc(text).replace(/\n/g,'<br>')}${intentHtml}${nextHtml}`;
+  const expertBtn=isDocAnalyzer ? '' : `<div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px"><button class="msg-action-btn primary" onclick="expertAnswerForThis(this)" title="Get detailed expert answer">⚡ Expert ₹7</button><span style="font-size:9px;color:var(--text3);font-style:italic;opacity:.7">Thala for a reason!</span></div>`;
+  d.innerHTML=`<div class="msg-avatar">⚖️</div><div><div class="msg-bubble">${bubbleHtml}</div><div class="msg-actions"><button class="msg-action-btn" onclick="copyBubble(this)">📋 Copy</button><button class="msg-action-btn" onclick="shareBubble(this)">↗ Share</button>${expertBtn}</div></div>`;
   c.appendChild(d);scrollBottom();
 }
+
 
 function appendTyping(){
   const c=document.getElementById('chatMessages');const d=document.createElement('div');
@@ -1851,6 +1933,34 @@ const SERVICES = {
     generate: async (vals) => { return ''; }
   },
 
+  gst_invoice: {
+    title: '🧾 GST Invoice Generator',
+    desc: 'Free simple GST invoice generator for quick billing. Fill details and get a ready invoice text.',
+    price: 0,
+    fields: [
+      {id:'gi_seller_name',label:'Seller / Business Name',placeholder:'e.g. Rabbit Retail'},
+      {id:'gi_seller_gstin',label:'Seller GSTIN',placeholder:'e.g. 36ABCDE1234F1Z5'},
+      {id:'gi_seller_address',label:'Seller Address',placeholder:'Complete business address', type:'textarea'},
+      {id:'gi_buyer_name',label:'Buyer Name',placeholder:'e.g. Rahul Traders'},
+      {id:'gi_buyer_gstin',label:'Buyer GSTIN (optional)',placeholder:'e.g. 36AAAAA0000A1Z5', optional:true},
+      {id:'gi_buyer_address',label:'Buyer Address',placeholder:'Buyer address', type:'textarea'},
+      {id:'gi_invoice_number',label:'Invoice Number',placeholder:'e.g. INV-1001'},
+      {id:'gi_invoice_date',label:'Invoice Date',placeholder:'e.g. 07/04/2026'},
+      {id:'gi_item_desc',label:'Item / Service Description',placeholder:'e.g. Cotton T-shirts / Design service'},
+      {id:'gi_hsn_sac',label:'HSN / SAC (optional)',placeholder:'e.g. 9983', optional:true},
+      {id:'gi_quantity',label:'Quantity',placeholder:'e.g. 2'},
+      {id:'gi_unit_price',label:'Unit Price (₹)',placeholder:'e.g. 499'},
+      {id:'gi_gst_rate',label:'GST Rate %',placeholder:'e.g. 18'},
+      {id:'gi_supply_type',label:'Supply Type',placeholder:'— Select Supply Type —', type:'select', options:[
+        {value:'intrastate', label:'Intrastate (CGST + SGST)'},
+        {value:'interstate', label:'Interstate (IGST)'}
+      ]},
+      {id:'gi_place_supply',label:'Place of Supply',placeholder:'e.g. Telangana'}
+    ],
+    btnLabel: 'Generate GST Invoice — Free',
+    generate: async (vals) => { return ''; }
+  },
+
   expert_answer: {
     title: '⭐ Expert Legal Answer',
     desc: 'Premium strategic guidance — situation analysis, exact law, action plan, what to write, mistakes to avoid, and when to escalate.',
@@ -1958,6 +2068,25 @@ async function generateServiceOutput(key, svc, vals, paymentResult){
       payment_id: pid,
       mobile: mob
     };
+  } else if(key === 'gst_invoice'){
+    endpoint = `${API}/api/gst-invoice`;
+    payload = {
+      seller_name: vals.gi_seller_name,
+      seller_gstin: vals.gi_seller_gstin,
+      seller_address: vals.gi_seller_address,
+      buyer_name: vals.gi_buyer_name,
+      buyer_gstin: vals.gi_buyer_gstin || '',
+      buyer_address: vals.gi_buyer_address,
+      invoice_number: vals.gi_invoice_number,
+      invoice_date: vals.gi_invoice_date,
+      item_description: vals.gi_item_desc,
+      hsn_sac: vals.gi_hsn_sac || '',
+      quantity: vals.gi_quantity,
+      unit_price: vals.gi_unit_price,
+      gst_rate: vals.gi_gst_rate,
+      supply_type: vals.gi_supply_type,
+      place_of_supply: vals.gi_place_supply
+    };
   } else if(key === 'expert_answer'){
     endpoint = `${API}/api/expert-answer`;
     payload = {
@@ -1974,7 +2103,8 @@ async function generateServiceOutput(key, svc, vals, paymentResult){
       message: promptText,
       language: state.lang,
       session_token: state.token,
-      conversation_history: state.chatHistory.slice(-8)
+      conversation_history: state.chatHistory.slice(-8),
+      category: state.category
     };
   }
 
@@ -2016,7 +2146,9 @@ async function openService(key){
   title.textContent = svc.title;
   desc.textContent  = svc.desc;
 
-  const priceDisplay = `<div class="priority-price-display">₹${svc.price} — One-time payment</div>`;
+  const priceDisplay = svc.price===0
+    ? `<div class="priority-price-display" style="color:var(--accent3);border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.08)">Free Tool</div>`
+    : `<div class="priority-price-display">₹${svc.price} — One-time payment</div>`;
   const fields = svc.fields.map(f => {
     if(f.type === 'select'){
       const opts = f.options.map(o =>
@@ -2058,6 +2190,23 @@ async function submitService(key){
     if(!vals[f.id] && !f.optional) missing = true;
   });
   if(missing){ toast('Please fill all required fields','error'); return; }
+
+  if(svc.price===0){
+    closeModal('serviceModal');
+    toast('Generating your document...', 'info');
+    document.getElementById('pdfOverlay').classList.add('show');
+    try {
+      const output = await generateServiceOutput(key, svc, vals, { razorpay_payment_id: 'free_tool' });
+      document.getElementById('pdfOverlay').classList.remove('show');
+      state.currentResult = { title: svc.title, content: output, serviceType: key };
+      showResult(key, output, svc.title);
+      toast('Document ready! ✓', 'success');
+    } catch(e) {
+      document.getElementById('pdfOverlay').classList.remove('show');
+      toast(e.message || 'Generation failed', 'error');
+    }
+    return;
+  }
 
   // Admin bypass – skip payment
   const adminMob = localStorage.getItem('ld_admin_mobile');
@@ -2439,18 +2588,27 @@ function startVoiceInput() {
   recognition.start();
 }
 
-// ========== FILE UPLOAD TRIGGER ==========
+// ========== FILE / DOC ANALYZER ==========
 function triggerFileUpload() {
-  document.getElementById('fileUploadInput').click();
+  const input = document.getElementById('fileUploadInput');
+  input.dataset.mode = 'attach';
+  input.click();
 }
 
-// Inside init() function, before the closing brace
-document.getElementById('fileUploadInput').addEventListener('change', async function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  document.getElementById('fileUploadInput').value = '';
+function triggerDocAnalyzerUpload() {
+  const input = document.getElementById('fileUploadInput');
+  input.dataset.mode = 'doc_analyzer';
+  input.click();
+}
 
-  const MAX_MB = 5;
+document.getElementById('fileUploadInput').addEventListener('change', async function(e) {
+  const input = e.target;
+  const mode = input.dataset.mode || 'doc_analyzer';
+  const file = input.files[0];
+  if (!file) return;
+  input.value = '';
+
+  const MAX_MB = 8;
   if (file.size > MAX_MB * 1024 * 1024) {
     toast(`File too large (max ${MAX_MB}MB)`, 'error');
     return;
@@ -2462,7 +2620,11 @@ document.getElementById('fileUploadInput').addEventListener('change', async func
     return;
   }
 
-  // Read file as base64
+  if(mode !== 'doc_analyzer'){
+    toast('For now, uploaded docs are handled via Doc Analyzer only.', 'warn');
+    return;
+  }
+
   const base64 = await new Promise((res, rej) => {
     const r = new FileReader();
     r.onload = () => res(r.result.split(',')[1]);
@@ -2470,61 +2632,69 @@ document.getElementById('fileUploadInput').addEventListener('change', async func
     r.readAsDataURL(file);
   });
 
-  const isPDF = file.type === 'application/pdf';
-  const mediaType = file.type;
-  const label = file.name;
+  let paymentId = '';
+  const isAdminUser = state.mobile && localStorage.getItem('ld_admin_mobile') === state.mobile;
+  const freeAvailable = isAdminUser || !hasUsedFreeDocAnalysis();
 
-  // Show user message with file name
+  if(!freeAvailable){
+    const paymentResult = await initiatePayment('doc_analyzer', 25);
+    if(!paymentResult) return;
+    paymentId = paymentResult.razorpay_payment_id || '';
+  }
+
   hideEmpty();
-  appendRaw(`<span style="font-size:18px">📎</span> <strong>${label}</strong><br/><span style="font-size:12px;color:var(--text3)">Analyzing document...</span>`);
+  appendRaw(`<span style="font-size:18px">📄</span> <strong>${file.name}</strong><br/><span style="font-size:12px;color:var(--text3)">Doc Analyzer is reading your file...</span>`);
 
   const tid = appendTyping();
   document.getElementById('sendBtn').disabled = true;
+  document.getElementById('docAnalyzerBtn').classList.add('active');
 
   try {
-    const langLabel = state.lang === 'hi' ? 'Hindi' : state.lang === 'te' ? 'Telugu' : 'Hinglish (Hindi-English mix)';
-    const prompt = `You are an expert Indian legal advisor. The user has uploaded a document: "${label}". Analyze it and:\n1. Summarize what this document is (type, parties involved, key terms)\n2. Identify any legal issues, risks, or important clauses\n3. Suggest what action the user should take\n4. Answer in ${langLabel}\n\nBe specific, practical, and mention relevant Indian laws where applicable.`;
+    const res = await fetch(`${API}/api/doc-analyzer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        filename: file.name,
+        media_type: file.type,
+        data_base64: base64,
+        language: state.lang,
+        session_token: state.token,
+        mobile: state.mobile,
+        payment_id: paymentId,
+        device_id: ensureDeviceId()
+      })
+    });
 
-    const contentBlock = isPDF
-      ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } }
-      : { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } };
+    const data = await res.json();
+    removeTyping(tid);
+    document.getElementById('sendBtn').disabled = false;
+    document.getElementById('docAnalyzerBtn').classList.remove('active');
 
+    if (!res.ok) {
+      if(res.status===402){
+        toast('Free doc analysis trial used. Next analysis is ₹25.', 'warn');
+      }
+      throw new Error(data.detail || 'Doc Analyzer failed');
+    }
 
-const res = await fetch(`${API}/api/chat`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    message: prompt,
-    language: state.lang,
-    session_token: state.token,
-    conversation_history: state.chatHistory.slice(-8)
-  })
-});
+    const output = data.content || '';
+    if (output) {
+      if(data.used_free) markFreeDocAnalysisUsed();
+      state.chatHistory.push({ role: 'user', content: `[Doc Analyzer: ${file.name}]` });
+      state.chatHistory.push({ role: 'assistant', content: output });
+      appendAiMsg(output, null, 'Doc Analyzer', { isDocAnalyzer:true, fileName:file.name });
+      toast(data.used_free ? '1 free doc analysis trial used ✓' : 'Doc Analyzer complete ✓', 'success');
+    } else {
+      appendMsg('ai', '⚠️ Could not analyze this document. Please try a clearer file.');
+    }
+  } catch (err) {
+    removeTyping(tid);
+    document.getElementById('sendBtn').disabled = false;
+    document.getElementById('docAnalyzerBtn').classList.remove('active');
+    appendMsg('ai', '⚠️ Document analysis failed. Please try again with a clearer PDF/image.');
+  }
 
-const data = await res.json();
-removeTyping(tid);
-
-if (!res.ok) {
-  throw new Error(data.detail || 'Generation failed');
-}
-
-const output = data.response || data.content || '';
-
-if (output) {
-  state.chatHistory.push({ role: 'user', content: `[Document: ${label}]` });
-  state.chatHistory.push({ role: 'assistant', content: output });
-  appendAiMsg(output, null, label);
-  incrementUsage();
-} else {
-  appendMsg('ai', '⚠️ Could not analyze this document. Please try again.');
-}
-} catch (err) {
-  removeTyping(tid);
-  appendMsg('ai', '⚠️ Document analysis failed. Please try again.');
-}
-
-document.getElementById('sendBtn').disabled = false;
-scrollBottom();
+  scrollBottom();
 });
 
 </script>

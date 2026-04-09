@@ -2,11 +2,12 @@ from fastapi import FastAPI, HTTPException, Request, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from pypdf import PdfReader
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime, timedelta
 from pymongo import MongoClient
-import os, random, string, hashlib, hmac, json, re
+import os, random, string, hashlib, hmac, json, re, base64
 from dotenv import load_dotenv
 import httpx
 from reportlab.lib.pagesizes import A4
@@ -25,6 +26,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 import os
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from pypdf import PdfReader
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FONT_DIR = os.path.join(BASE_DIR, "fonts")
@@ -412,6 +414,240 @@ OUTPUT STYLE:
 - End with this disclaimer exactly: {disclaimer}
 """
 
+def build_general_qa_prompt(question: str, language: str) -> str:
+    return f"""You are answering a GENERAL Q&A legal help query for an Indian user.
+
+QUESTION:
+{question}
+
+STRICT RULES:
+- Answer in the requested language only
+- Use very simple language
+- Focus on common Indian practical issues: notice, police, bank, fraud, landlord, salary, GST, cheque bounce, consumer issue
+- If the user asks a broad question, first explain what it means, then give next steps
+- Mention deadlines only if reasonably clear from Indian legal practice
+- Do not guess facts or legal sections
+
+OUTPUT FORMAT:
+स्थिति / Situation or Simple Meaning
+क्या करना है / What to do now
+ज़रूरी documents / Important documents
+ध्यान रखें / Important caution
+
+Keep it short, sharp, useful.
+"""
+
+def detect_doc_urgency(doc_text: str) -> str:
+    t = (doc_text or '').lower()
+    critical_keywords = [
+        'court', 'summons', 'warrant', 'income tax', 'gst', 'assessment', 'penalty',
+        'prosecution', 'police', 'fir', 'tribunal', 'arrest', 'search', 'seizure'
+    ]
+    high_keywords = [
+        'legal notice', 'demand notice', 'recovery', 'outstanding amount', 'payment due',
+        'respond within', 'reply within', 'section', 'msme', 'show cause', 'default', 'dues'
+    ]
+    medium_keywords = [
+        'reminder', 'intimation', 'communication', 'draft', 'generated', 'advisory', 'warning'
+    ]
+    if any(k in t for k in critical_keywords):
+        return 'CRITICAL'
+    if any(k in t for k in high_keywords):
+        return 'HIGH'
+    if any(k in t for k in medium_keywords):
+        return 'MEDIUM'
+    return 'LOW'
+
+
+def detect_doc_nature(doc_text: str) -> str:
+    t = (doc_text or '').lower()
+    if 'ai-generated' in t or 'bklchai' in t or 'openai api key not configured' in t:
+        return 'draft_or_ai_generated'
+    if 'government of india' in t or 'department' in t or 'ministry' in t or 'notice' in t:
+        return 'possibly_official'
+    return 'unclear'
+
+
+def build_doc_analyzer_prompt(doc_text: str, language: str, source_name: str) -> str:
+    lang_map = {
+        'hi': 'Respond ONLY in Hindi (Devanagari). Keep the tone simple, clear, confident, and practical.',
+        'te': 'Respond ONLY in Telugu script. Keep the tone simple, clear, confident, and practical.',
+        'hinglish': 'Respond ONLY in clean Hinglish (Hindi in English script). Keep it simple, sharp, and practical.'
+    }
+    lang_instruction = lang_map.get(language, lang_map['hi'])
+    urgency_guess = detect_doc_urgency(doc_text)
+    nature_guess = detect_doc_nature(doc_text)
+
+    return f"""You are BKLChai — a practical Indian legal notice decoder.
+
+Your job:
+- Read the uploaded notice/document text carefully
+- Identify what kind of notice it is
+- Tell the user exactly what it means
+- Tell the user exactly what to do next
+- Do NOT give generic advice
+- Do NOT say 'consult a lawyer' unless the matter is truly serious, criminal, court-stage, or deadline-critical
+- Focus on action, clarity, and confidence
+
+DOCUMENT NAME:
+{source_name}
+
+DOCUMENT TEXT:
+{doc_text}
+
+LANGUAGE RULE:
+{lang_instruction}
+
+BACKEND HINTS:
+- Likely urgency guess: {urgency_guess}
+- Likely document nature: {nature_guess}
+
+STRICT RULES:
+- Never invent facts that are not visible in the document
+- If something is not visible, say 'Not clearly visible'
+- But still make a practical inference if strongly likely
+- No fluff
+- No motivational lines
+- No vague statements like 'check details'
+- No useless generic legal disclaimer in every point
+- Keep each section useful and specific
+- Use Indian practical context
+- If the sender is AI-generated or not official, say that clearly
+- If the document looks incomplete, broken, or fake, say that clearly
+- For 'What you should do right now', give concrete steps, not abstract advice
+- Do not include any expert answer section
+
+URGENCY LOGIC:
+- LOW = informational, no action pressure
+- MEDIUM = useful to act soon, but no immediate threat
+- HIGH = legal or financial consequence likely if ignored
+- CRITICAL = court, police, tax, recovery, compliance, or hard deadline risk
+
+DEADLINE LOGIC:
+- If exact date is visible, mention it
+- If only response window is visible, mention that
+- If no deadline is visible, say 'No clear deadline visible'
+- If this notice type usually carries a practical response window, mention that as a practical note
+
+OUTPUT FORMAT:
+Use exactly these headings only. Do NOT add numbering before the headings.
+
+From where the doc came
+- Mention sender / department / company / authority
+- If not clearly visible, say so
+
+What type of document this is
+- Example: payment recovery notice, legal notice, bank notice, tax notice, police-related communication, consumer complaint, demand letter, AI-generated draft, etc.
+
+Urgency level
+- LOW / MEDIUM / HIGH / CRITICAL
+- Give 1-line reason
+
+Deadline
+- Exact date or response window
+- If not visible, say so clearly
+
+What this means in simple language
+- Explain in 2-4 lines like a normal Indian person would understand
+
+What you should do right now
+- Give short, concrete action steps
+- Must include:
+  a) what to verify
+  b) what documents to collect
+  c) where/how to reply if applicable
+  d) what mistake to avoid
+
+What can happen if you ignore it
+- Mention practical consequences only
+
+BKLChai smart move
+- Give one useful strategic tip most people miss
+
+END WITH:
+This is practical guidance, not formal legal advice.
+"""
+
+def build_gst_invoice_text(req) -> str:
+    qty = float(req.quantity)
+    unit_price = float(req.unit_price)
+    gst_rate = float(req.gst_rate)
+    taxable_value = round(qty * unit_price, 2)
+    gst_amount = round(taxable_value * gst_rate / 100.0, 2)
+    total_amount = round(taxable_value + gst_amount, 2)
+
+    if req.supply_type == 'intrastate':
+        half_rate = round(gst_rate / 2.0, 2)
+        half_tax = round(gst_amount / 2.0, 2)
+        tax_lines = f"CGST @ {half_rate}%: Rs. {half_tax:,.2f}\nSGST @ {half_rate}%: Rs. {half_tax:,.2f}"
+    else:
+        tax_lines = f"IGST @ {gst_rate}%: Rs. {gst_amount:,.2f}"
+
+    buyer_gstin_line = f"Buyer GSTIN: {req.buyer_gstin}\n" if req.buyer_gstin else ''
+    hsn_line = f"HSN/SAC: {req.hsn_sac}\n" if req.hsn_sac else ''
+
+    return f"""GST INVOICE
+
+Seller: {req.seller_name}
+Seller GSTIN: {req.seller_gstin}
+Seller Address: {req.seller_address}
+
+Buyer: {req.buyer_name}
+{buyer_gstin_line}Buyer Address: {req.buyer_address}
+
+Invoice Number: {req.invoice_number}
+Invoice Date: {req.invoice_date}
+Place of Supply: {req.place_of_supply}
+Supply Type: {'Intrastate' if req.supply_type == 'intrastate' else 'Interstate'}
+
+Item Description: {req.item_description}
+{hsn_line}Quantity: {qty:g}
+Unit Price: Rs. {unit_price:,.2f}
+Taxable Value: Rs. {taxable_value:,.2f}
+{tax_lines}
+
+Total Invoice Value: Rs. {total_amount:,.2f}
+
+Declaration:
+We declare that this invoice shows the actual price of the goods/services described above and that all particulars are true and correct.
+
+Authorised Signatory
+{req.seller_name}
+
+Note: Verify GST details before issuing this invoice."""
+
+async def call_openai_with_image(prompt_text: str, image_data_url: str, system: str = '') -> str:
+    if not OPENAI_API_KEY:
+        raise RuntimeError('OpenAI API key not configured')
+    headers = {"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"}
+    payload = {
+        "model": OPENAI_MODEL_PREMIUM,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": [
+                {"type": "text", "text": prompt_text},
+                {"type": "image_url", "image_url": {"url": image_data_url}}
+            ]}
+        ],
+        "max_tokens": 1800,
+        "temperature": 0.3
+    }
+    async with httpx.AsyncClient(timeout=90) as c:
+        r = await c.post('https://api.openai.com/v1/chat/completions', headers=headers, json=payload)
+        r.raise_for_status()
+        return r.json()['choices'][0]['message']['content']
+
+def extract_pdf_text_from_base64(data_base64: str) -> str:
+    raw = base64.b64decode(data_base64)
+    reader = PdfReader(io.BytesIO(raw))
+    parts = []
+    for page in reader.pages[:12]:
+        try:
+            parts.append(page.extract_text() or '')
+        except Exception:
+            continue
+    return '\n'.join(parts).strip()
+
 # ─── PROMPT BUILDERS FOR PREMIUM SERVICES ────────────────────────────────────
 
 def build_expert_answer_prompt(question: str, language: str) -> str:
@@ -524,6 +760,34 @@ class ChatRequest(BaseModel):
     language: str = "hi"
     session_token: Optional[str] = None
     conversation_history: Optional[List[dict]] = []
+    category: Optional[str] = "general"
+
+class DocAnalyzeRequest(BaseModel):
+    filename: str
+    media_type: str
+    data_base64: str
+    language: str = "hi"
+    session_token: Optional[str] = None
+    mobile: Optional[str] = None
+    payment_id: Optional[str] = None
+    device_id: Optional[str] = None
+
+class GSTInvoiceRequest(BaseModel):
+    seller_name: str
+    seller_gstin: str
+    seller_address: str
+    buyer_name: str
+    buyer_gstin: Optional[str] = ''
+    buyer_address: str
+    invoice_number: str
+    invoice_date: str
+    item_description: str
+    hsn_sac: Optional[str] = ''
+    quantity: str
+    unit_price: str
+    gst_rate: str
+    supply_type: str
+    place_of_supply: str
 
 class ChequeNoticeRequest(BaseModel):
     client_name: str
@@ -754,8 +1018,14 @@ async def chat(req: ChatRequest, request: Request):
     history = req.conversation_history or []
     messages = history + [{"role": "user", "content": req.message}]
 
-    system = get_system_prompt(language)
-    response_text = await call_with_fallback(messages, system, task="normal_chat", language=language, use_openai_first=False)
+    category = (req.category or 'general').lower()
+    if category == 'general':
+        system = get_system_prompt(language)
+        prompt_text = build_general_qa_prompt(req.message, language)
+        response_text = await call_with_fallback(history + [{"role": "user", "content": prompt_text}], system, task="normal_chat", language=language, use_openai_first=False)
+    else:
+        system = get_system_prompt(language)
+        response_text = await call_with_fallback(messages, system, task="normal_chat", language=language, use_openai_first=False)
 
     if mobile:
         users_col.update_one({"mobile": mobile}, {"$inc": {"daily_chats": 1}, "$set": {"last_chat_date": today}})
@@ -790,6 +1060,62 @@ async def chat(req: ChatRequest, request: Request):
         }
 
     return result
+
+@app.post("/api/doc-analyzer")
+async def doc_analyzer(req: DocAnalyzeRequest, request: Request):
+    token_user = get_user_from_token(req.session_token) if req.session_token else None
+    mobile = req.mobile or (token_user.get('mobile') if token_user else None)
+    tracker_key = mobile or (req.device_id or request.client.host or 'guest')
+    usage_field = 'free_doc_analysis_used'
+
+    if not req.payment_id:
+        if mobile:
+            user_doc = users_col.find_one({"mobile": mobile}) or {}
+            if user_doc.get(usage_field, 0) >= 1 and not is_admin_mobile(mobile):
+                raise HTTPException(402, 'Free doc analysis trial already used. Next analysis is ₹25.')
+        elif analytics_col.find_one({"event": "doc_analysis_free_used", "data.tracker_key": tracker_key}):
+            raise HTTPException(402, 'Free doc analysis trial already used. Next analysis is ₹25.')
+
+    system = get_system_prompt(req.language)
+
+    try:
+        if req.media_type == 'application/pdf':
+            pdf_text = extract_pdf_text_from_base64(req.data_base64)
+            if not pdf_text or len(pdf_text.strip()) < 20:
+                raise HTTPException(400, 'This PDF looks scanned, image-only, or unclear. Please upload a clearer PDF or image.')
+            prompt = build_doc_analyzer_prompt(pdf_text[:14000], req.language, req.filename)
+            content = await call_with_fallback([{"role": "user", "content": prompt}], system, task='high_accuracy', language=req.language, use_openai_first=bool(OPENAI_API_KEY))
+        elif req.media_type.startswith('image/'):
+            if not OPENAI_API_KEY:
+                raise HTTPException(503, 'Image doc analysis needs OpenAI vision configured on the backend.')
+            prompt = build_doc_analyzer_prompt('Image notice uploaded by user. Read visible text carefully and analyze only what is visible.', req.language, req.filename)
+            data_url = f"data:{req.media_type};base64,{req.data_base64}"
+            content = await call_openai_with_image(prompt, data_url, system=system)
+        else:
+            raise HTTPException(400, 'Unsupported file type')
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(500, f'Document analysis failed: {str(e)}')
+
+    used_free = False
+    if not req.payment_id and not is_admin_mobile(mobile):
+        used_free = True
+        if mobile:
+            users_col.update_one({"mobile": mobile}, {"$set": {usage_field: 1}}, upsert=False)
+        analytics_col.insert_one({"event": "doc_analysis_free_used", "data": {"tracker_key": tracker_key, "mobile": mobile}, "timestamp": datetime.utcnow()})
+
+    log_analytics('doc_analysis', {"mobile": mobile, "filename": req.filename, "paid": bool(req.payment_id)})
+    return {"content": content, "used_free": used_free, "service": "doc_analyzer", "price": 25}
+
+@app.post("/api/gst-invoice")
+async def gst_invoice(req: GSTInvoiceRequest):
+    try:
+        content = build_gst_invoice_text(req)
+    except Exception as e:
+        raise HTTPException(400, f'Invalid GST invoice data: {str(e)}')
+    log_analytics('gst_invoice_generated', {"invoice_number": req.invoice_number})
+    return {"content": content, "service": "gst_invoice"}
 
 # ─── PREMIUM: CHEQUE BOUNCE ───────────────────────────────────────────────────
 @app.post("/api/cheque-notice")
