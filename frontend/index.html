@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -329,6 +330,21 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .toast.warn{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.1);}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
+
+/* PWA INSTALL BUTTON */
+.install-app-btn{
+  position:fixed;right:14px;bottom:18px;z-index:350;
+  background:linear-gradient(135deg,var(--accent),#f97316);color:#000;
+  border:none;border-radius:999px;padding:12px 16px;
+  font-size:12px;font-weight:800;font-family:var(--font);cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,.38);display:none;align-items:center;gap:8px;
+}
+.install-app-btn.show{display:flex;}
+.install-app-btn:hover{opacity:.92;}
+@media(max-width:680px){
+  .install-app-btn{right:10px;bottom:12px;padding:11px 14px;font-size:11px;}
+}
+
 /* MOBILE */
 .sidebar-overlay{display:none;position:fixed;inset:0;top:52px;background:rgba(0,0,0,.55);z-index:140;}
 .sidebar-overlay.open{display:block;}
@@ -424,6 +440,16 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 .da-foot{margin-top:4px;color:var(--text3);font-size:11px;}
 
 </style>
+
+<link rel="manifest" href="/app.webmanifest">
+<meta name="theme-color" content="#0a0a0f"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="BKLChai"/>
+<link rel="icon" href="/icons/icon-192.png" sizes="192x192" type="image/png"/>
+<link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+
 </head>
 <body>
 
@@ -560,6 +586,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(10,10,15,.97);backdrop-fil
 
   </main>
 </div>
+<button id="installAppBtn" class="install-app-btn" type="button">📲 Install App</button>
 
 <!-- FOOTER -->
 <footer style="background:var(--bg2);border-top:1px solid var(--border);padding:12px 20px;text-align:center;font-size:11px;color:var(--text3);flex-shrink:0;">
@@ -2697,6 +2724,60 @@ document.getElementById('fileUploadInput').addEventListener('change', async func
   scrollBottom();
 });
 
+
+/* PWA INSTALL + SERVICE WORKER */
+let deferredInstallPrompt = null;
+
+async function registerPWA(){
+  if ('serviceWorker' in navigator) {
+    try {
+      const reg = await navigator.serviceWorker.register('/sw.js');
+      console.log('Service worker registered:', reg.scope);
+    } catch (err) {
+      console.error('Service worker registration failed:', err);
+    }
+  }
+}
+registerPWA();
+
+function isStandaloneMode(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+const installBtn = document.getElementById('installAppBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if (installBtn && !isStandaloneMode()) installBtn.classList.add('show');
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  if (installBtn) installBtn.classList.remove('show');
+  try { toast('BKLChai app installed successfully ✓', 'success'); } catch(e){}
+});
+
+if (installBtn) {
+  installBtn.addEventListener('click', async () => {
+    if (!deferredInstallPrompt) {
+      try { toast('Install option Chrome menu mein milega: Add to Home screen', 'warn'); } catch(e){}
+      return;
+    }
+    deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+    if (choice.outcome !== 'accepted') {
+      try { toast('Install cancelled', 'warn'); } catch(e){}
+    }
+    deferredInstallPrompt = null;
+    installBtn.classList.remove('show');
+  });
+
+  if (isStandaloneMode()) {
+    installBtn.classList.remove('show');
+  }
+}
+
 </script>
 <!-- FEEDBACK MODAL -->
 <div class="modal-overlay" id="feedbackModal">
@@ -2769,5 +2850,17 @@ document.getElementById('fileUploadInput').addEventListener('change', async func
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("./sw.js");
+        console.log("SW registered:", reg.scope);
+      } catch (err) {
+        console.error("SW registration failed:", err);
+      }
+    });
+  }
+</script>
 </body>
 </html>
